@@ -28,7 +28,7 @@ module app {
 
     $qProvider.errorOnUnhandledRejections(false);
     $locationProvider.html5Mode(true);
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/app');
 
     var states: any[] = getStates();
     states.forEach(function (state) {
@@ -42,7 +42,7 @@ module app {
       {
         state: 'main',
         config: {
-          url: '/',
+          url: '/app',
           template: '<main></main>',
           title: 'main',
           settings: {

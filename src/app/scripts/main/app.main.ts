@@ -17,13 +17,13 @@ module app.main {
       public q: any,
       private DataService
     ) {
-      
+
       element.dblclick((e) => {
         if (e.target.nodeName == 'INPUT') return false;
         this.openModal(false, null);
       })
 
-      //our data!
+      //our data!  
       DataService.get().then((data) => {
         this.user = data.user;
         this.lists = data.lists;
@@ -32,6 +32,7 @@ module app.main {
       })
     }
 
+    
 
     test(text){
       this.test1=text;

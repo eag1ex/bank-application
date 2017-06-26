@@ -1,4 +1,7 @@
 module.exports ={
   APP_PATH: "./src/app",
-  DIST_PATH: "./public/dist"
+  DIST_PATH: "./public/dist",
+  SERVER_PORT: 8010,
+  SERVER_PATH: './server/',
+  SERVER_FILE:'./server/server.js'
 }

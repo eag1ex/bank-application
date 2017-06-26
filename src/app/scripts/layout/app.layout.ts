@@ -15,10 +15,10 @@ module app.layout {
        *             >> form is send if the nodemailer is running.
        */
 
-      
 
      DataService.get().then((data)=>{
       this.category = data.category;
+     
      },(error)=>{
        console.log('category data not available', error)
      })

@@ -2,6 +2,7 @@
 
 var express = require('express');
 var apiRoutes = express.Router();
+var apimyapp = express.Router();
 var app = express();
 var cors = require('cors');
 
@@ -14,12 +15,12 @@ var bodyParser = require('body-parser');
 //mongodb setup
 var morgan = require('morgan');
 var mongoose = require('mongoose');
-const config = require(__dirname+'/config'); // config file
-var Bankuser = require(__dirname+'/models/bank_user.js'); // orm model
+const config = require(__dirname + '/config'); // config file
+var Bankuser = require(__dirname + '/models/bank_user.js'); // orm model
 
 /// for generating new db from json file
 var json = require('json-file');
-var jsonData = json.read(__dirname+'/initial_data.json').data;
+var jsonData = json.read(__dirname + '/initial_data.json').data;
 
 
 // configuration =========
@@ -27,10 +28,21 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.PUBLIC);
-var port = app.set('port', process.env.PORT || 8000);
+
+
+//console logging 
+app.use(morgan('dev'));
+app.use(express.static(config.PUBLIC));
+app.use(function (req, res, next) {
+    next();
+});
+
+
+var port = app.set('port', process.env.PORT || config.SERVER_PORT);
 //==============
 
 
@@ -42,13 +54,13 @@ mongoose.connect(config.database, function (err, db) {
         console.log('error connecting to mongo db');
         throw err;
     } else {
-         console.log('data base connected');
+        console.log('data base connected');
     }
 });
 
 
 // define file name and destination to save
-let storage = multer.diskStorage({
+var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, __dirname + '/images')
     },
@@ -61,7 +73,7 @@ let storage = multer.diskStorage({
 
 
 // define what file type to accept
-let filter = (req, file, cb) => {
+var filter = (req, file, cb) => {
     if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
         cb(null, true);
     } else {
@@ -70,21 +82,10 @@ let filter = (req, file, cb) => {
 }
 
 // set multer config
-let upload = multer({
+var upload = multer({
     storage: storage,
     fileFilter: filter
 }).single('upload');
-
-
-
-//console logging 
-app.use(morgan('dev'));
-
-app.use(function (req, res, next) {
-//    res.header("Access-Control-Allow-Origin", "*");
-  //  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 
 
 
@@ -102,7 +103,7 @@ app.get('/setup', function (req, res) {
 
     if (!jsonData.data) {
         console.log('json data not available for new db');
-        res.send({
+        res.json({
             message: 'json data not available for new db',
             success: false
         });
@@ -125,14 +126,11 @@ app.get('/setup', function (req, res) {
         if (err) throw err;
 
         console.log('saved successfully', obj1);
-        res.send({
+        res.json({
             message: 'populated db for jsonfile',
             success: true
         });
     });
-
-
-
 
 });
 
@@ -153,7 +151,7 @@ function findModel(name) {
             console.log('we found your obj', obj)
         }
     });
-}; 
+};
 
 
 function removeModel(name) {
@@ -173,21 +171,21 @@ function removeModel(name) {
             console.log('error trying to remove')
         }
     });
-}; 
+};
 
 
 
 apiRoutes.get('/', function (req, res) {
 
     var query = Bankuser.where({ name: 'user' });
-   // console.log('query',query)
+    // console.log('query',query)
     query.findOne(function (err, obj) {
         if (obj === null) {
             console.log('no model found')
-           
-            res.send({
-                message:'no data found',
-                success:false
+
+            res.json({
+                message: 'no data found',
+                success: false
             })
             res.status(404);
         }
@@ -203,18 +201,15 @@ apiRoutes.get('/', function (req, res) {
 
 });
 
+app.get('/', function (req, res) {
+    res.redirect('/app');
+});
 
-// api call at http://localhost:{port}/api
-app.use('/api', apiRoutes);
-
-
-
-// general route
-app.use(express.static(config.PUBLIC));
-app.get('/', (req, res) => {
+apimyapp.get('/', (req, res, next) => {
     res.render('index', {
         /**
          * render server address API_MAIN in index.html
+         * not working at moment??
          */
         API_MAIN: "http://localhost:" + app.get('port')
     });
@@ -222,15 +217,29 @@ app.get('/', (req, res) => {
 
 
 
-
 // start server and listen
-var server = app.listen(app.get('port'), _ => {
-    console.log('server started. listening on http://localhost:' + app.get('port'));
-    console.log('Open Browser on http://localhost:' + app.get('port'));
+var newport = app.get('port');
+var server = app.listen(newport, function () {
+    console.log('server started. listening on http://localhost:' + newport);
+    console.log('Open Browser on http://localhost:' + newport);
 })
 
+app.use('/api', apiRoutes);
+app.use('/app', apimyapp);
 
 
+
+/*
+.on('error', function (err) {
+    if (err.code === 'EADDRINUSE') {
+        newport++;
+        console.log('Address in use, retrying on port ' + newport);
+        setTimeout(function () {
+            app.listen(newport);
+        }, 250);
+    }
+});
+*/
 
 
 

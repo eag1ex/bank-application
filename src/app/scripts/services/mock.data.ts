@@ -14,7 +14,7 @@ module app.data {
 
         /* @ngInject */
         constructor(private q: any) {
-
+         
         }
 
         data() {

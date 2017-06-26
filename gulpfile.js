@@ -1,6 +1,8 @@
+var args = require('yargs').argv;
 var gulp = require('gulp');
 var rename = require("gulp-rename");
 var browserSync = require('browser-sync').create();
+var nodemon = require('gulp-nodemon');
 var sass = require('gulp-sass');
 var wiredep = require('wiredep').stream;
 var inject = require('gulp-inject');
@@ -27,7 +29,7 @@ var jshint = require('gulp-jshint');
 
 
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || config.SERVER_PORT;
 
 var APP_PATH = config.APP_PATH;
 var DIST_PATH = config.DIST_PATH;
@@ -331,12 +333,13 @@ gulp.task('all', ['clean'], function (done) {
 
   gulp.start('wiredep', function () {
     gutil.log('-------------------------');
-    gutil.log('Ready!', 'local:', gutil.colors.magenta('http:localhost:' + port));
+    // gutil.log('Ready!', 'local:', gutil.colors.magenta('http:localhost:' + port));
     gutil.log('-------------------------');
   })
 
   done();
 });
+
 
 
 /** 
@@ -350,31 +353,83 @@ gulp.task('all', ['clean'], function (done) {
 
 gulp.task('default', ['all', 'watch'], function () {
 
+  var browserTimer;
 
-  var myVar = setInterval(function () { myTimer() }, 200);
-  function myTimer() {
-    if (WIREDEB_FINISHED == true) {
-      bSync();
-      myStopFunction();
-      gutil.log(gutil.colors.magenta('browserSync executed '));
+  function stopInterval() {
+    clearInterval(browserTimer);
+  }
+
+  var browserSyncOptions = {
+    proxy: 'localhost:' + port,
+    port: 3000,
+    browser: ["chrome"],//, "firefox"],
+    files: ["public/**/*.*","public/*.*","public/"],
+    ghostMode: { // these are the defaults t,f,t,t
+      clicks: true,
+      location: false,
+      forms: true,
+      scroll: true
+    },
+    injectChanges: true,
+    logFileChanges: true,
+    logLevel: 'debug',
+    logPrefix: 'gulp-patterns',
+    notify: true,
+    reloadDelay: 0 //1000
+  };
+
+
+  function startbrowserSync() {
+    if (WIREDEB_FINISHED === true) {
+      browserSyncOptions.nodeArgs = ['--debug=5858'];
+
+    if (!browserSync.active) {
+       browserSync.init(null,browserSyncOptions);
+    }else{
+      setTimeout(function () {
+        browserSync.reload();
+        browserSync.notify('reloading browserSync now ...');
+      }, 2300);
+    }
+
+      stopInterval();
+      gutil.log(gutil.colors.magenta('browserSync executed after WIREDEB'));
     }
   }
+   
 
-  function myStopFunction() {
-    clearInterval(myVar);
-  }
+  var nodeNoneOptions = {
+    script: config.SERVER_FILE,
+    delayTime: 1,
+    env: {
+      'PORT': port,
+      //   'NODE_ENV': isDev ? 'dev' : 'build'
+    },
+    watch: [config.SERVER_PATH, './gulpfile.js']
+  };
 
-  function bSync() {
-    browserSync.init({
-      server: {
-        port: port,
-        open: true,
-        baseDir: './public',
-        middleware: function (req, res, next) {
-          next();
-        },
-      }
+  return nodemon(nodeNoneOptions)
+    .on('restart', function (ev) {
+      gutil.log('*** nodemon restarted');
+      setTimeout(function () {
+        browserSync.notify('reloading browserSync now ...');
+        browserSync.reload();
+      }, 1300);
     })
-  }
+    .on('start', function () {
+      gutil.log('*** nodemon and browserSync started');
 
+      /**
+       * start checking is all has files have rendered then execute
+       */
+      
+      browserTimer = setInterval(function () { startbrowserSync(); }, 200);
+
+    })
+    .on('crash', function () {
+      gutil.log('*** nodemon crashed: script crashed for some reason');
+    })
+    .on('exit', function () {
+      gutil.log('*** nodemon exited cleanly');
+    });
 });
