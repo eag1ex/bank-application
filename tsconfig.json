@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "target": "ES5",
+    "sourceMap": true,
+    "listFiles": false
+  },
+  "filesGlob": [
+    "./typings/**/*.ts",
+    "./typings/**/**/*.ts",
+    "./typings/**/**/**/*.ts",
+    "./typings/index.d.ts",
+    "./src/app/scripts/**/*.ts",
+    "./src/app/scripts/*.ts",
+    "./src/app/**/**/*.ts"
+  ]
+  
+}

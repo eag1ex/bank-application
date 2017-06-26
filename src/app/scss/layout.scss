@@ -1,0 +1,400 @@
+//@import "compass/css3";
+// include animation before app loads
+@import '_preloader';
+
+
+//----------------------------
+// @layout.scss
+//----------------------------
+//----------------------------
+//colors
+//mixins --------------------
+@mixin box-shadow($shadow1, $shadow2:false, $shadow3:false, $shadow4:false, $shadow5:false) {
+    $params: $shadow1;
+    @if $shadow2 {
+        $params: $shadow1, $shadow2;
+    }
+    @if $shadow3 !=false {
+        $params: $shadow1, $shadow2, $shadow3;
+    }
+    @if $shadow4 !=false {
+        $params: $shadow1, $shadow2, $shadow3, $shadow4;
+    }
+    @if $shadow5 !=false {
+        $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5;
+    }
+    -webkit-box-shadow: $params;
+    -moz-box-shadow: $params;
+    box-shadow: $params;
+}
+
+@mixin reset-button() {
+    border: none!important;
+    border-color: transparent!important;
+    padding: 0!important;
+    margin: 0!important;
+    background: none!important;
+    background-color: transparent!important;
+    color: #fff!important;
+}
+
+@mixin reset-input() {
+    border: none!important;
+    border-color: transparent!important;
+    background: none!important;
+    background-color: transparent!important;
+    color: #fff!important;
+    padding: 0;
+    margin: 0;
+}
+
+$bkg-color:#0275d8;
+html,
+body {
+    background: $bkg-color!important;
+}
+
+.angular-app-include {
+    opacity: 0;
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.unl {
+    text-decoration: underline;
+}
+  
+.neg-l-25 {
+    margin-left: -25px;
+}
+
+.r-input {
+    @include reset-input();
+}
+
+.r-btn {
+    @include reset-button();
+}
+
+html .hide-me {
+    display: none!important;
+}
+
+//---------- overites
+.strong,
+.bold {
+    font-weight: bold;
+}
+
+i.c1 {
+    color: #000;
+}
+
+i.c2 {
+    color: #555;
+}
+
+i.c3 {
+    color: #999
+}
+
+//-------------------- ng-animate
+.animate-enter {
+    -webkit-transition: 1s linear all;
+    /* Chrome */
+    transition: 1s linear all;
+    opacity: 0;
+}
+
+.animate-enter-active {
+    opacity: 1;
+}
+
+.ng-enter,
+.ng-hide {
+    /* standard transition code */
+    transition: 0.1s linear all;
+    opacity: 0;
+}
+
+.ng-enter-stagger {
+    /* this will have a 100ms delay between each successive leave animation */
+    transition-delay: 0.1s;
+    /* As of 1.4.4, this must always be set: it signals ngAnimate
+    to not accidentally inherit a delay property from another CSS class */
+    transition-duration: 0s;
+    /* if you are using animations instead of transitions you should configure as follows:
+    animation-delay: 0.1s;
+    animation-duration: 0s; */
+}
+
+.ng-enter.ng-enter-active,
+.ng-show {
+    transition: 0.1s linear all;
+    opacity: 1;
+}
+
+.modal-backdrop.fade {
+    opacity: 0.5; //overite
+}
+
+.fade-in {
+    -webkit-transition: 0.1s linear all;
+    transition: 0.1s linear all;
+}
+
+.fade-in.ng-enter {
+    opacity: 0;
+}
+
+.fade-in.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.fade-in.ng-leave {
+    opacity: 1;
+}
+
+.fade-in.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+.modal {
+    &.fade {
+        opacity: 1!important;
+    }
+    .modal-content {
+        background: transparent;
+        border: none;
+    }
+    .modal-dialog {
+        top: 100px;
+    }
+    .modal-body {
+        padding: 10px;
+        margin: 2px;
+    }
+    ticket-modal {
+        position: relative;
+        .card {
+            background: #eee!important;
+            flex-direction: inherit!important;
+            h6,
+            button {
+                color: #54585a;
+            }
+            .btn-action-list {
+                .btn-primary {
+                    color: #fff!important;
+                }
+            }
+            .comment-group {
+                p.card-text {
+                    background: #e6e4e4;
+                    padding-left: 10px!important;
+                    @include border-radius(3px);
+                    @include box-shadow(1px 1px 1px rgba(0, 0, 0, 0.1));
+                }
+                i.fa-ravelry {
+                    opacity: 0.3;
+                }
+                i.fa-comment-o {
+                    margin-left: -25px;
+                }
+            }
+            .project-title-group {
+                i.fa-tasks {
+                    position: relative;
+                    top: 7px;
+                    margin-left: -25px;
+                }
+            }
+            small.card-text {
+                color: #999;
+            }
+            .card-title {
+                opacity: 0.6;
+            }
+            .cat-list {
+                position: relative;
+                top: -14px;
+                span.cat-name {
+                    color: $bkg-color;
+                }
+            }
+            a.edit {
+                font-size: 0.8rem;
+                color: #999;
+            }
+            .add-list {
+                button {
+                    font-size: 0.8rem;
+                    width: 100%;
+                }
+            }
+        }
+    }
+}
+
+nav {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    project-name {
+        display: flex;
+        flex-direction: row;
+    }
+    input.main-project-name {
+        @include reset-input();
+        font-weight: bold;
+        &::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+    }
+    a {
+        color: #fff;
+    }
+    &.navbar {
+        background: $bkg-color!important;
+    }
+    .lists-menu-group {
+        >button {
+            &:hover {
+                @include reset-button();
+            }
+            @include reset-button();
+        }
+    }
+}
+
+main {
+    button.add-ticket-cta {
+        &:hover {
+            color: #fff;
+            border-color: #fff;
+        }
+        color: #00abff;
+        border-color: #00abff;
+    }
+    .add-new-card-group {
+        button {
+            border: none;
+            font-weight: normal!important;
+        }
+    }
+    .card {
+        @include box-shadow(1px 1px 2px rgba(0, 0, 0, .2));
+        background: #eee!important;
+        .remove-card-list {
+            color: #aaa;
+            font-size: 0.7rem;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .list-group {
+            li {
+                cursor: pointer;
+                &:hover {
+                    background: rgba(0, 0, 0, 0.04)!important;
+                    transition: 0.1s linear all;
+                }
+            }
+        }
+        .card-block {
+            position: relative;
+            padding: 0.5rem;
+            span.card-text {
+                font-size: 0.8rem;
+                font-weight: bold;
+                text-transform: uppercase;
+                position: relative;
+                top: -3px;
+                color: #777;
+            }
+            .card-title {
+                color: #777;
+                font-weight: bold;
+                font-size: 0.8rem;
+                width: 100%!important;
+                border: none!important;
+                padding: 3px;
+                background: rgba(0, 0, 0, .01)!important;
+                margin-bottom: 0px;
+            }
+        }
+        .list-group-item {
+            background: #fff!important;
+            padding: 4px!important;
+            margin: 6px!important;
+            border: none!important;
+            @include border-radius(2px);
+            @include box-shadow(1px 1px 2px rgba(0, 0, 0, .05));
+        }
+    }
+}
+
+.email-form-outer {}
+
+email-form {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    height: 100%;
+    .display-message-wrap {
+        position: relative;
+        >div{
+            position: absolute;
+        }
+        .form-control-feedback {
+            .fa-smile-o{
+                position: relative;
+                top: 15px;
+            }
+        }
+    }
+    >.container {
+        margin-top: 30%;
+        position: relative;
+        z-index: 11;
+    }
+    .back-fill {
+        background: rgba(255, 255, 255, 0.7);
+        width: 100%;
+        height: 3000px;
+        position: absolute;
+        top: 0px;
+        z-index: 1;
+    }
+    .close-email-form {
+        z-index: 11;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+    .return-message {
+        background: #fff;
+    }
+    form {
+        min-height: 100px;
+        input {
+            &::placeholder {
+                color: rgba(0, 0, 0, 0.3)!important;
+            }
+        }
+    }
+}
+
+//buttons------------------------
+button.btn {
+    &btn-success {}
+}
+
+// forms -----------------------
+textarea.form-control {
+    border: 1px solid rgba(0, 0, 0, .03);
+    @include box-shadow(1px 1px 2px rgba(0, 0, 0, .03));
+}

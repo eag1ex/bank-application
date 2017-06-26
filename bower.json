@@ -1,0 +1,45 @@
+{
+  "name": "angulat-trello",
+  "version": "0.0.1",
+  "author": "Michael",
+  "url": "http://creativeatwork.net",
+  "license": [
+    "CC BY",
+    "https://creativecommons.org/licenses/"
+  ],
+  
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  
+  "overrides": {
+    "bootstrap-sass": {
+      "ignore": true
+    },
+    "jquery": {
+      "ignore": false
+    }
+  },
+  "dependencies": {
+    "jquery": "3.2.1",
+    "angular": "^1.6.4",
+    "angular-sanitize": "1.6.4",
+    "bootstrap": "v4.0.0-alpha.6",
+    "angular-animate": "1.6.4",
+    "angular-ui-router": "0.4.2",
+    "angular-mocks": "^1.6.4",
+    "angular-bootstrap": "^2.5.0",
+    "lodash": "^4.17.4",
+    "angular-drag-and-drop-lists": "~1.4.0",
+    "font-awesome": "^4.7.0"
+  },
+  "resolutions": {
+    "jquery": "3.2.1",
+    "bootstrap": "v4.0.0-alpha.6",
+     "angular": "^1.6.4"
+  }
+}

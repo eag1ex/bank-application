@@ -1,0 +1,8 @@
+const gulpConfig = require('../config.js');
+module.exports = {
+    'secret': 'mysecretabc',
+    'database': 'mongodb://localhost/bankapplication',
+    APP_PATH: gulpConfig.APP_PATH,
+    DIST_PATH: gulpConfig.DIST_PATH,
+    PUBLIC:"./public"
+};

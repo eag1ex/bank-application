@@ -1,0 +1,118 @@
+<div class="px-4 pt-0 pb-0 d-flex align-content-start flex-wrap card  modal-body m-1">
+  <div class="align-self-start w-75">
+    <!--add title -->
+    <div class="card-block card-title pb-0 project-title-group">
+      <div class="form-group mb-0" ng-init='cardName.is=0; cardName.show=0;'>
+        <i class="fa fa-tasks float-left fa-lg" aria-hidden="true"></i>
+        <h4 class="mb-4 card-text float-left" ng-class="{'hide-me': cardName.is==1}" ng-show='cardName.is==0' ng-click='cardName.is=(cardName.is==0)? 1:0; cardName.show=(cardName.show==0)? 0:1;'
+          ng-mouseover='cardName.show=(cardName.show==0)? 1:0;' ng-mouseleave="cardName.show=(cardName.show==1)? 0:1;">
+          {{ vm.tempData.name}}
+        </h4>
+        <i class="fa fa-pencil-square-o fa-2x float-right mt-1  mr-4" aria-hidden="true" ng-show='cardName.show==1' ng-click='cardName.is=(cardName.is==0)? 1:0; cardName.show=(cardName.show==0)? 1:0;'></i>
+
+        <input class="form-control mb-0 ticket-name w-75" ng-class="{'hide-me': cardName.is==0}" ng-show='cardName.is==1' ng-mouseover='cardName.show=(cardName.show==0)? 1:0;'
+          ng-mouseleave="cardName.show=(cardName.show==1)? 1:0;" ng-model="vm.tempData.name" aria-describedby="emailHelp" placeholder="Ticket name">
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="card-block cat-list pt-0 pb-0">
+      <div class="form-group">
+        <small class="ml-1 card-text">In List <span class='cat-name'>
+                 {{vm.tempData.catList.length>0 ? vm.tempData.catList: '&nbsp;Choose List'}}</span>
+          </small>
+      </div>
+    </div>
+    <!--add description -->
+    <div class="clearfix"></div>
+    <div class="card-block pt-0 pb-0 descr-group">
+      <div class="form-group ml-1 " ng-init='desc.is=0;'>
+        <small class="card-text" ng-show="desc.is==0">Description</small>
+        <a class='edit pr-2' href='#' ng-class="{'float-right': desc.is==1}" class='ml-1' ng-click='desc.is=(desc.is==0)? 1:0;'>{{ desc.is==0 ? 'edit': 'hide'}}</a>
+
+        <textarea ng-class="{'hide-me': desc.is==0}" class="form-control" ng-model="vm.tempData.desc" rows="3" ng-show="desc.is==1"
+          placeholder="Project description..."></textarea>
+
+        <p class="card-text p-1" ng-show="desc.is==0" ng-click='desc.is=(desc.is==0)? 1:0;'>
+          {{vm.tempData.desc}}</p>
+
+      </div>
+    </div>
+
+    <!--add comment -->
+    <div class="card-block comment-group">
+      <div class="ticket" ng-repeat="ticket in vm.tempData.tickets track by $index" ng-animate="'animate'">
+
+
+        <div class="form-group" ng-init="comment.is=(ticket.title.length==0)? 1:0">
+          <h6 class="ml-1 card-text float-left">
+            <i class="fa fa-comment-o float-left fa-lg" aria-hidden="true"></i> Add Comment</h6>
+          <a href="" class="float-right" ng-click="vm.removeList($index)">
+            <i class="fa fa-times c3" aria-hidden="true"></i>&nbsp;</a>
+
+          <a ng-hide="ticket.title.length==0" class='edit pr-2 float-right' href='#' ng-click='comment.is=(comment.is==0)? 1:0;'>
+            {{ comment.is==0 ? 'edit': 'hide'}}</a>
+
+          <div class="clearfix"></div>
+          <div class="d-flex flex-nowrap mt-2">
+            <div class="flex-first pr-2 neg-l-25"><i class="fa fa-ravelry" aria-hidden="true"></i></div>
+            <div class="flex-last w-100">
+
+              <textarea ng-class="{'hide-me': comment.is==0 && ticket.title.length!=0}" ng-hide="comment.is==0 && ticket.title.length!=0"
+                ng-focus="comment.is=1" class="form-control" ng-model="ticket.title" rows="3" placeholder="Write description..."></textarea>
+              <p class="card-text" ng-show="comment.is==0" ng-click='comment.is=(comment.is==0)? 1:0;'>
+                {{ticket.title}}</p>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <div class="clearfix"></div>
+
+    <div class="card-block pt-0 pb-0 email-form-outer">
+      <email-form ng-init="vm.hideform=1"  hideform="vm.hideform" 
+      ng-hide="vm.hideform==1"></email-form>
+    </div>
+
+  </div>
+
+  <div class="align-self-start w-25 mt-4">
+
+    <div class="card-block add-list p-0">
+      <h6 class="card-title mb-2">Add</h6>
+      <div class="dropdown">
+        <button class="btn-sm btn btn-secondary float-right 
+         mb-1 dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">List
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+          <button ng-repeat='list in vm.cats track by $index' class="dropdown-item" type="button" ng-click="vm.addCatList(list,$index)">
+                  {{list}}
+          </button>
+        </div>
+      </div>
+      <button type="button" class="btn-sm btn btn-secondary float-right  mb-1">
+                            <i class="fa fa-user-o float-left" aria-hidden="true"></i>Members</button>
+      <button type="button" class="btn-sm btn btn-secondary float-right mb-1">
+                            <i class="fa fa-tags float-left" aria-hidden="true"></i>Labels</button>
+      <button type="button" class="btn-sm btn btn-secondary float-right mb-1">
+                            <i class="fa fa-check-square-o float-left" aria-hidden="true"></i>Checklist</button>
+      <button type="button" class="btn-sm btn btn-secondary float-right  mb-1">
+                            <i class="fa fa-clock-o float-left" aria-hidden="true"></i>Due Date</button>
+      <button type="button" class="btn-sm btn btn-secondary float-right  mb-1">
+                            <i class="fa fa-paperclip float-left" aria-hidden="true"></i>Attachament</button>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="align-self-start w-100 mt-4">
+    <div class="card-block btn-action-list pt-0">
+      <button class="btn-sm btn btn-secondary m-1" type="button" ng-click="vm.addList();">Add List</button>
+      <button id="handleClose" class="btn-sm btn btn-secondary m-1" type="button" ng-click="vm.handleClose()">Save</button>
+      <button class="btn-sm btn btn-secondary m-1" type="button" ng-click="vm.handleDismiss()">Dimiss</button>
+      <button class="btn btn-sm btn-primary m-1" ng-click="vm.hideform=0" type="button">Send</button>
+    </div>
+  </div>
+</div>
