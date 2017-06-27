@@ -102,8 +102,8 @@ var upload = multer({
 
 
 
-apiRoutes.post('/send', (req, res) => {
-    console.log('req.body',req.body)   
+apiRoutes.post('/upload', (req, res) => {
+
     upload(req, res, (err) => {
         if (err) {
             return res.end("Error uploading file.");

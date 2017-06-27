@@ -197,7 +197,7 @@ gulp.task('ts-to-js-watch', ['angular-templates-typescript'], function (done) {
    setTimeout(function () {
         browserSync.reload();
         done();
-      }, 300);
+      }, 500);
   
 });
 
@@ -230,7 +230,7 @@ gulp.task('watch', function () {
   gulp.watch(APP_PATH + "/scripts/**/*.ts", ['ts-to-js-watch']);
   gulp.watch(APP_PATH + "/scss/*.scss", ['style-change']);
   gulp.watch(APP_PATH + "/scripts/**/*.html", ['ts-to-js-watch']);
-  gulp.watch('./src' + "/*.html", ['wiredep-index-watch']);
+  gulp.watch('./src' + "/index.html", ['wiredep-index-watch']);
 });
 
 
