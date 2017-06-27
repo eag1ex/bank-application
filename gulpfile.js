@@ -1,3 +1,5 @@
+"use strict"
+
 var args = require('yargs').argv;
 var gulp = require('gulp');
 var rename = require("gulp-rename");
@@ -26,7 +28,6 @@ var print = require('gulp-print');
 var jscs = require('gulp-jscs');
 var jsStylish = require('jshint-stylish');
 var jshint = require('gulp-jshint');
-
 
 
 var port = process.env.PORT || config.SERVER_PORT;
@@ -160,7 +161,7 @@ gulp.task('angular-templates-typescript', ['typescript'], function () {
        * once finished with TS to js, run VET for js code checking
        */
 
-      gulp.start('vet-js', function () { });
+      //gulp.start('vet-js', function () { });
     });
 });
 
@@ -183,6 +184,8 @@ gulp.task('vet-js', function () {
     .pipe(jscs());
 });
 
+
+
 /**
  * 
  * @ts-to-js
@@ -190,8 +193,12 @@ gulp.task('vet-js', function () {
  */
 
 gulp.task('ts-to-js-watch', ['angular-templates-typescript'], function (done) {
-  browserSync.reload();
-  done();
+
+   setTimeout(function () {
+        browserSync.reload();
+        done();
+      }, 300);
+  
 });
 
 /**
@@ -267,7 +274,7 @@ gulp.task('wiredep-index', function (cb) {
 
   var wireupConf = {
     'ignorePath': '../public/',
-    exclude: ['sass-bem', 'bootstrap-sass'],
+    exclude: ['sass-bem', 'bootstrap-sass','angular-bootstrap'],
     directory: './public/bower_components'
   }
 
@@ -360,8 +367,8 @@ gulp.task('default', ['all', 'watch'], function () {
   }
 
   var browserSyncOptions = {
-    proxy: 'localhost:' + port,
-    port: 3000,
+    proxy: 'localhost:' + port+'/app',
+    port: port,
     browser: ["chrome"],//, "firefox"],
     files: ["public/**/*.*","public/*.*","public/"],
     ghostMode: { // these are the defaults t,f,t,t

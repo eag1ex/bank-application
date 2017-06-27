@@ -66,6 +66,7 @@
     "morgan": "^1.8.2",
     "path": "^0.12.7",
     "path-exists": "^3.0.0",
+    "tslint-loader": "^3.5.3",
     "typescript": "^2.2.2",
     "wiredep": "^4.0.0",
     "yargs": "^8.0.2"

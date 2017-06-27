@@ -2,8 +2,9 @@
 
 var express = require('express');
 var apiRoutes = express.Router();
-var apimyapp = express.Router();
+var myapp = express.Router();
 var app = express();
+app.enable('trust proxy');
 var cors = require('cors');
 
 const multer = require('multer');
@@ -24,22 +25,29 @@ var jsonData = json.read(__dirname + '/initial_data.json').data;
 
 
 // configuration =========
-app.use(cors());
+//app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+//console logging 
+//app.use(morgan('dev'));
+app.use(express.static(config.PUBLIC));
+
+app.use(function (req, res, next) {
+    next();
+});
+
+apiRoutes.use(function (req, res, next) {
+    next();
+});
+
+
 
 
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.PUBLIC);
-
-
-//console logging 
-app.use(morgan('dev'));
-app.use(express.static(config.PUBLIC));
-app.use(function (req, res, next) {
-    next();
-});
 
 
 var port = app.set('port', process.env.PORT || config.SERVER_PORT);
@@ -62,10 +70,13 @@ mongoose.connect(config.database, function (err, db) {
 // define file name and destination to save
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, __dirname + '/images')
+        console.log('uploading image to ', __dirname + '\\images')
+        cb(null, __dirname + '\\images')
     },
     filename: (req, file, cb) => {
+       
         let ext = file.originalname.split('.');
+         console.log('uploading filename',ext)
         ext = ext[ext.length - 1];
         cb(null, 'uploads-' + Date.now() + '.' + ext);
     }
@@ -75,8 +86,10 @@ var storage = multer.diskStorage({
 // define what file type to accept
 var filter = (req, file, cb) => {
     if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
+        console.log('all good uploading')
         cb(null, true);
     } else {
+        console.log('Failed: format not supported')
         cb('Failed: format not supported');
     }
 }
@@ -85,11 +98,29 @@ var filter = (req, file, cb) => {
 var upload = multer({
     storage: storage,
     fileFilter: filter
-}).single('upload');
+}).single('appForm');
 
 
 
-app.get('/remove', function (req, res) {
+apiRoutes.post('/send', (req, res) => {
+    console.log('req.body',req.body)   
+    upload(req, res, (err) => {
+        if (err) {
+            return res.end("Error uploading file.");
+        }
+           
+        res.status(200).json({
+            file: req.protocol + '://' + req.get('host') + '/images/' + req.file.originalname,
+            response:req.file
+        })
+    });
+
+
+})
+
+
+
+apiRoutes.get('/remove', function (req, res) {
     removeModel('bankuser');
     res.json({
         message: 'bankuser table removed from mongo db',
@@ -97,7 +128,7 @@ app.get('/remove', function (req, res) {
     });
 });
 
-app.get('/setup', function (req, res) {
+apiRoutes.get('/setup', function (req, res) {
 
     //console.log('model is found', findModel('bankuser'))
 
@@ -201,21 +232,23 @@ apiRoutes.get('/', function (req, res) {
 
 });
 
-app.get('/', function (req, res) {
-    res.redirect('/app');
-});
 
-apimyapp.get('/', (req, res, next) => {
+myapp.get(['/','/application'], (req, res, next) => {
     res.render('index', {
         /**
          * render server address API_MAIN in index.html
          * not working at moment??
          */
-        API_MAIN: "http://localhost:" + app.get('port')
+        API_MAIN: "http://localhost:" + app.get('port')+"/api"
     });
 })
 
+app.get('/application',function (req, res, next) {
+    res.redirect('/app');
+});
 
+app.use('/api', apiRoutes);
+app.use('/app', myapp);
 
 // start server and listen
 var newport = app.get('port');
@@ -224,8 +257,6 @@ var server = app.listen(newport, function () {
     console.log('Open Browser on http://localhost:' + newport);
 })
 
-app.use('/api', apiRoutes);
-app.use('/app', apimyapp);
 
 
 

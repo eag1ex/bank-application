@@ -1,4 +1,18 @@
 {
+
+
+    "version": "2.0.0",
+    "command": "gulp",
+    "isShellCommand": true,
+    "tasks": [
+        {
+            "taskName": "tslint",
+            "args": [],
+            "problemMatcher": "$tslint5"
+        }
+    ],
+
+
   "rules": {
     "class-name": true,
     "curly": true,
@@ -7,7 +21,7 @@
     "indent": [true, 4],
     "label-position": true,
     "label-undefined": true,
-    "max-line-length": [true, 120],
+    "max-line-length": [true, 220],
     "no-arg": true,
     "no-bitwise": true,
     "no-console": [true,

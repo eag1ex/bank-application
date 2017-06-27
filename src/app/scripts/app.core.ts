@@ -1,3 +1,5 @@
+declare var API_MAIN;
+
 module app {
   'use strict';
   angular.module('app.core', []);
@@ -7,7 +9,7 @@ module app {
     .config(configureStates)
     .run(appRun)
     .constant('_', window._)
-    .constant('API', {'EMAIL':"http://localhost:3100/send",  'DATA':null})
+    .constant('API', {'URL':"http:"+API_MAIN,  'DATA':null})
 
   appRun['$inject'] = ['$rootScope','$timeout','httpbackedMockService'];
   function appRun($rootScope,$timeout,httpbackedMockService) {
@@ -39,14 +41,26 @@ module app {
   function getStates(): any[] {
 
     return [
-      {
-        state: 'main',
+       {
+        state: 'welcome',
         config: {
           url: '/app',
-          template: '<main></main>',
-          title: 'main',
+          template: '<welcome></welcome>',
+          title: 'Welcome',
           settings: {
             nav: 1,
+            content: '<i class="fa fa-dashboard"></i> Dashboard'
+          },
+        }
+      },
+      {
+        state: 'application',
+        config: {
+          url: '/app/application',
+          template: '<application></application>',
+          title: 'Application',
+          settings: {
+            nav: 2,
             content: '<i class="fa fa-dashboard"></i> Dashboard'
           },
         }

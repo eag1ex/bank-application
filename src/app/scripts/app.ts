@@ -6,7 +6,7 @@ module app {
   angular.module('app', [
     // dependant
     'ui.router',
-    'ui.bootstrap',
+   // 'ui.bootstrap',
     'ngAnimate',
     'ngMockE2E',
     'dndLists',
@@ -16,8 +16,10 @@ module app {
     'app.data.httpMock',
     'app.core',
     'app.layout',
-    'app.main',
-    'app.projectName',
-    'app.emailForm'
+
+    'app.welcome',
+    'app.application',
+    'app.applicationForm',
+    'app.appNumber'
   ]);
 }
