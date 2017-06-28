@@ -26,10 +26,10 @@ module app.welcome {
 
   class MainComponent {
 
-    constructor() { }
+    constructor() { } 
     restrict = 'E';
     controllerAs = "vm";
-    templateUrl = 'dist/js/app.welcome.html';
+    templateUrl = 'dist/js/app.welcome.html';  
     controller = MainController;
   }
 

@@ -25,16 +25,22 @@ var jsonData = json.read(__dirname + '/initial_data.json').data;
 
 
 // configuration =========
-//app.use(cors());
+var corsOPT ={
+  "origin": "*",
+  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+  "preflightContinue": false,
+  "optionsSuccessStatus": 204
+}
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
 //console logging 
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(express.static(config.PUBLIC));
 
-app.use(function (req, res, next) {
+app.use(function (req, res, next) {;
     next();
 });
 
@@ -232,7 +238,6 @@ apiRoutes.get('/', function (req, res) {
 
 });
 
-
 myapp.get(['/','/application'], (req, res, next) => {
     res.render('index', {
         /**
@@ -242,6 +247,8 @@ myapp.get(['/','/application'], (req, res, next) => {
         API_MAIN: "http://localhost:" + app.get('port')+"/api"
     });
 })
+
+
 
 app.get('/application',function (req, res, next) {
     res.redirect('/app');
@@ -255,7 +262,7 @@ var newport = app.get('port');
 var server = app.listen(newport, function () {
     console.log('server started. listening on http://localhost:' + newport);
     console.log('Open Browser on http://localhost:' + newport);
-})
+});
 
 
 

@@ -38,12 +38,12 @@ module app.application {
 
       this.scope.$on('formStep', (event, data) => {
         if (data.step === 'one' && data.resolution) {
-          //this.collapse(data.nextID,'show');
+          this.collapse(data.nextID,'show');
           console.log(data.step, 'form stage valid');
           console.log(this.APPFORM[data.step])
         }
         else {
-          // this.collapse(data.nextID,'hide');
+           this.collapse(data.nextID,'hide');
           console.log(data.step, 'form stage not valid');
           console.log(this.APPFORM[data.step])
           console.log('invalid elms', data.invals)
@@ -58,7 +58,7 @@ module app.application {
       },()=>{
         console.log('errors on the form')
       })
-      */
+      */    
 
 
       //our data!  
@@ -104,7 +104,7 @@ module app.application {
         this.APPFORM[step].valid = false;
         this.scope.$emit('formStep', { "step": step, resolution: false, invals: invalidElms, next: nextID });
       }
-      
+
     }//
 
 

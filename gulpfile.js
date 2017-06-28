@@ -21,6 +21,7 @@ var minifyHtml = require('gulp-htmlmin');
 var angularTemplatecache = require('gulp-angular-templatecache');
 var pathExists = require('path-exists');
 var concat = require('gulp-concat');
+var glob = require('glob');
 const config = require('./config');
 
 // for vetting code
@@ -132,7 +133,7 @@ gulp.task('typescript', function () {
 /**
  * 
  * @angular-templates
- * 
+ * @disabled not in use in faver of server, no need for caching templates
  */
 
 gulp.task('angular-templates-typescript', ['typescript'], function () {
@@ -164,6 +165,18 @@ gulp.task('angular-templates-typescript', ['typescript'], function () {
       //gulp.start('vet-js', function () { });
     });
 });
+
+gulp.task('move-html-templates', function () {
+
+var htmlfiles = APP_PATH+'/scripts/**/*.html';
+
+  glob(htmlfiles, {}, function (er, files) {
+    gulp.src(files)
+        .pipe(gulp.dest(DIST_PATH + '/js'));
+  })
+
+});
+
 
 
 /**
@@ -201,6 +214,16 @@ gulp.task('ts-to-js-watch', ['angular-templates-typescript'], function (done) {
   
 });
 
+gulp.task('typescript-watch', ['typescript'], function (done) {
+
+   setTimeout(function () {
+        browserSync.reload();
+        done();
+      }, 1000);
+  
+});
+
+
 /**
  * 
  * @style-change
@@ -229,9 +252,11 @@ gulp.task('wiredep-index-watch', ['wiredep-index'], function (done) {
  */
 
 gulp.task('watch', function () {
-  gulp.watch(APP_PATH + "/scripts/**/*.ts", ['ts-to-js-watch']);
+  
+  gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript-watch']);
+  //gulp.watch(APP_PATH + "/scripts/**/*.ts", ['ts-to-js-watch']);
   gulp.watch(APP_PATH + "/scss/*.scss", ['style-change']);
-  gulp.watch(APP_PATH + "/scripts/**/*.html", ['ts-to-js-watch']);
+  gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates']);
   gulp.watch('./src' + "/index.html", ['wiredep-index-watch']);
 });
 
@@ -319,7 +344,7 @@ gulp.task('wiredep-index', function (cb) {
  * 
  */
 
-gulp.task('wiredep', ['styles', 'angular-templates-typescript'], function (done) {
+gulp.task('wiredep', ['styles', 'move-html-templates','typescript',], function (done) {
 
   gulp.start('wiredep-index', function () {
     gutil.log('-------------------------');
@@ -372,7 +397,7 @@ gulp.task('default', ['all', 'watch'], function () {
     proxy: 'localhost:' + port+'/app',
     port: port,
     browser: ["chrome"],//, "firefox"],
-    files: ["public/**/*.*","public/*.*","public/"],
+  //  files: ["public/**/*.*","public/*.*","public/"],
     ghostMode: { // these are the defaults t,f,t,t
       clicks: true,
       location: false,
