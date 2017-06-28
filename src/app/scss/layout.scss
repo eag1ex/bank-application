@@ -156,10 +156,16 @@ i.c3 {
 
 .fade-in.ng-leave {
     opacity: 1;
-}
+} 
 
 .fade-in.ng-leave.ng-leave-active {
     opacity: 0;
+}
+
+.strike{
+    width: 100%; 
+
+    border-bottom: 2px solid $body-color;
 }
 
 
@@ -195,6 +201,9 @@ nav {
 application{
     
     form#application-form{
+        .hide{
+            display: none;
+        }
         div.form-group{
             label.section-label{
                 justify-content: left;

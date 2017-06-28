@@ -6,7 +6,6 @@ module app {
   angular.module('app', [
     // dependant
     'ui.router',
-   // 'ui.bootstrap',
     'ngAnimate',
     'ngMockE2E',
     'dndLists',

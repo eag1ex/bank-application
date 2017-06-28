@@ -209,8 +209,10 @@ gulp.task('ts-to-js-watch', ['angular-templates-typescript'], function (done) {
 
 gulp.task('style-change', ['styles'], function (done) {
 
-  browserSync.reload();
-  done();
+  setTimeout(function () {
+        browserSync.reload();
+        done();
+      }, 500);
 });
 
 gulp.task('wiredep-index-watch', ['wiredep-index'], function (done) {
@@ -270,7 +272,7 @@ gulp.task('wiredep-index', function (cb) {
       return "<script src='" + filepath + '?=' + fileVer + "'></script>"
     }
   };
-
+ 
 
   var wireupConf = {
     'ignorePath': '../public/',
