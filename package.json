@@ -5,7 +5,7 @@
   "scripts": {
     "hot": "npm update& npm i node-sass -g& npm rebuild node-sass",
     "postinstall": "bower install -g",
-    "server": "node ./server/server.js",
+    "server": "nodemon ./server/server.js",
     "start": "gulp"
   },
   "keywords": [
@@ -20,10 +20,7 @@
   ],
   "author": "Michael",
   "url": "http://creativeatwork.net",
-  "license": [
-    "CC BY",
-    "https://creativecommons.org/licenses/"
-  ],
+  "license":"CC BY",
   "engine": {
     "node": ">=6.9.4",
     "node-sass": "^3.10.10"
@@ -68,13 +65,11 @@
     "path-exists": "^3.0.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.2.2",
-    "wiredep": "^4.0.0",
-    "yargs": "^8.0.2"
+    "wiredep": "^4.0.0"
   },
   "dependencies": {
     "express": "^4.15.3",
     "gulp-nodemon": "^2.2.1",
-    "junk": "^2.1.0",
     "mongoose": "^4.11.0",
     "multer": "^1.3.0"
   }

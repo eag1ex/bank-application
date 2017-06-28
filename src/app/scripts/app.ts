@@ -7,18 +7,18 @@ module app {
     // dependant
     'ui.router',
     'ngAnimate',
-    'ngMockE2E',
-    'dndLists',
+    //'ngMockE2E', couses template not loading
+    //'dndLists',
 
-    'app.mockData',
-    'app.data.dataservice',
-    'app.data.httpMock',
+   // 'app.mockData',
+   // 'app.data.dataservice',
+   // 'app.data.httpMock',
     'app.core',
     'app.layout',
 
     'app.welcome',
     'app.application',
-    'app.applicationForm',
+  //  'app.applicationForm',
     'app.appNumber'
   ]);
 }

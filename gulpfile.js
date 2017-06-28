@@ -1,6 +1,5 @@
 "use strict"
 
-var args = require('yargs').argv;
 var gulp = require('gulp');
 var rename = require("gulp-rename");
 var browserSync = require('browser-sync').create();
@@ -22,7 +21,7 @@ var angularTemplatecache = require('gulp-angular-templatecache');
 var pathExists = require('path-exists');
 var concat = require('gulp-concat');
 var glob = require('glob');
-const config = require('./config');
+var config = require('./config');
 
 // for vetting code
 var print = require('gulp-print');
@@ -168,13 +167,14 @@ gulp.task('angular-templates-typescript', ['typescript'], function () {
 
 gulp.task('move-html-templates', function () {
 
-var htmlfiles = APP_PATH+'/scripts/**/*.html';
+  var htmlfiles = APP_PATH + '/scripts/**/*.html';
 
+  var stream;
   glob(htmlfiles, {}, function (er, files) {
-    gulp.src(files)
-        .pipe(gulp.dest(DIST_PATH + '/js'));
+    stream = gulp.src(files)
+      .pipe(gulp.dest(DIST_PATH + '/js'));
   })
-
+  return stream;
 });
 
 
@@ -201,62 +201,60 @@ gulp.task('vet-js', function () {
 
 /**
  * 
- * @ts-to-js
- * execute vet once all else complete
+ * @ assets reloaders
+ * 
  */
 
 gulp.task('ts-to-js-watch', ['angular-templates-typescript'], function (done) {
 
-   setTimeout(function () {
-        browserSync.reload();
-        done();
-      }, 500);
-  
+  setTimeout(function () {
+    browserSync.reload();
+    done();
+  }, 500);
+
 });
 
 gulp.task('typescript-watch', ['typescript'], function (done) {
 
-   setTimeout(function () {
-        browserSync.reload();
-        done();
-      }, 1000);
-  
+  setTimeout(function () {
+    browserSync.reload();
+    done();
+    console.log('reloading typescript')
+  }, 1000);
+
 });
-
-
-/**
- * 
- * @style-change
- * 
- */
 
 gulp.task('style-change', ['styles'], function (done) {
 
   setTimeout(function () {
-        browserSync.reload();
-        done();
-      }, 500);
+    browserSync.reload();
+    done();
+    console.log('reloading styles')
+  }, 500);
 });
 
 gulp.task('wiredep-index-watch', ['wiredep-index'], function (done) {
   browserSync.reload();
   done();
-  console.log('reloading wiredep-index-watch')
+  console.log('reloading wiredep-index')
 });
 
 
-/**
- * 
- * @watch
- * 
- */
+gulp.task('move-html-templates-watch', ['move-html-template'], function (done) {
+  setTimeout(function () {
+    browserSync.reload();
+    done();
+    console.log('reloading move-html-template')
+  }, 500);
+});
+
 
 gulp.task('watch', function () {
-  
+
   gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript-watch']);
   //gulp.watch(APP_PATH + "/scripts/**/*.ts", ['ts-to-js-watch']);
   gulp.watch(APP_PATH + "/scss/*.scss", ['style-change']);
-  gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates']);
+  gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates-watch']);
   gulp.watch('./src' + "/index.html", ['wiredep-index-watch']);
 });
 
@@ -297,11 +295,11 @@ gulp.task('wiredep-index', function (cb) {
       return "<script src='" + filepath + '?=' + fileVer + "'></script>"
     }
   };
- 
+
 
   var wireupConf = {
     'ignorePath': '../public/',
-    exclude: ['sass-bem', 'bootstrap-sass','angular-bootstrap'],
+    exclude: ['sass-bem', 'bootstrap-sass', 'angular-bootstrap'],
     directory: './public/bower_components'
   }
 
@@ -344,7 +342,7 @@ gulp.task('wiredep-index', function (cb) {
  * 
  */
 
-gulp.task('wiredep', ['styles', 'move-html-templates','typescript',], function (done) {
+gulp.task('wiredep', ['styles', 'move-html-templates', 'typescript',], function (done) {
 
   gulp.start('wiredep-index', function () {
     gutil.log('-------------------------');
@@ -394,10 +392,10 @@ gulp.task('default', ['all', 'watch'], function () {
   }
 
   var browserSyncOptions = {
-    proxy: 'localhost:' + port+'/app',
+    proxy: 'localhost:' + port + '/app',
     port: port,
     browser: ["chrome"],//, "firefox"],
-  //  files: ["public/**/*.*","public/*.*","public/"],
+    // files: ["public/**/*.*","public/*.*","public/"],
     ghostMode: { // these are the defaults t,f,t,t
       clicks: true,
       location: false,
@@ -415,22 +413,21 @@ gulp.task('default', ['all', 'watch'], function () {
 
   function startbrowserSync() {
     if (WIREDEB_FINISHED === true) {
-      browserSyncOptions.nodeArgs = ['--debug=5858'];
 
-    if (!browserSync.active) {
-       browserSync.init(null,browserSyncOptions);
-    }else{
-      setTimeout(function () {
-        browserSync.reload();
-        browserSync.notify('reloading browserSync now ...');
-      }, 2300);
-    }
+      if (!browserSync.active) {
+        browserSync.init(null, browserSyncOptions);
+      } else {
+        setTimeout(function () {
+          browserSync.reload();
+          browserSync.notify('reloading browserSync now ...');
+        }, 2300);
+      }
 
       stopInterval();
       gutil.log(gutil.colors.magenta('browserSync executed after WIREDEB'));
     }
   }
-   
+
 
   var nodeNoneOptions = {
     script: config.SERVER_FILE,
@@ -456,7 +453,7 @@ gulp.task('default', ['all', 'watch'], function () {
       /**
        * start checking is all has files have rendered then execute
        */
-      
+
       browserTimer = setInterval(function () { startbrowserSync(); }, 200);
 
     })

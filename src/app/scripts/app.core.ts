@@ -11,10 +11,10 @@ module app {
     .constant('_', window._)
     .constant('API', {'URL':"http:"+API_MAIN,  'DATA':null})
 
-  appRun['$inject'] = ['$rootScope','$timeout','httpbackedMockService'];
-  function appRun($rootScope,$timeout,httpbackedMockService) {
+  appRun['$inject'] = ['$rootScope','$timeout'];
+  function appRun($rootScope,$timeout) {
        //////// run fake server
-    httpbackedMockService.run();
+   // httpbackedMockService.run();
 
       //lodash globaly
         $rootScope._ = window._;

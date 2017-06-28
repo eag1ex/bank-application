@@ -1,22 +1,22 @@
 "use scrict"
 
+// server
 var express = require('express');
 var apiRoutes = express.Router();
 var myapp = express.Router();
 var app = express();
-app.enable('trust proxy');
-var cors = require('cors');
 
-const multer = require('multer');
-const fs = require('fs');
-const junk = require('junk');
+//http 
+var cors = require('cors');
+var multer = require('multer');
+var fs = require('fs');
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 
-//mongodb setup
+//mongodb 
 var morgan = require('morgan');
 var mongoose = require('mongoose');
-const config = require(__dirname + '/config'); // config file
+var config = require(__dirname + '/config'); // config file
 var Bankuser = require(__dirname + '/models/bank_user.js'); // orm model
 
 /// for generating new db from json file
@@ -25,12 +25,7 @@ var jsonData = json.read(__dirname + '/initial_data.json').data;
 
 
 // configuration =========
-var corsOPT ={
-  "origin": "*",
-  "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-  "preflightContinue": false,
-  "optionsSuccessStatus": 204
-}
+app.enable('trust proxy');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,7 +35,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(express.static(config.PUBLIC));
 
-app.use(function (req, res, next) {;
+app.use(function (req, res, next) {
     next();
 });
 

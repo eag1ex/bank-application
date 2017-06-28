@@ -2,29 +2,24 @@ module app.welcome {
   'use strict';
   export class MainController {
     public register;
-    static $inject: Array<string> = ['$scope', '$element', '$document', '$timeout', '$q', 'dataservice'];
-    /* @ngInject */
+    static $inject: Array<string> = ['$scope', '$element', '$document', '$timeout', '$q'];
+    /* @ngInject */   
     constructor(
       public scope: any,
       public element: any,
       public document: any,
       public timeout: any,
-      public q: any,
-      private DataService
+      public q: any,  
+ 
     ) {
-
-      this.register='testval'
-      //our data!  
-      DataService.get().then((data) => {
-
-      }, (error) => {
-        console.log('data not available', error)
-      })
+      alert('no')
+      this.register='testval';
+    
     }
 
-  }
-
-  class MainComponent {
+  }  
+   
+  class MainComponent {    
 
     constructor() { } 
     restrict = 'E';

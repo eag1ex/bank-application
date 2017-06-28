@@ -2,9 +2,9 @@ module app.layout {
   'use strict';
 
   export class LayoutController {
-    static $inject: Array<string> = ['$scope','dataservice'];
+    static $inject: Array<string> = ['$scope'];
     public category:any;
-    constructor(public scope:any, private DataService:any) {
+    constructor(public scope:any) {
 
       /**
        *  The hierarchy of this app is:
@@ -16,14 +16,7 @@ module app.layout {
        */
 
 
-     DataService.get().then((data)=>{
-      this.category = data.category;
-     
-     },(error)=>{
-       console.log('category data not available', error)
-     })
-
-    } 
+    }   
 
   }
   angular

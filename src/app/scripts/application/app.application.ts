@@ -6,15 +6,14 @@ module app.application {
     public APPFORM: any;
     public application: Object;
     public numberOnlyReg: any;
-    static $inject: Array<string> = ['$scope', '$element', '$document', '$timeout', '$q', 'dataservice'];
+    static $inject: Array<string> = ['$scope', '$element', '$document', '$timeout', '$q'];
     /* @ngInject */
     constructor(
       public scope: any,
       public element: any,
       public document: any,
       public timeout: any,
-      public q: any,
-      private DataService
+      public q: any
     ) {
 
       this.numberOnlyReg = "/^[1-9][0-9]{0,2}(?:,?[0-9]{3}){0,3}(?:\.[0-9]{1,2})?$/";
@@ -60,14 +59,6 @@ module app.application {
       })
       */    
 
-
-      //our data!  
-      DataService.get().then((data) => {
-        //  this.user = data.user;
-        // this.lists = data.lists;
-      }, (error) => {
-        console.log('data not available', error)
-      })
     }
 
     checkFromStepsValid(step, nextID) {
