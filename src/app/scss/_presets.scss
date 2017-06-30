@@ -1,0 +1,126 @@
+//----------------------------
+// @_presets.scss
+//----------------------------
+
+html,
+body {
+
+    background: $bkg-color!important;
+}
+
+.angular-app-include {
+    opacity: 0;
+}
+
+.center {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.unl {
+    text-decoration: underline;
+}
+  
+.neg-l-25 {
+    margin-left: -25px;
+}
+
+.r-input {
+    @include reset-input();
+}
+
+.r-btn {
+    @include reset-button();
+}
+
+html .hide-me {
+    display: none!important;
+}
+
+//---------- overites
+.strong,
+.bold {
+    font-weight: bold;
+}
+
+i.c1 {
+    color: #000;
+}
+
+i.c2 {
+    color: #555;
+}
+
+i.c3 {
+    color: #999
+}
+
+//-------------------- ng-animate
+.animate-enter {
+    -webkit-transition: 1s linear all;
+    /* Chrome */
+    transition: 1s linear all;
+    opacity: 0;
+}
+
+.animate-enter-active {
+    opacity: 1;
+}
+
+.ng-enter,
+.ng-hide {
+    /* standard transition code */
+    transition: 0.1s linear all;
+    opacity: 0;
+}
+
+.ng-enter-stagger {
+    /* this will have a 100ms delay between each successive leave animation */
+    transition-delay: 0.1s;
+    /* As of 1.4.4, this must always be set: it signals ngAnimate
+    to not accidentally inherit a delay property from another CSS class */
+    transition-duration: 0s;
+    /* if you are using animations instead of transitions you should configure as follows:
+    animation-delay: 0.1s;
+    animation-duration: 0s; */
+}
+
+.ng-enter.ng-enter-active,
+.ng-show {
+    transition: 0.1s linear all;
+    opacity: 1;
+}
+
+
+
+.modal-backdrop.fade {
+    opacity: 0.5; //overite
+}
+
+.fade-in {
+    -webkit-transition: 0.1s linear all;
+    transition: 0.1s linear all;
+}
+
+.fade-in.ng-enter {
+    opacity: 0;
+}
+
+.fade-in.ng-enter.ng-enter-active {
+    opacity: 1;
+}
+
+.fade-in.ng-leave {
+    opacity: 1;
+} 
+
+.fade-in.ng-leave.ng-leave-active {
+    opacity: 0;
+}
+
+.strike{
+    width: 100%; 
+
+    border-bottom: 2px solid $body-color;
+}
+

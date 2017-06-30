@@ -16,12 +16,11 @@ var uglify = require('gulp-uglify');
 var csso = require('gulp-csso');
 var wiredep = require('wiredep').stream;
 var gutil = require('gulp-util');
-var minifyHtml = require('gulp-htmlmin');
-var angularTemplatecache = require('gulp-angular-templatecache');
 var pathExists = require('path-exists');
 var concat = require('gulp-concat');
 var glob = require('glob');
 var config = require('./config');
+var ngAnnotate = require('gulp-ng-annotate');
 
 // for vetting code
 var print = require('gulp-print');
@@ -35,7 +34,7 @@ var port = process.env.PORT || config.SERVER_PORT;
 var APP_PATH = config.APP_PATH;
 var DIST_PATH = config.DIST_PATH;
 var WIREDEB_FINISHED = false;
-
+var INITIAL_LOAD = false;
 
 
 /**
@@ -48,6 +47,15 @@ gulp.task('clean', function (done) {
   del(['./public/dist/'], done);
 });
 
+/**
+ * 
+ * @reload browserSync
+ * 
+ */
+function reloadBrowserSync() {
+  if (INITIAL_LOAD === true)
+    browserSync.reload();
+}
 
 /**
  * 
@@ -98,15 +106,16 @@ gulp.task('styles', function () {
     directory: './public/bower_components',
   };
 
-
   return gulp.src(APP_PATH + '/scss/main.scss')
     .pipe(wiredep())
     .pipe(inject(injectGlobalFiles, injectGlobalOptions))
     .pipe(inject(injectAppFiles, injectAppOptions))
     .pipe(sass())
     .pipe(csso())
-    .pipe(gulp.dest(DIST_PATH + '/styles'));
-
+    .pipe(gulp.dest(DIST_PATH + '/styles'))
+    .on('finish', function () {
+      reloadBrowserSync();
+    });
 });
 
 /**
@@ -121,60 +130,29 @@ gulp.task('typescript', function () {
     APP_PATH + '/scripts/**/*.ts'];
 
   return gulp.src(tsSources)
+    
     .pipe(tsProject())
+    .pipe(ngAnnotate())
     .pipe(rename({ dirname: '' }))// remove dir structure copy
     .pipe(sourcemaps.init())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(DIST_PATH + '/js'))
-})
-
-
-/**
- * 
- * @angular-templates
- * @disabled not in use in faver of server, no need for caching templates
- */
-
-gulp.task('angular-templates-typescript', ['typescript'], function () {
-
-  var templateCache = {
-    file: 'templates.js',
-    options: {
-      module: 'app.core',
-      root: 'dist/js',
-      standAlone: false
-    }
-  }
-
-  return gulp.src(APP_PATH + '/scripts/**/*.html')
-
-    .pipe(rename({ dirname: '' }))
-    .pipe(minifyHtml({ collapseWhitespace: true }))
-    .pipe(angularTemplatecache(
-      templateCache.file,
-      templateCache.options
-    ))
+    .pipe(sourcemaps.write('.'))  
     .pipe(gulp.dest(DIST_PATH + '/js'))
     .on('finish', function () {
-
-      /**
-       * once finished with TS to js, run VET for js code checking
-       */
-
-      //gulp.start('vet-js', function () { });
+      reloadBrowserSync();
     });
-});
+})
+
 
 gulp.task('move-html-templates', function () {
 
   var htmlfiles = APP_PATH + '/scripts/**/*.html';
-
-  var stream;
   glob(htmlfiles, {}, function (er, files) {
-    stream = gulp.src(files)
-      .pipe(gulp.dest(DIST_PATH + '/js'));
+    gulp.src(files)
+      .pipe(gulp.dest(DIST_PATH + '/js'))
+      .on('finish', () => {
+        reloadBrowserSync();
+      })
   })
-  return stream;
 });
 
 
@@ -199,63 +177,13 @@ gulp.task('vet-js', function () {
 
 
 
-/**
- * 
- * @ assets reloaders
- * 
- */
-
-gulp.task('ts-to-js-watch', ['angular-templates-typescript'], function (done) {
-
-  setTimeout(function () {
-    browserSync.reload();
-    done();
-  }, 500);
-
-});
-
-gulp.task('typescript-watch', ['typescript'], function (done) {
-
-  setTimeout(function () {
-    browserSync.reload();
-    done();
-    console.log('reloading typescript')
-  }, 1000);
-
-});
-
-gulp.task('style-change', ['styles'], function (done) {
-
-  setTimeout(function () {
-    browserSync.reload();
-    done();
-    console.log('reloading styles')
-  }, 500);
-});
-
-gulp.task('wiredep-index-watch', ['wiredep-index'], function (done) {
-  browserSync.reload();
-  done();
-  console.log('reloading wiredep-index')
-});
-
-
-gulp.task('move-html-templates-watch', ['move-html-template'], function (done) {
-  setTimeout(function () {
-    browserSync.reload();
-    done();
-    console.log('reloading move-html-template')
-  }, 500);
-});
 
 
 gulp.task('watch', function () {
-
-  gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript-watch']);
-  //gulp.watch(APP_PATH + "/scripts/**/*.ts", ['ts-to-js-watch']);
-  gulp.watch(APP_PATH + "/scss/*.scss", ['style-change']);
-  gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates-watch']);
-  gulp.watch('./src' + "/index.html", ['wiredep-index-watch']);
+  gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript']);
+  gulp.watch(APP_PATH + "/scss/*.scss", ['styles']);
+  gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates']);
+  gulp.watch('./src' + "/index.html", ['wiredep-index']);
 });
 
 
@@ -267,8 +195,6 @@ gulp.task('watch', function () {
 
 gulp.task('wiredep-index', function (cb) {
 
-
-  var fileVer = Math.random() * (10 - 5) + 5;
   var injectJSFiles = gulp.src([
     DIST_PATH + '/js/*.js',
     '!' + DIST_PATH + '/js/app.js',
@@ -280,20 +206,12 @@ gulp.task('wiredep-index', function (cb) {
     starttag: '<!-- inject:css -->',
     endtag: '<!-- endinject -->',
     addRootSlash: false,
-    ignorePath: ['src', 'public'],
-    //add file caching
-    transform: function (filepath, file, i, length) {
-      return "<link rel='stylesheet' href='" + filepath + '?=' + fileVer + "'/>"
-    }
+    ignorePath: ['src', 'public']
   };
 
   var injectJSOptions = {
     addRootSlash: false,
-    ignorePath: ['src', 'public'],
-    //add file caching
-    transform: function (filepath, file, i, length) {
-      return "<script src='" + filepath + '?=' + fileVer + "'></script>"
-    }
+    ignorePath: ['src', 'public']
   };
 
 
@@ -309,30 +227,21 @@ gulp.task('wiredep-index', function (cb) {
       {
         starttag: '<!-- inject:app:{{ext}} -->',
         addRootSlash: false,
-        ignorePath: ['src', 'public'],
-        //add file caching
-        transform: function (filepath, file, i, length) {
-          return "<script src='" + filepath + '?=' + fileVer + "'></script>"
-        }
+        ignorePath: ['src', 'public']
       }))
 
     .pipe(inject(gulp.src(DIST_PATH + '/js/app.core.js', { read: false }),
       {
         starttag: '<!-- inject:appcore:{{ext}} -->',
         addRootSlash: false,
-        ignorePath: ['src', 'public'],
-        //add file caching
-        transform: function (filepath, file, i, length) {
-          return "<script src='" + filepath + '?=' + fileVer + "'></script>"
-        }
+        ignorePath: ['src', 'public']
       }))
-
     .pipe(inject(injectCSSFiles, injectCSSOptions))
     .pipe(inject(injectJSFiles, injectJSOptions))
     .pipe(gulp.dest('./public')).on('finish', function () {
       WIREDEB_FINISHED = true;
+      reloadBrowserSync();
     });
-
 })
 
 
@@ -351,7 +260,6 @@ gulp.task('wiredep', ['styles', 'move-html-templates', 'typescript',], function 
 
   });
   done();
-
 });
 
 
@@ -368,10 +276,8 @@ gulp.task('all', ['clean'], function (done) {
     // gutil.log('Ready!', 'local:', gutil.colors.magenta('http:localhost:' + port));
     gutil.log('-------------------------');
   })
-
   done();
 });
-
 
 
 /** 
@@ -448,6 +354,8 @@ gulp.task('default', ['all', 'watch'], function () {
       }, 1300);
     })
     .on('start', function () {
+      INITIAL_LOAD = true;
+
       gutil.log('*** nodemon and browserSync started');
 
       /**

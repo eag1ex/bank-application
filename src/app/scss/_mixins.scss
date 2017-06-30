@@ -1,0 +1,43 @@
+//----------------------------
+// @_mixins.scss
+//----------------------------
+
+@mixin box-shadow($shadow1, $shadow2:false, $shadow3:false, $shadow4:false, $shadow5:false) {
+    $params: $shadow1;
+    @if $shadow2 {
+        $params: $shadow1, $shadow2;
+    }
+    @if $shadow3 !=false {
+        $params: $shadow1, $shadow2, $shadow3;
+    }
+    @if $shadow4 !=false {
+        $params: $shadow1, $shadow2, $shadow3, $shadow4;
+    }
+    @if $shadow5 !=false {
+        $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5;
+    }
+    -webkit-box-shadow: $params;
+    -moz-box-shadow: $params;
+    box-shadow: $params;
+}
+
+@mixin reset-button() {
+    border: none!important;
+    border-color: transparent!important;
+    padding: 0!important;
+    margin: 0!important;
+    background: none!important;
+    background-color: transparent!important;
+    color: #fff!important;
+}
+
+@mixin reset-input() {
+    border: none!important;
+    border-color: transparent!important;
+    background: none!important;
+    background-color: transparent!important;
+    color: #fff!important;
+    padding: 0;
+    margin: 0;
+}
+

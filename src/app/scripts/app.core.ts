@@ -1,32 +1,32 @@
 declare var API_MAIN;
 
-module app {
+module app.core {
   'use strict';
   angular.module('app.core', []);
 
   angular
     .module('app.core')
-    .config(configureStates)
+    .config(configure)
     .run(appRun)
     .constant('_', window._)
-    .constant('API', {'URL':"http:"+API_MAIN,  'DATA':null})
+    .constant('API', {'URL':"http:"+API_MAIN,  'DATA':null});
 
-  appRun['$inject'] = ['$rootScope','$timeout'];
+  /* @ngInject */
   function appRun($rootScope,$timeout) {
-       //////// run fake server
+
    // httpbackedMockService.run();
 
       //lodash globaly
         $rootScope._ = window._;
         $rootScope.angularLoader = 0;
-        $rootScope.$on("$stateChangeSuccess", function(){       
+        $rootScope.$on("$stateChangeSuccess", ()=>{     
           console.log('angular Loaded');
         });     
-  }
+  };
 
-  configureStates['$inject'] = ['$stateProvider', '$locationProvider', '$urlRouterProvider','$qProvider'];
+
   /* @ngInject */
-  function configureStates($stateProvider, $locationProvider, $urlRouterProvider,$qProvider) {
+  function configure($stateProvider, $locationProvider, $urlRouterProvider,$qProvider) {
 
     $qProvider.errorOnUnhandledRejections(false);
     $locationProvider.html5Mode(true);
@@ -67,5 +67,4 @@ module app {
       }
     ];
   }
-}
-
+};

@@ -20,7 +20,7 @@
   ],
   "author": "Michael",
   "url": "http://creativeatwork.net",
-  "license":"CC BY",
+  "license": "CC BY",
   "engine": {
     "node": ">=6.9.4",
     "node-sass": "^3.10.10"
@@ -35,7 +35,7 @@
     "url": "#"
   },
   "devDependencies": {
-    "angular-mocks": "^1.6.3",
+    "babel-plugin-angularjs-annotate": "^0.7.0",
     "body-parser": "^1.17.2",
     "browser-sync": "^2.18.8",
     "cors": "^2.8.3",
@@ -44,14 +44,13 @@
     "fs": "0.0.1-security",
     "glob": "^7.1.2",
     "gulp": "^3.8.11",
-    "gulp-angular-templatecache": "^2.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-csso": "^1.0.0",
-    "gulp-htmlmin": "^3.0.0",
     "gulp-if": "^2.0.2",
     "gulp-inject": "^4.2.0",
     "gulp-jscs": "^4.0.0",
     "gulp-jshint": "^2.0.4",
+    "gulp-ng-annotate": "^2.0.0",
     "gulp-print": "^2.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.1",

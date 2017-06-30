@@ -1,5 +1,5 @@
 {
-  "name": "angulat-trello",
+  "name": "bank-application",
   "version": "0.0.1",
   "author": "Michael",
   "url": "http://creativeatwork.net",
@@ -7,7 +7,6 @@
     "CC BY",
     "https://creativecommons.org/licenses/"
   ],
-  
   "ignore": [
     "**/.*",
     "node_modules",
@@ -15,7 +14,6 @@
     "test",
     "tests"
   ],
-  
   "overrides": {
     "bootstrap-sass": {
       "ignore": true
@@ -25,20 +23,20 @@
     }
   },
   "dependencies": {
-    "jquery": "3.2.1",
+    "jquery": "^3.2.1",
     "angular": "^1.6.4",
     "angular-sanitize": "1.6.4",
     "bootstrap": "v4.0.0-alpha.6",
     "angular-animate": "1.6.4",
     "angular-ui-router": "0.4.2",
-    "angular-mocks": "^1.6.4",
     "angular-bootstrap": "^2.5.0",
     "lodash": "^4.17.4",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "AngularJS-Toaster": "angularjs-toaster#^2.1.0"
   },
   "resolutions": {
-    "jquery": "3.2.1",
+    "jquery": "^3.2.1",
     "bootstrap": "v4.0.0-alpha.6",
-     "angular": "^1.6.4"
+    "angular": "^1.6.4"
   }
 }

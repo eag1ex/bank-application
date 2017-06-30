@@ -1,174 +1,10 @@
 //@import "compass/css3";
-// include animation before app loads
+@import '_mixins';
+@import '_presets';
 @import '_preloader';
-
-
 //----------------------------
 // @layout.scss
 //----------------------------
-//----------------------------
-//colors
-//mixins --------------------
-@mixin box-shadow($shadow1, $shadow2:false, $shadow3:false, $shadow4:false, $shadow5:false) {
-    $params: $shadow1;
-    @if $shadow2 {
-        $params: $shadow1, $shadow2;
-    }
-    @if $shadow3 !=false {
-        $params: $shadow1, $shadow2, $shadow3;
-    }
-    @if $shadow4 !=false {
-        $params: $shadow1, $shadow2, $shadow3, $shadow4;
-    }
-    @if $shadow5 !=false {
-        $params: $shadow1, $shadow2, $shadow3, $shadow4, $shadow5;
-    }
-    -webkit-box-shadow: $params;
-    -moz-box-shadow: $params;
-    box-shadow: $params;
-}
-
-@mixin reset-button() {
-    border: none!important;
-    border-color: transparent!important;
-    padding: 0!important;
-    margin: 0!important;
-    background: none!important;
-    background-color: transparent!important;
-    color: #fff!important;
-}
-
-@mixin reset-input() {
-    border: none!important;
-    border-color: transparent!important;
-    background: none!important;
-    background-color: transparent!important;
-    color: #fff!important;
-    padding: 0;
-    margin: 0;
-}
-
-$bkg-color:#0275d8;
-html,
-body {
-    background: $bkg-color!important;
-}
-
-.angular-app-include {
-    opacity: 0;
-}
-
-.center {
-    margin: 0 auto;
-    text-align: center;
-}
-
-.unl {
-    text-decoration: underline;
-}
-  
-.neg-l-25 {
-    margin-left: -25px;
-}
-
-.r-input {
-    @include reset-input();
-}
-
-.r-btn {
-    @include reset-button();
-}
-
-html .hide-me {
-    display: none!important;
-}
-
-//---------- overites
-.strong,
-.bold {
-    font-weight: bold;
-}
-
-i.c1 {
-    color: #000;
-}
-
-i.c2 {
-    color: #555;
-}
-
-i.c3 {
-    color: #999
-}
-
-//-------------------- ng-animate
-.animate-enter {
-    -webkit-transition: 1s linear all;
-    /* Chrome */
-    transition: 1s linear all;
-    opacity: 0;
-}
-
-.animate-enter-active {
-    opacity: 1;
-}
-
-.ng-enter,
-.ng-hide {
-    /* standard transition code */
-    transition: 0.1s linear all;
-    opacity: 0;
-}
-
-.ng-enter-stagger {
-    /* this will have a 100ms delay between each successive leave animation */
-    transition-delay: 0.1s;
-    /* As of 1.4.4, this must always be set: it signals ngAnimate
-    to not accidentally inherit a delay property from another CSS class */
-    transition-duration: 0s;
-    /* if you are using animations instead of transitions you should configure as follows:
-    animation-delay: 0.1s;
-    animation-duration: 0s; */
-}
-
-.ng-enter.ng-enter-active,
-.ng-show {
-    transition: 0.1s linear all;
-    opacity: 1;
-}
-
-.modal-backdrop.fade {
-    opacity: 0.5; //overite
-}
-
-.fade-in {
-    -webkit-transition: 0.1s linear all;
-    transition: 0.1s linear all;
-}
-
-.fade-in.ng-enter {
-    opacity: 0;
-}
-
-.fade-in.ng-enter.ng-enter-active {
-    opacity: 1;
-}
-
-.fade-in.ng-leave {
-    opacity: 1;
-} 
-
-.fade-in.ng-leave.ng-leave-active {
-    opacity: 0;
-}
-
-.strike{
-    width: 100%; 
-
-    border-bottom: 2px solid $body-color;
-}
-
-
 nav {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     project-name {
@@ -198,25 +34,41 @@ nav {
     }
 }
 
-application{
-    
-    form#application-form{
-        .hide{
+application {
+    form#application-form {
+        .input-group {
+            position: relative;
+            span.required {
+                color: red;
+                font-size: 15px;
+                position: absolute;
+                display: block;
+                top: 1px;
+                right: 4px;
+                z-index: 2;
+            }
+        }
+        .hide {
             display: none;
         }
-        div.form-group{
-            label.section-label{
+        div.form-group {
+            label.section-label {
                 justify-content: left;
-                text-align: left; 
+                text-align: left;
             }
         }
     }
-    
 }
 
+footer {
+    position: relative;
+    bottom: 5px;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+}
 
 //buttons------------------------
-
 // forms -----------------------
 textarea.form-control {
     border: 1px solid rgba(0, 0, 0, .03);
