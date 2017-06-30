@@ -47,27 +47,29 @@
 
                     </div>
                     <!-- inline-section -->
+
                     <div class="form-inline inline-section mb-3 w-100">
                         <label class="col-form-label w-100 section-label">Your Phone:-</label>
                         <div myvalidation="{field:appForm.homePhone, has:'input', 
                             bothValid:appForm.homePhone.$valid===appForm.homePhonePre.$valid}" class="input-group mb-2 mb-sm-0 mx-0">
-                            <input ng-pattern="/[0-9]$/" required ng-maxlength="5" ng-init="vm.APPFORM.one.homePhonePre=(vm.APPFORM.one.homePhonePre)? vm.APPFORM.one.homePhonePre:'';"
-                                ng-model="vm.APPFORM.one.homePhonePre" name="homePhonePre" type="number" class="form-control"
+                            <input validnumber required ng-maxlength="5" ng-init="vm.APPFORM.one.homePhonePre=(vm.APPFORM.one.homePhonePre)? vm.APPFORM.one.homePhonePre:'';"
+                                ng-model="vm.APPFORM.one.homePhonePre" name="homePhonePre" type="text" class="form-control"
                                 id="" placeholder="+">
                             <span class=required>*</span>
 
-                            <input ng-init="vm.APPFORM.one.homePhone=(vm.APPFORM.one.homePhone)? vm.APPFORM.one.homePhone:'';" required ng-pattern="/[0-9_-]$/"
-                                ng-model="vm.APPFORM.one.homePhone" name="homePhone" type="number" class="form-control w-75"
+                            <input ng-init="vm.APPFORM.one.homePhone=(vm.APPFORM.one.homePhone)? vm.APPFORM.one.homePhone:'';" required 
+                                validnumber
+                                ng-model="vm.APPFORM.one.homePhone" name="homePhone" type="text" class="form-control w-75"
                                 id="" placeholder="Home Phone">
                             <span class=required>*</span>
-                        </div>
+                        </div>  
 
                         <div myvalidation="{field:appForm.mobile, has:'input',
                                    bothValid:appForm.mobilePre.$valid===appForm.mobile.$valid}" class="input-group mb-2 mb-sm-0 mx-0">
                             <input ng-maxlength="5" ng-init="vm.APPFORM.one.mobilePre=(vm.APPFORM.one.mobilePre)? vm.APPFORM.one.mobilePre:'';" ng-model="vm.APPFORM.one.mobilePre"
-                                name="mobilePre" type="number" class="form-control" id="" placeholder="+">
+                                name="mobilePre" type="text" validnumber class="form-control" id="" placeholder="+">
                             <input ng-init="vm.APPFORM.one.mobile=(vm.APPFORM.one.mobile)? vm.APPFORM.one.mobile:'';" ng-model="vm.APPFORM.one.mobile"
-                                name="mobile" type="number" class="form-control w-75" id="" placeholder="Mobile Phone">
+                                name="mobile" type="text" validnumber class="form-control w-75" id="" placeholder="Mobile Phone">
                         </div>
                     </div>
                     <!-- inline-section -->
@@ -98,7 +100,7 @@
                                 required ng-pattern="/[a-zA-Z0-9]$/" name="securityNumber" type="text" class="form-control" id="" placeholder="Security Number">
                             <span class=required>*</span>
                         </div>
-                        {{appForm.securityNumber}}
+  
                     </div>
                     <!-- inline-section -->
 
@@ -149,10 +151,10 @@
                         has:'input',bothValid:appForm.workPhonePre.$valid===appForm.workPhone.$valid}"
                         class="input-group mb-2 mb-sm-0 mx-0">
                             <input ng-maxlength="5" ng-init="vm.APPFORM.two.workPhonePre=(vm.APPFORM.two.workPhonePre)? vm.APPFORM.two.workPhonePre:'';"
-                                ng-model="vm.APPFORM.two.workPhonePre" name="workPhonePre" type="number" class="form-control"
+                                ng-model="vm.APPFORM.two.workPhonePre" name="workPhonePre" type="text" validnumber class="form-control"
                                 id="" placeholder="+">
                             <input ng-init="vm.APPFORM.two.workPhone=(vm.APPFORM.two.workPhone)? vm.APPFORM.two.workPhone:'';" ng-model="vm.APPFORM.two.workPhone"
-                                name="workPhone" type="number" class="form-control w-75" id="" placeholder="Work Phone">
+                                name="workPhone" type="text" validnumber class="form-control w-75" id="" placeholder="Work Phone" validnumber>
                         </div>
 
                     </div>

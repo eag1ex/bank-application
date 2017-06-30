@@ -20,13 +20,13 @@ module app.core {
         $rootScope._ = window._;
         $rootScope.angularLoader = 0;
         $rootScope.$on("$stateChangeSuccess", ()=>{     
-          console.log('angular Loaded');
+             console.log('angular Loaded');
         });     
   };
+  
 
-
-  /* @ngInject */
-  function configure($stateProvider, $locationProvider, $urlRouterProvider,$qProvider) {
+  /* @ngInject */ 
+  function configure($stateProvider, $locationProvider, $urlRouterProvider,$qProvider, $httpProvider) {
 
     $qProvider.errorOnUnhandledRejections(false);
     $locationProvider.html5Mode(true);

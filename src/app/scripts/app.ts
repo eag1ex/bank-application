@@ -1,4 +1,4 @@
-//avoid compailer error messages
+//avoid compailer error messages   
 declare var angular: any;
 declare var _: any;
 declare var $: any;
@@ -7,13 +7,13 @@ module app {
   angular.module('app', [
     // dependant
     'ui.router',
-    'ngAnimate',
+    'ngAnimate',  
     
     //'ngMockE2E', couses template not loading
     //'dndLists',
 
    // 'app.mockData',
-   // 'app.data.dataservice',
+   'app.dataservice',
    // 'app.data.httpMock',
     'app.core',
     'app.layout',
@@ -21,7 +21,8 @@ module app {
     'app.welcome',
     'app.application',
   //  'app.applicationForm',
+    'app.validateNumber',
     'app.appNumber',
     'app.myvalidation'
   ]);
-}
+}  

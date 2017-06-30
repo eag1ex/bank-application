@@ -55,6 +55,7 @@ gulp.task('clean', function (done) {
 function reloadBrowserSync() {
   if (INITIAL_LOAD === true)
     browserSync.reload();
+    console.log('reloading browser?')
 }
 
 /**

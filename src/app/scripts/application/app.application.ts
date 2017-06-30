@@ -5,6 +5,7 @@ module app.application {
     public APPFORM: any;
     public application: Object;
     public newAppForm: any;
+    public dummy: any;
 
     /* @ngInject */
     constructor(
@@ -12,34 +13,54 @@ module app.application {
       public $element: any,
       public $document: any,
       public $timeout: any,
-      public $q: any
+      public $q: any,
+      private dataservice
+
     ) {
+      this.dummy = {
+        tok: 'sdfsdf345sw'
+      }
 
 
       /**
        * 
        * we need to extend our APPFORM with appFormClass
        */
-
+      this.APPFORM = {};
+      let _t = this;
       let appFormClass = function (val = 'one') {
+
         this.one = { index: 9, valid: false, className: ".step-one" };
         this.two = { index: 4, valid: false, className: ".step-two" };
         this.three = { index: 3, valid: false, className: ".step-three" };
         this.final = { index: 1, valid: false, className: ".step-final" };
 
-        this.data = Object.assign({}, { one: this.one }, { two: this.two }, { three: this.three }, { final: this.final });
-
-        this.nextClass = (v=val) => {
+        this.data = Object.assign({}, { one: _t.APPFORM.one }, { two: _t.APPFORM.two },
+            { three: _t.APPFORM.three }, { final: _t.APPFORM.final });         
+        
+        this.nextClass = (v = val) => {
           var next = 0;
           for (var key in this.data) {
-            if (next ===1) return this.data[key].className;
-            if (key === v)  next++;          
+            if (next === 1) return this[key].className;
+            if (key === v) next++;
           }
         }
       }
-      this.APPFORM = {};
-      Object.assign(this.APPFORM, new appFormClass());
-      console.log('this.APPFORM', this.APPFORM)
+      
+      /**
+       *  initially we check for data, then we set data to varriable, next we merge with appformClass
+       */
+
+      this.dataservice.getById(this.dummy.tok).then((data) => {
+        this.APPFORM =data.form;
+        return this.APPFORM;
+      }).then((data)=>{
+        this.APPFORM = _.merge(data, new appFormClass());
+         console.log('this.APPFORM', this.APPFORM)
+      },(err)=>{
+        this.APPFORM = new appFormClass();
+        console.log('no APPFORM',err)
+      })
 
       /*
       for (var key in this.APPFORM) {
@@ -67,13 +88,13 @@ module app.application {
         console.log(data, 'form stage valid');
         console.log(this.APPFORM[data.step])
       }
-      
-      if (!data.resolution){
-          this.collapse(data.next, 'hide');
-          console.log(data, 'form stage not valid');
-          console.log('invalid elms', data.invals)
+
+      if (!data.resolution) {
+        this.collapse(data.next, 'hide');
+        console.log(data, 'form stage not valid');
+        console.log('invalid elms', data.invals)
       }
-     
+
     }
 
     checkFormStepsValid(step) {
@@ -131,7 +152,7 @@ module app.application {
         // show all invalid fields        
         this.manualExecuteValidation(this.APPFORM[step].className);
 
-        console.log('this.APPFORM.nextClass()',step, this.APPFORM.nextClass(step))
+        console.log('this.APPFORM.nextClass()', step, this.APPFORM.nextClass(step))
 
       }
 

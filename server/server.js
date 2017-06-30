@@ -208,7 +208,7 @@ function removeModel(name) {
 
 
 
-apiRoutes.get('/', function (req, res) {
+apiRoutes.get('/all', function (req, res) {
 
     var query = Bankuser.where({ userID: '34456324234' });
     // console.log('query',query)
@@ -230,9 +230,34 @@ apiRoutes.get('/', function (req, res) {
             console.log('we found your obj', obj)
         }
     });
-
-
 });
+
+apiRoutes.get('/:token', function (req, res) {
+    console.log('req.params.token',req.params.token );
+    
+    var query = Bankuser.where({ token: req.params.token });
+    query.findOne(function (err, obj) {
+        if (obj === null) {
+            res.json({
+                message: 'no data found',
+                success: false
+            })
+            res.status(404);
+        }
+
+        if (err) return handleError(err);
+
+        if (obj) {
+            res.json({
+                message: 'data received',
+                success: true,
+                data:obj
+            });
+        }
+    });
+});
+
+
 
 myapp.get(['/', '/application'], (req, res, next) => {
     res.render('index', {
