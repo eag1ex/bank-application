@@ -2,6 +2,27 @@ module app.application {
   'use strict';
   export class MainController {
 
+/**
+ * 
+ * The APPFORM models are dynamicly created on the html template with ng-init,
+ * when equired we merge it with appFormClass.
+ * 
+ * The form name values use {common name space} for ease of use for example:
+ * ngInit/ngModel=vm.APPFORM.one.homePhone  == name=homePhone
+ * ngInit/ngModel=vm.APPFORM.one.homePhonePre == homePhonePre
+ * 
+ * First we extend our APPFORM with appFormClass then we wait for new data if available,
+ * for existing user we merge the object with new data.
+ * We check for validation of each steps using checkFormStepsValid()
+ * which tne calls initFormSteps() to make decision of the next form STEP.
+ * 
+ * FUNCTION manualExecuteValidation() forces the uivalidation directive to reinitialize the ui.
+ * 
+ */
+
+
+
+
     public APPFORM: any;
     public application: Object;
     public newAppForm: any;
@@ -48,6 +69,7 @@ module app.application {
       }
       
       /**
+       * 
        *  initially we check for data, then we set data to varriable, next we merge with appformClass
        */
 
@@ -103,7 +125,6 @@ module app.application {
       var index = 0;
       var elements = this.$scope.appForm;
       var formValid = false;
-      var isDirty = false;
       var checkIndex = [];
       var invalidElms = {}
       for (var key in elements) {
@@ -121,9 +142,8 @@ module app.application {
             invalidElms[key] = elements[key];
             formValid = false;
           }
-
-        }
-      }
+        }//IF
+      }//FOR
 
       for (let i = 0; i < checkIndex.length; i++) {
         if (checkIndex[i] === false) {
@@ -143,7 +163,6 @@ module app.application {
         this.initFormSteps(data);
         // show all valid fields   
         this.manualExecuteValidation(this.APPFORM[step].className);
-
       }
       if (!formValid) {
         this.APPFORM[step].valid = false;
@@ -151,14 +170,17 @@ module app.application {
         this.initFormSteps(data);
         // show all invalid fields        
         this.manualExecuteValidation(this.APPFORM[step].className);
-
         console.log('this.APPFORM.nextClass()', step, this.APPFORM.nextClass(step))
-
       }
 
     }//
 
     manualExecuteValidation(el) {
+
+      /**
+       * ==DOTOS
+       * STILL MISSING THE 'SELECT' LOGIC
+       */
       var elm;
       if ($(el).has('input').length > 0) {
         elm = $(el).find('.input-group>input');
