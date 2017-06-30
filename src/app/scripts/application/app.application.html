@@ -15,7 +15,7 @@
 
                         <label class="col-form-label w-100 section-label">Your Name:-</label>
 
-                        <div class="input-group mb-2 mb-sm-0 mt-2" myvalidation="{field:appForm.title, has:'select'}">
+                        <div class="input-group input-group-select mb-2 mb-sm-0 mt-2" myvalidation="{field:appForm.title, has:'select'}">
                             <select ng-init="vm.APPFORM.one.title=(vm.APPFORM.one.title)? vm.APPFORM.one.title:'';" required ng-model="vm.APPFORM.one.title"
                                 name="title" class="custom-select mb-2 mr-1 mb-sm-0 px-2" id="inlineFormCustomSelect">
                                 <option value='' selected>Title</option>
@@ -24,7 +24,7 @@
                                 <option value="MRS">MRS.</option>
                                 <option value="DR">DR.</option>
                             </select>
-                            <small class="form-text text-muted"></small>
+                            <span class=required>*</span>
                         </div>
 
                         <div myvalidation="{field:appForm.firstName, has:'input'}" class="input-group mb-2 mb-sm-0 mr-1 mt-2">
@@ -171,7 +171,7 @@
                         <label class="col-form-label w-100 section-label">Account Type:-</label>
                         <div 
                         myvalidation="{field:appForm.accountType, has:'select'}"
-                        class="input-group mb-2 mb-sm-0 w-25">
+                        class="input-group mb-2 mb-sm-0 w-25 input-group-select">
                             <select ng-init="vm.APPFORM.three.accountType=(vm.APPFORM.three.accountType)? vm.APPFORM.three.accountType:'';" ng-model="vm.APPFORM.three.accountType"
                                 name="accountType" required class="custom-select mb-2 mr-1 mb-sm-0 px-2" id="inlineFormCustomSelect">
                                 <option value="" selected>Type</option>

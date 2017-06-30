@@ -36,7 +36,7 @@ nav {
 
 application {
     form#application-form {
-        .input-group {
+        .input-group, .input-group-select  {
             position: relative;
             span.required {
                 color: red;

@@ -75,9 +75,9 @@ var storage = multer.diskStorage({
         cb(null, __dirname + '\\images')
     },
     filename: (req, file, cb) => {
-       
+
         let ext = file.originalname.split('.');
-         console.log('uploading filename',ext)
+        console.log('uploading filename', ext)
         ext = ext[ext.length - 1];
         cb(null, 'uploads-' + Date.now() + '.' + ext);
     }
@@ -109,10 +109,10 @@ apiRoutes.post('/upload', (req, res) => {
         if (err) {
             return res.end("Error uploading file.");
         }
-           
+
         res.status(200).json({
             file: req.protocol + '://' + req.get('host') + '/images/' + req.file.originalname,
-            response:req.file
+            response: req.file
         })
     });
 
@@ -129,6 +129,9 @@ apiRoutes.get('/remove', function (req, res) {
     });
 });
 
+
+//https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
+//https://stackoverflow.com/questions/21497639/how-to-get-id-from-url-in-express-param-and-query-doesnt-seem-to-work#21498520
 apiRoutes.get('/setup', function (req, res) {
 
     //console.log('model is found', findModel('bankuser'))
@@ -143,24 +146,22 @@ apiRoutes.get('/setup', function (req, res) {
     }
 
     // create
-    var newIndex = [];
-    for (var i = 0; i < jsonData.data.length; i++) {
-        newIndex.push(jsonData.data[i]);
-    }
-
-    var obj1 = new Bankuser({
-        name: 'user',
-        indexes: newIndex
-    });
+    let user1 =new Bankuser(
+        {
+            token: jsonData.data[0].token,
+            userID: jsonData.data[0].userID,
+            form: jsonData.data[0].form
+        });
 
     // save
-    obj1.save(function (err) {
+    user1.save(function (err) {
         if (err) throw err;
 
-        console.log('saved successfully', obj1);
+        console.log('saved successfully', user1);
         res.json({
             message: 'populated db for jsonfile',
-            success: true
+            success: true,
+            data:user1
         });
     });
 
@@ -209,7 +210,7 @@ function removeModel(name) {
 
 apiRoutes.get('/', function (req, res) {
 
-    var query = Bankuser.where({ name: 'user' });
+    var query = Bankuser.where({ userID: '34456324234' });
     // console.log('query',query)
     query.findOne(function (err, obj) {
         if (obj === null) {
@@ -225,7 +226,7 @@ apiRoutes.get('/', function (req, res) {
         if (err) return handleError(err);
         if (obj) {
             // res.json(jsonData.data)
-            res.json(obj.indexes)
+            res.json(obj)
             console.log('we found your obj', obj)
         }
     });
@@ -233,19 +234,19 @@ apiRoutes.get('/', function (req, res) {
 
 });
 
-myapp.get(['/','/application'], (req, res, next) => {
+myapp.get(['/', '/application'], (req, res, next) => {
     res.render('index', {
         /**
          * render server address API_MAIN in index.html
          * not working at moment??
          */
-        API_MAIN: "http://localhost:" + app.get('port')+"/api"
+        API_MAIN: "http://localhost:" + app.get('port') + "/api"
     });
 })
 
 
 
-app.get('/application',function (req, res, next) {
+app.get('/application', function (req, res, next) {
     res.redirect('/app');
 });
 
