@@ -71,6 +71,10 @@ gulp.task('styles', function () {
   gulp.src(APP_PATH + '/scss/*.svg')
     .pipe(gulp.dest(DIST_PATH + '/styles'));
 
+  //  mobe images  
+  gulp.src(APP_PATH + '/scss/images/*.*')
+    .pipe(gulp.dest(DIST_PATH + '/styles/images'));
+
   // move font-awesome to dist  manually
   var fontAwesomePath = './public/bower_components/font-awesome/';
 

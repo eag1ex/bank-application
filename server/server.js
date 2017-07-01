@@ -340,17 +340,15 @@ apiRoutes.get('/:token', function (req, res) {
 });
 
 
-
-myapp.get(['/', '/application'], (req, res, next) => {
+//give access to these pages
+myapp.get(['/', '/application','/tc'], (req, res, next) => {
     res.render('index', {
         /**
          * render server address API_MAIN in index.html
-         * not working at moment??
          */
         API_MAIN: "http://localhost:" + app.get('port') + "/api"
     });
 })
-
 
 
 app.get('/application', function (req, res, next) {

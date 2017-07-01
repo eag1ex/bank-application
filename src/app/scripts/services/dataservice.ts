@@ -1,16 +1,26 @@
 module app.data {
   'use strict';
 
-
   export class DataService {
     /* @ngInject */
+
+    private GLOBALS:any={};
+
     private user_exists:any;
-    private user_exists_data:any;
+    private user_data_cached:any;
     constructor(private $http,
       private $q, private API) {
 
     }
 
+    public GLOB(){
+      let cached = this.user_data_cached;
+      return {
+        terms:  (this.GLOBALS.terms) ? this.GLOBALS.terms:undefined,
+        token: (cached) ? cached.data.token:undefined,
+        cached:this.user_data_cached || undefined,
+        G:this.GLOBALS};
+    }
 
     getAll() {
       return this.$http.get(this.API.URL+"/all")
@@ -28,18 +38,48 @@ module app.data {
         .catch(this.fail);
     }
 
-    resetData(){
+    resetExisting(){
       this.user_exists='';
     }
 
-    registerUser(token) {
+    clearAllCache(){
+      this.user_data_cached=undefined;
+      this.GLOBALS = {};
+    }
 
-      if(this.user_exists){
+    checkDataRetention(){
+      let failed = false;
+      if (this.user_data_cached && (this.GLOBALS.token==undefined || !this.GLOBALS.token) ){
+         this.clearAllCache(); failed = true;
+         console.log('token not valid, but have cached data', 'decline');
+      }
+      if(this.user_data_cached && (this.GLOBALS.terms==undefined || !this.GLOBALS.terms)){
+         this.clearAllCache(); failed = true;
+          console.log('terms not valid, but have cached data', 'decline');
+      }
+
+      return failed;
+    }
+
+    registerUser(tok='') {
+      
+      var token = (tok) ? tok: this.GLOB().token;
+
+      if(this.user_data_cached){
         console.log('sending existing user data to application page');
          var deferred = this.$q.defer();
-         deferred.resolve(this.user_exists_data);
+         deferred.resolve(this.user_data_cached);
          return deferred.promise;
       };
+      
+      if (!token || token==undefined){
+        console.log('token not available!')
+        return;
+      } 
+
+      /**
+       * we are doing retreiving data for storage as well!
+       */
      return this.$http({
         url: this.API.URL+'/register/'+token,
         method: "POST",
@@ -53,23 +93,26 @@ module app.data {
           this.user_exists = response.data.userExists;
           let new_user = response.data.newUser;
           let success = response.data.success;
+
           if(this.user_exists===true){
-              this.user_exists_data =  response.data;
-              return {userExists:true};
+              this.user_data_cached =  response.data;
+              return response.data;
           }
           if(new_user && success && this.user_exists!==true){
+             this.user_data_cached =  response.data;
              return response.data;
           }
           else{
+            this.user_data_cached = undefined;
             return throw {error:`new_user: ${new_user} user_exists: ${this.user_exists}`}
           }
           
         }, (response)=> { 
+           this.user_data_cached = undefined; 
            return this.fail(response)
         });
     }
 
-    
 
     postUser(data) {
 

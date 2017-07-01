@@ -1,0 +1,39 @@
+<!-- add app.terms -->
+<div class="row justify-content-center" ng-init='vm.terms=false;'>
+    <div class="col-8 mt-3 mb-5">
+        <h3>Terms and conditions</h3>
+        <p class="lead">Application form.<br>
+            Please read and accept to proceed.
+        </p>
+        <div id="terms">
+            <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor imperdiet, venenatis sem ac, dictum nulla.
+                Duis a diam enim. Aliquam sit amet justo eu dui rutrum porttitor. Ut facilisis sed lectus ut hendrerit. Fusce
+                rhoncus vestibulum facilisis. Donec a elit vel ante pretium feugiat. Donec mattis, quam non interdum laoreet,
+                risus nisl venenatis eros, et porta lorem nisl in elit. Maecenas nec feugiat neque. Fusce eu turpis at risus
+                pulvinar vulputate.</p>
+
+            <p>In vestibulum mattis purus, ut vulputate elit fringilla id. Donec aliquam semper erat. Pellentesque hendrerit
+                non elit vitae semper. Suspendisse metus nisi, tincidunt sed lacinia sit amet, sollicitudin eu tortor. Integer
+                pharetra diam eget venenatis fermentum. Phasellus dictum libero vitae efficitur pretium. Aliquam sodales
+                convallis dignissim. Pellentesque egestas sem vitae erat facilisis consectetur. Nunc sed feugiat purus, in
+                elementum est. Nullam neque magna, consequat a mattis vel, consectetur quis nunc. Duis nibh felis, laoreet
+                ac lectus sit amet, consectetur venenatis lectus. Proin vestibulum elit in nisl vehicula, sit amet semper
+                ante consectetur. Fusce luctus tempus ante. Praesent pharetra odio nec porta accumsan. Morbi iaculis diam
+                eget arcu tincidunt pulvinar.</p>
+
+            <p>Donec turpis justo, vulputate non interdum vel, finibus non mi. Quisque pretium a sem et convallis. Suspendisse
+                potenti. Vivamus semper gravida nunc, sed pretium felis sodales et. Ut bibendum lacinia mi, sed euismod turpis
+                suscipit ac. Praesent tristique velit aliquam sodales cursus. Aliquam quis lorem aliquam ipsum feugiat pulvinar
+                eget sodales nisl. Nulla facilisi. Nullam sed mollis leo. Pellentesque erat lorem, gravida eget dolor sit
+                amet, tincidunt interdum nibh. Proin vel enim semper, ultricies leo nec, vulputate elit. Aliquam erat nisi,
+                blandit nec libero vel, mollis ullamcorper orci. Vestibulum in sodales mauris. Pellentesque eu posuere mauris.</p>
+        </div>
+        <!-- terms -->
+        <button ng-click="vm.terms=true; vm.acceptTerms(vm.terms);" type="submit" 
+                        class="btn btn-secondary mt-3">Accept</button>
+    </div>
+    <!-- col -->
+</div>
+<!-- row -->
+
+<button type="submit" class="btn btn-primary mt-2" ng-click="vm.gotoTest('application')">got to</button>

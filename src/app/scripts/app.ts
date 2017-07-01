@@ -7,20 +7,22 @@ module app {
   angular.module('app', [
     // dependant
     'ui.router',
-    'ngAnimate',  
-    
-    //'ngMockE2E', couses template not loading
-    //'dndLists',
+    'ngAnimate',
 
-   // 'app.mockData',
-   'app.dataservice',
-   // 'app.data.httpMock',
+    //data service
+    'app.dataservice',
+    'app.core.stateChecking',
+
+    //structure
     'app.core',
     'app.layout',
 
+    //pages
     'app.welcome',
+    'app.terms',
     'app.application',
-  //  'app.applicationForm',
+
+    //directives
     'app.validateNumber',
     'app.appNumber',
     'app.myvalidation'

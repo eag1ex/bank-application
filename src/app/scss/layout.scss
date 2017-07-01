@@ -34,18 +34,31 @@ nav {
     }
 }
 
-welcome{
-    form.app-welcome-form{
-        .form-control-feedback{
+welcome {
+    form.app-welcome-form {
+        .form-control-feedback {
             position: absolute;
             font-size: 13px;
+        }
+        .form-group {
+            position: relative;
+            span#preloader {
+                background: url($image-path+'/preregister.gif') no-repeat center center;
+                display: block;
+                width: 32px;
+                height: 32px;
+                position: absolute;
+                top: 5px;
+                right: 0px;
+            }
         }
     }
 }
 
 application {
     form#application-form {
-        .input-group, .input-group-select  {
+        .input-group,
+        .input-group-select {
             position: relative;
             span.required {
                 color: red;

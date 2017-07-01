@@ -12,6 +12,7 @@ module app.welcome {
       private $timeout: any,
       private $q: any,
       private dataservice
+      private $state: any
     ) {
       // dummy toke id:'sdfsdf345sw'  
 
@@ -21,33 +22,49 @@ module app.welcome {
         token: '',
         valid: ''
       }
+    }
 
+    gotoTest(state = 'welcome'){
+      this.$state.go(state);
+    }
 
+    redirectingToNext(state = 'welcome') {
+      this.$timeout(() => {
+        this.$state.go(state);
+      }, 2000)
     }
 
     public registerUser() {
-      // in case we do subsequent submit event;
+      if (this.$scope.welcomeForm.$invalid) return;
 
-      this.dataservice.resetData();
+      // in case we do subsequent submit events;
+      this.dataservice.resetExisting();
 
       this.formOnsubmit = true;
       let token = this.registerNewUser.token;
+
       this.dataservice.registerUser(token).then((data) => {
         let newData = data;
         this.existingUser = false;
-        //redirect to application page and caching data
-      
-          if (newData.userExists === true) {
-            
-            
-            this.registerNewUser.valid = false;
-            this.existingUser = true;
-          } if(newData.userExists===false) {
-            this.existingUser = false;
-            this.registerNewUser.valid = true;
-          }
-       
 
+
+
+        if (newData.userExists === true) {
+          // data is already cached at this point           
+          this.registerNewUser.valid = false;
+          this.existingUser = true;
+          console.log('newData userExists', newData);
+          // got to next page
+          this.redirectingToNext('terms');
+
+        } if (newData.userExists === false) {
+          // data is already cached at this point   
+          this.existingUser = false;
+          this.registerNewUser.valid = true;
+
+          // got to next page
+          this.redirectingToNext('terms');
+        }
 
       }).catch((err) => {
         this.registerNewUser.valid = false;

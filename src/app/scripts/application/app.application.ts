@@ -35,7 +35,8 @@ module app.application {
       public $document: any,
       public $timeout: any,
       public $q: any,
-      private dataservice
+      private dataservice,
+      private $state,
 
     ) {
       this.dummy = {
@@ -101,6 +102,10 @@ module app.application {
         console.log('errors on the form')
       })
       */
+    }
+
+    gotoTest(state = 'welcome'){
+      this.$state.go(state);
     }
 
     initFormSteps(data) {

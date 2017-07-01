@@ -3,11 +3,14 @@
 //----------------------------
 
 html,
-body {
+body {  
 
     background: $bkg-color!important;
 }
-
+ 
+button, .btn{  
+    cursor: pointer!important;
+}
 .angular-app-include {
     opacity: 0;
 }
