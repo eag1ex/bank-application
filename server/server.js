@@ -38,6 +38,7 @@ app.use(function (req, res, next) {
 });
 
 apiRoutes.use(function (req, res, next) {
+    res.header({ "access-control-allow-origin": "*" });
     next();
 });
 
@@ -46,7 +47,7 @@ app.set('view engine', 'html');
 app.set('views', config.PUBLIC);
 
 
-var port = app.set('port', process.env.PORT || config.SERVER_PORT);
+var port = app.set('port', process.env.PORT || 8002);
 //==============
 
 
@@ -98,8 +99,7 @@ var upload = multer({
 
 
 function errorHandler(err, res, req, next) {
-    res.status(500)
-    res.render('error', { error: err })
+    throw new Error(err);
 }
 
 
@@ -146,7 +146,6 @@ apiRoutes.get('/setup', function (req, res) {
     let user1 = new Bankuser(
         {
             token: jsonData.data[0].token,
-            userID: jsonData.data[0].userID,
             form: jsonData.data[0].form
         });
 
@@ -174,6 +173,7 @@ apiRoutes.post(['/register/:token', '/register'], function (req, res) {
     //console.log('req.params.token',req.params.token );
     //console.log('model is found', findModel('bankuser'))
 
+
     if (!req.params.token) {
         res.status(200).json({
             message: 'no token found',
@@ -181,54 +181,62 @@ apiRoutes.post(['/register/:token', '/register'], function (req, res) {
         });
     }
 
-    // check for existing user before registering new token
+   
     var dymmyToken = req.params.token;//'sdfsdf345sw';
-
+     // check for existing user before registering new token
     let userfound = findUser(() => {
         let promise = new Promise((resolve, reject) => {
             resolve({ token: dymmyToken })
         })
         return promise;
-    })
+    }, res);
 
     userfound.then((data) => {
-        if (!data) throw false;
-        
-        console.log('user dataFound', data);
-        res.status(200).json({
-            message: 'registered new user token',
-            user_exists: true,
-            new_user: false,
+        // if existing user not found move on!
+        if (!data) return false;;
+
+        return res.json({
+            message: 'user data found!',
+            userExists: true,
+            newUser: false,
             data: data
         });
-
-    }, res).catch((err) => {
-        console.log('user does not exist');
-    });/// CONTINUATION DOWN IS USER NOT FOUND>>
-
-
-    ////////////////////////////
-    // create new user token if it doesnt exist beon this point 
-    let user = new Bankuser(
-        {
-            token: req.params.token,
-            userID: new Date(),
-            form: {}
-        });
-     
-    // save
-    user.save(function (err) {
-        if (err) errorHandler(err,res);
-
-        console.log('saved successfully', user);
-        res.status(200).json({
-            message: 'registered new user token',
-            success: true,
-            new_user: true,
-            user_exists: false,
-            data: user
-        });
+    })
+    .then((data) => {
+        /// register new user here
+        if (data === false) registerNew();
+           
+    }, (err) => {
+        return res.json({ serverError: "could not do post/register request" })
+    })
+    .catch((err) => {
+        console.log(err);
     });
+
+
+    function registerNew() {
+        let user = new Bankuser(
+            {
+                token: req.params.token,
+                date: new Date(),
+                form: {}
+            });
+
+        // save
+         user.save(function (err) {
+            if (err) errorHandler(err, res);
+
+             res.status(200).json({
+                message: 'registered new user token',
+                success: true,
+                newUser: true,
+                userExists: false,
+                data: user
+            });
+        },()=>{
+          errorHandler(err, res);
+        });
+    }
 });
 
 
@@ -248,11 +256,11 @@ function findUser(callbackPromise, res) {
                 return dataFound;
             }
 
-            if (err) return errorHandler(err, res);
+            if (err) errorHandler(err, res);
 
             if (obj) {
                 dataFound = obj;
-                console.log('user already exists', obj)
+                console.log('user already exists1', obj)
                 return dataFound;
             }
         });
@@ -266,7 +274,7 @@ function removeModel(name, res) {
         if (!err) {
             console.log('object removed');
             query.findOne(function (err, obj) {
-                if (err) return errorHandler(err, res);
+                if (err) errorHandler(err, res);
                 if (obj) {
                     console.log('object found', obj)
                 }
@@ -283,7 +291,7 @@ function removeModel(name, res) {
 
 apiRoutes.get('/all', function (req, res) {
 
-    var query = Bankuser.where({ userID: '34456324234' });
+    var query = Bankuser.where({ _id: '34456324234' });
     // console.log('query',query)
     query.findOne(function (err, obj) {
         if (obj === null) {
@@ -296,7 +304,7 @@ apiRoutes.get('/all', function (req, res) {
             res.status(404);
         }
 
-        if (err) return errorHandler(err, res);
+        if (err) errorHandler(err, res);
         if (obj) {
             // res.json(jsonData.data)
             res.status(200).json(obj)
@@ -318,7 +326,7 @@ apiRoutes.get('/:token', function (req, res) {
             res.status(404);
         }
 
-        if (err) return errorHandler(err, res);
+        if (err) errorHandler(err, res);
 
         if (obj) {
             res.status(200).json({

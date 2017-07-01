@@ -300,7 +300,7 @@ gulp.task('default', ['all', 'watch'], function () {
 
   var browserSyncOptions = {
     proxy: 'localhost:' + port + '/app',
-    port: port,
+    port: 8080,
     browser: ["chrome"],//, "firefox"],
     // files: ["public/**/*.*","public/*.*","public/"],
     ghostMode: { // these are the defaults t,f,t,t

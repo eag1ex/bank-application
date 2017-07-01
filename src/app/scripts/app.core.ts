@@ -21,7 +21,8 @@ module app.core {
         $rootScope.angularLoader = 0;
         $rootScope.$on("$stateChangeSuccess", ()=>{     
              console.log('angular Loaded');
-        });     
+        });
+             
   };
   
 

@@ -4,8 +4,11 @@ module app.data {
 
   export class DataService {
     /* @ngInject */
+    private user_exists:any;
+    private user_exists_data:any;
     constructor(private $http,
       private $q, private API) {
+
     }
 
 
@@ -24,6 +27,44 @@ module app.data {
         })
         .catch(this.fail);
     }
+
+    registerUser(token) {
+
+      if(this.user_exists){
+        console.log('sending existing user data to application page');
+         var deferred = this.$q.defer();
+         return deferred.resolve(this.user_exists_data);
+      }
+     return this.$http({
+        url: this.API.URL+'/register/'+token,
+        method: "POST",
+        data: {},
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      })
+        .then((response)=> {
+          console.log('response',response)
+          // so we dont have to make another request on the application page, when coming from welcome page
+          // only if user already exists
+          this.user_exists = response.data.userExists;
+          let new_user = response.data.newUser;
+          let success = response.data.success;
+          if(this.user_exists===true){
+              this.user_exists_data =  response.data;
+              return {"user_exists":true};
+          }
+          if(new_user && success && this.user_exists!==true){
+             return response.data;
+          }
+          else{
+            return throw {error:`new_user: ${new_user} user_exists: ${this.user_exists}`}
+          }
+          
+        }, (response)=> { 
+           return this.fail(response)
+        });
+    }
+
+    
 
     postUser(data) {
 
