@@ -176,6 +176,7 @@ apiRoutes.post(['/register/:token', '/register'], function (req, res) {
 
     if (!req.params.token) {
         res.status(200).json({
+            userExists: false,
             message: 'no token found',
             success: false
         });

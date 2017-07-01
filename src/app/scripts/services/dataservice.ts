@@ -28,13 +28,18 @@ module app.data {
         .catch(this.fail);
     }
 
+    resetData(){
+      this.user_exists='';
+    }
+
     registerUser(token) {
 
       if(this.user_exists){
         console.log('sending existing user data to application page');
          var deferred = this.$q.defer();
-         return deferred.resolve(this.user_exists_data);
-      }
+         deferred.resolve(this.user_exists_data);
+         return deferred.promise;
+      };
      return this.$http({
         url: this.API.URL+'/register/'+token,
         method: "POST",
@@ -50,7 +55,7 @@ module app.data {
           let success = response.data.success;
           if(this.user_exists===true){
               this.user_exists_data =  response.data;
-              return {"user_exists":true};
+              return {userExists:true};
           }
           if(new_user && success && this.user_exists!==true){
              return response.data;
