@@ -23,13 +23,11 @@ var Bankuser = require(__dirname + '/models/bank_user.js'); // orm model
 var json = require('json-file');
 var jsonData = json.read(__dirname + '/initial_data.json').data;
 
-
 // configuration =========
 app.enable('trust proxy');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 //console logging 
 app.use(morgan('dev'));
@@ -42,9 +40,6 @@ app.use(function (req, res, next) {
 apiRoutes.use(function (req, res, next) {
     next();
 });
-
-
-
 
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
@@ -102,9 +97,13 @@ var upload = multer({
 }).single('appForm');
 
 
+function errorHandler(err, res, req, next) {
+    res.status(500)
+    res.render('error', { error: err })
+}
+
 
 apiRoutes.post('/upload', (req, res) => {
-
     upload(req, res, (err) => {
         if (err) {
             return res.end("Error uploading file.");
@@ -115,15 +114,13 @@ apiRoutes.post('/upload', (req, res) => {
             response: req.file
         })
     });
-
-
 })
 
 
 
 apiRoutes.get('/remove', function (req, res) {
     removeModel('bankuser');
-    res.json({
+    res.status(200).json({
         message: 'bankuser table removed from mongo db',
         success: true
     });
@@ -138,7 +135,7 @@ apiRoutes.get('/setup', function (req, res) {
 
     if (!jsonData.data) {
         console.log('json data not available for new db');
-        res.json({
+        res.status(200).json({
             message: 'json data not available for new db',
             success: false
         });
@@ -146,7 +143,7 @@ apiRoutes.get('/setup', function (req, res) {
     }
 
     // create
-    let user1 =new Bankuser(
+    let user1 = new Bankuser(
         {
             token: jsonData.data[0].token,
             userID: jsonData.data[0].userID,
@@ -158,42 +155,118 @@ apiRoutes.get('/setup', function (req, res) {
         if (err) throw err;
 
         console.log('saved successfully', user1);
-        res.json({
+        res.status(200).json({
             message: 'populated db for jsonfile',
             success: true,
-            data:user1
+            data: user1
         });
     });
 
 });
 
+
 /**
- * 
- * @findmodel
+ * @register new
  */
 
-function findModel(name) {
-    var query = Bankuser.where({ name: name });
-    query.findOne(function (err, obj) {
-        if (obj === null) {
-            console.log('no model found')
-        }
 
-        if (err) return handleError(err);
-        if (obj) {
-            console.log('we found your obj', obj)
-        }
+apiRoutes.post(['/register/:token', '/register'], function (req, res) {
+    //console.log('req.params.token',req.params.token );
+    //console.log('model is found', findModel('bankuser'))
+
+    if (!req.params.token) {
+        res.status(200).json({
+            message: 'no token found',
+            success: false
+        });
+    }
+
+    // check for existing user before registering new token
+    var dymmyToken = req.params.token;//'sdfsdf345sw';
+
+    let userfound = findUser(() => {
+        let promise = new Promise((resolve, reject) => {
+            resolve({ token: dymmyToken })
+        })
+        return promise;
+    })
+
+    userfound.then((data) => {
+        if (!data) throw false;
+        
+        console.log('user dataFound', data);
+        res.status(200).json({
+            message: 'registered new user token',
+            user_exists: true,
+            new_user: false,
+            data: data
+        });
+
+    }, res).catch((err) => {
+        console.log('user does not exist');
+    });/// CONTINUATION DOWN IS USER NOT FOUND>>
+
+
+    ////////////////////////////
+    // create new user token if it doesnt exist beon this point 
+    let user = new Bankuser(
+        {
+            token: req.params.token,
+            userID: new Date(),
+            form: {}
+        });
+     
+    // save
+    user.save(function (err) {
+        if (err) errorHandler(err,res);
+
+        console.log('saved successfully', user);
+        res.status(200).json({
+            message: 'registered new user token',
+            success: true,
+            new_user: true,
+            user_exists: false,
+            data: user
+        });
     });
+});
+
+
+/**
+ * 
+ * @findUser using promiss with callback from POST/register route
+ */
+
+function findUser(callbackPromise, res) {
+    var dataFound = false;
+    return callbackPromise().then((tokenName) => {
+
+        var query = Bankuser.where({ token: tokenName.token });
+        return query.findOne(function (err, obj) {
+            if (obj === null) {
+                console.log('no Bankuser with token ' + tokenName.token + " found!")
+                return dataFound;
+            }
+
+            if (err) return errorHandler(err, res);
+
+            if (obj) {
+                dataFound = obj;
+                console.log('user already exists', obj)
+                return dataFound;
+            }
+        });
+    })//
 };
 
 
-function removeModel(name) {
+function removeModel(name, res) {
     var query = Bankuser.where({ name: name });
     Bankuser.remove({ name: name }, function (err) {
         if (!err) {
             console.log('object removed');
             query.findOne(function (err, obj) {
-                if (err) return handleError(err);
+                if (err) return errorHandler(err, res);
                 if (obj) {
                     console.log('object found', obj)
                 }
@@ -216,42 +289,42 @@ apiRoutes.get('/all', function (req, res) {
         if (obj === null) {
             console.log('no model found')
 
-            res.json({
+            res.status(200).json({
                 message: 'no data found',
                 success: false
             })
             res.status(404);
         }
 
-        if (err) return handleError(err);
+        if (err) return errorHandler(err, res);
         if (obj) {
             // res.json(jsonData.data)
-            res.json(obj)
+            res.status(200).json(obj)
             console.log('we found your obj', obj)
         }
     });
 });
 
 apiRoutes.get('/:token', function (req, res) {
-    console.log('req.params.token',req.params.token );
-    
+    console.log('req.params.token', req.params.token);
+
     var query = Bankuser.where({ token: req.params.token });
     query.findOne(function (err, obj) {
         if (obj === null) {
-            res.json({
+            res.status(200).json({
                 message: 'no data found',
                 success: false
             })
             res.status(404);
         }
 
-        if (err) return handleError(err);
+        if (err) return errorHandler(err, res);
 
         if (obj) {
-            res.json({
+            res.status(200).json({
                 message: 'data received',
                 success: true,
-                data:obj
+                data: obj
             });
         }
     });
