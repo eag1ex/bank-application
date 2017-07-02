@@ -52,15 +52,15 @@ module app.application {
       let _t = this;
       let appFormClass = function (val = 'one') {
 
-        this.one = { index: 9, valid: false, className: ".step-one" };
-        this.two = { index: 4, valid: false, className: ".step-two" };
-        this.three = { index: 3, valid: false, className: ".step-three" };
-        this.final = { index: 1, valid: false, className: ".step-final" };
+        this.one = { /*index: 9,*/ valid: false };
+        this.two = { /*index: 4,*/ valid: false};
+        this.three = { /*index: 3,*/ valid: false };
+        this.final = { /*index: 1,*/ valid: false };
 
         this.update = ( d=_t.APPFORM )=>{
           console.log('what is the d value here--- ',d)
-          let data = Object.assign({}, { one: d.one }, { two: d.two },
-            { three: d.three }, { final: d.final });   
+          let data = Object.assign({}, { one: d.one,className: ".step-one"  }, { two: d.two,className: ".step-two"  },
+            { three: d.three,className: ".step-three" }, { final: d.final,className: ".step-final" });   
    
             return data;
         }
@@ -69,7 +69,8 @@ module app.application {
         
         this.nextClass = (v = val) => {
           var next = 0;
-          for (var key in this.data) {
+          for (var key in this.data()) {
+            if (next === 1) console.log('this[key]',this[key]);
             if (next === 1) return this[key].className;
             if (key === v) next++;
           }
@@ -79,9 +80,10 @@ module app.application {
 
        // at this point we retreive cached data
       this.dataservice.getCached().then((data) => {
-        console.log('got cached data! ',data)
+       // console.log('got cached data! ',data)
         if (data.form!==undefined && Object.keys(data.form).length>0){
           this.APPFORM =data.form;
+          console.log('we have data with form')
         } 
       
         return this.APPFORM;
@@ -113,9 +115,11 @@ module app.application {
     }
 
     onSave(){
+      // cleanup and save
       this.APPFORM.terms=this.dataservice.GLOB().terms;
       this.APPFORM.token = this.dataservice.GLOB().token;
       let dataToSave = Object.assign({}, { form: this.APPFORM.data()}, { tc:this.APPFORM.terms,token:this.APPFORM.token });
+      
      //if (this.$scope.appForm.$invalid) return;
  
       console.log('dataToSave ',dataToSave);
@@ -193,9 +197,12 @@ module app.application {
         this.initFormSteps(data);
         // show all valid fields   
         this.manualExecuteValidation(this.APPFORM[step].className);
+        console.log('next step is?? '+step)
+        console.log('this.APPFORM.nextClass(step)',this.APPFORM.nextClass(step))
       }
       if (!formValid) {
         this.APPFORM[step].valid = false;
+        
         let data = { "step": step, resolution: false, invals: invalidElms, next: this.APPFORM.nextClass(step) };
         this.initFormSteps(data);
         // show all invalid fields        
