@@ -1,9 +1,10 @@
 module app.welcome {
   'use strict';
   export class MainController {
-    public registerNewUser;
+    public registerNewUser:any;
     public existingUser;
-    public formOnsubmit;
+    public formOnsubmit:boolean;
+    public clickToContinue:boolean;
     /* @ngInject */
     constructor(
       public $scope: any,
@@ -11,7 +12,7 @@ module app.welcome {
       private $document: any,
       private $timeout: any,
       private $q: any,
-      private dataservice
+      private dataservice:any,
       private $state: any
     ) {
       // dummy toke id:'sdfsdf345sw'  
@@ -20,7 +21,8 @@ module app.welcome {
 
       this.registerNewUser = {
         token: '',
-        valid: ''
+        valid: '',
+        invalid:''
       }
     }
 
@@ -37,6 +39,11 @@ module app.welcome {
     public registerUser() {
       if (this.$scope.welcomeForm.$invalid) return;
 
+      if(this.registerNewUser.valid){
+        this.redirectingToNext('terms');
+        return;
+      }
+
       // in case we do subsequent submit events;
       this.dataservice.resetExisting();
 
@@ -44,10 +51,18 @@ module app.welcome {
       let token = this.registerNewUser.token;
 
       this.dataservice.registerUser(token).then((data) => {
+        console.log('what is the data',data)
+       // if 
+
         let newData = data;
         this.existingUser = false;
+        this.registerNewUser.invalid = false;
 
-
+        if(newData.invalidToken){
+          this.registerNewUser.valid = '';
+          this.existingUser = false;
+          this.registerNewUser.invalid = true;
+        }
 
         if (newData.userExists === true) {
           // data is already cached at this point           
@@ -55,6 +70,7 @@ module app.welcome {
           this.existingUser = true;
           console.log('newData userExists', newData);
           // got to next page
+          this.clickToContinue =true;
           this.redirectingToNext('terms');
 
         } if (newData.userExists === false) {
@@ -63,12 +79,15 @@ module app.welcome {
           this.registerNewUser.valid = true;
 
           // got to next page
-          this.redirectingToNext('terms');
+          
         }
 
+      },(err)=>{
+        console.log('before chatch')
+        return err;
       }).catch((err) => {
         this.registerNewUser.valid = false;
-        console.log(err)
+        console.log('what is the error?',err)
       })
     }
 

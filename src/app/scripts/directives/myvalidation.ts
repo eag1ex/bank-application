@@ -1,5 +1,5 @@
 
-module app.myvalidation {
+module app.uivalidation {
     'use strict';
     class DirectiveController {
         /* @ngInject */
@@ -14,20 +14,20 @@ module app.myvalidation {
  */
 
 
-    angular.module('app.myvalidation', []);
-    angular.module('app.myvalidation')
+    angular.module('app.uivalidation', []);
+    angular.module('app.uivalidation')
         .directive("uivalidation", [() => {
 
             return {
                 restrict: "A",
                 scope: {
-                    myvalidation: "="
+                    uivalidation: "="
                 },
                 controller: DirectiveController,
 
                 link: (scope, el, attrs, ctrl: DirectiveController) => {
 
-                    scope.$watch('myvalidation', () => {
+                    scope.$watch('uivalidation', () => {
                         el.bind('change', (event) => {
                             event.preventDefault();
                             event.stopPropagation();
@@ -37,9 +37,9 @@ module app.myvalidation {
                                 return;
                             }
 
-                            let field = scope.myvalidation.field;
-                            let childSelector = scope.myvalidation.has;
-                            let bothValid = scope.myvalidation.bothValid;
+                            let field = scope.uivalidation.field;
+                            let childSelector = scope.uivalidation.has;
+                            let bothValid = scope.uivalidation.bothValid;
                             bothValid = (bothValid === undefined) ? true : bothValid;
 
                             console.log('bothValid', bothValid)
@@ -54,7 +54,7 @@ module app.myvalidation {
                             };
                             console.log('field.$valid', field.$valid)
                             if (field.$viewValue.length === 0 && field.$invalid === false) {
-                                //    console.log(scope.myvalidation.field)
+                                //    console.log(scope.uivalidation.field)
                                 //  console.log('this element is empty or undefined')
                                 // return;
                             }

@@ -21,7 +21,7 @@ module app.core.stateChecking {
                 console.log('this.dataservice not available');
                 return;
             }
-
+            console.log('what is token',this.dataservice.GLOB().token)
             // if not registered to not let to TC page
             if (this.dataservice.GLOB().token !== undefined && toState.name == "welcome") {
                 e.preventDefault();

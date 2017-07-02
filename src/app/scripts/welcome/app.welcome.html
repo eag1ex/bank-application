@@ -2,38 +2,50 @@
 <div class="row justify-content-center">
     <div class="col-6">
         <h2>Welcome!</h2>
-        <h1>Online bank application form</h1>
+        <h2>Online bank application form</h2>
         <p class="lead">
             Please register new token/ or enter existing.
         </p>
         <div id="app-welcome-wrap" class="w-75">
             <form name="welcomeForm" class="app-welcome-form" novalidate ng-submit="vm.registerUser(vm.registerNewUser.token);">
 
-                <div class="form-group mx-sm-3" ng-class='{"has-danger":welcomeForm.$invalid && welcomeForm.$dirty, 
+                <div class="form-group mx-0" ng-class='{"has-danger":welcomeForm.$invalid && welcomeForm.$dirty || vm.registerNewUser.invalid, 
                             "has-success":welcomeForm.$valid && welcomeForm.$dirty}'>
-                    <small>Enter unique token</small>
+                    <small class="ml-1">Enter unique token</small>
 
-                    <input ng-change="vm.formOnsubmit=false;" ng-class='{"form-control-danger":welcomeForm.$invalid===true, 
+                    <input ng-pattern="/^[a-zA-Z0-9\s]*$/" ng-change="vm.formOnsubmit=false;" ng-class='{"form-control-danger":welcomeForm.$invalid===true || vm.registerNewUser.invalid, 
                             "form-control-success":welcomeForm.$valid}' ng-model="vm.registerNewUser.token" ng-minlength="5"
                         required name="registerNewUser" type="text" class="form-control" id="inputnumber" placeholder="Enter token">
 
                     <!-- checking steps -->
-                    <div ng-show="vm.registerNewUser.valid==='' && welcomeForm.$dirty && vm.formOnsubmit===true" class="form-control-feedback">Checking...</div>
+                    <div ng-show="vm.registerNewUser.valid==='' && welcomeForm.$dirty && vm.formOnsubmit===true && vm.registerNewUser.invalid!==true"
+                        class="form-control-feedback ml-1 w-100">Checking...</div>
 
-                    <div ng-show="welcomeForm.$invalid && welcomeForm.$dirty" class="form-control-feedback">Sorry, invalid combination!</div>
+                    <div ng-show="welcomeForm.$invalid && welcomeForm.$dirty || vm.registerNewUser.invalid" class="form-control-feedback ml-1 w-100">Sorry, invalid combination!</div>
 
                     <div ng-show="vm.existingUser===false && vm.registerNewUser.valid===true && welcomeForm.$dirty && vm.formOnsubmit===true"
-                        class="form-control-feedback">Great, new token created, keep it save!</div>
-
-                    <div ng-show="vm.existingUser===true && welcomeForm.$dirty && vm.formOnsubmit===true" class="w-100 form-control-feedback">You are already registered!
-                        <span class="text-white">Redirecting now...</span>
+                        class="form-control-feedback ml-1 w-100">Great, new token created, keep it save!
+                        <div ng-show="vm.clickToContinue==true">
+                            <div class="text-white">Redirecting now...</div>
                             <span id="preloader"></span>
+                        </div>
                     </div>
 
+                    <div ng-show="vm.existingUser===true && welcomeForm.$dirty && vm.formOnsubmit===true" 
+                    class=" form-control-feedback ml-1 w-100">You are already registered!
+                        <div class="text-white">Redirecting now...</div>
+                        <span id="preloader"></span>
+                    </div>
 
                 </div>
-                <button ng-class='{"disabled": welcomeForm.registerNewUser.$invalid || !welcomeForm.registerNewUser.$dirty || welcomeForm.registerNewUser.$modelValue.length<4}'
-                    type="submit" class="btn btn-primary mt-2">Confirm</button>
+
+                <button 
+                ng-init= 'vm.clickToContinue=false;'
+                ng-model="vm.clickToContinue"
+                ng-click="vm.clickToContinue=(vm.registerNewUser.valid || vm.existingUser)"
+                ng-class='{"disabled": welcomeForm.registerNewUser.$invalid || !welcomeForm.registerNewUser.$dirty || welcomeForm.registerNewUser.$modelValue.length<4}'
+                ng-hide="vm.clickToContinue==true"
+                    type="submit" class="btn btn-primary mt-4">Confirm</button>
 
             </form>
         </div>
@@ -42,6 +54,5 @@
     <!-- col -->
 </div>
 <!-- row -->
-
 
 <button type="submit" class="btn btn-primary mt-2" ng-click="vm.gotoTest('terms')">got to</button>

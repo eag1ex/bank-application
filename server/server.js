@@ -173,18 +173,37 @@ apiRoutes.post(['/register/:token', '/register'], function (req, res) {
     //console.log('req.params.token',req.params.token );
     //console.log('model is found', findModel('bankuser'))
 
+    //res.status(500).json({'error':true});
+
+  //  return;
+
+    let token = req.params.token || "??><$%^";
+    let tokenOK = token.match(/^[a-zA-Z0-9\s]*$/);
+ 
+    console.log('token is ok? ',tokenOK);
+    
+    if (!tokenOK) {
+         res.status(200).json({
+            userExists: false,
+            message: 'token invalid!',
+            success: false,
+            newUser:false,
+            invalidToken:true
+        });
+    }
 
     if (!req.params.token) {
         res.status(200).json({
             userExists: false,
             message: 'no token found',
-            success: false
+            success: false,
+            newUser:false
         });
     }
 
-   
+
     var dymmyToken = req.params.token;//'sdfsdf345sw';
-     // check for existing user before registering new token
+    // check for existing user before registering new token
     let userfound = findUser(() => {
         let promise = new Promise((resolve, reject) => {
             resolve({ token: dymmyToken })
@@ -203,16 +222,16 @@ apiRoutes.post(['/register/:token', '/register'], function (req, res) {
             data: data
         });
     })
-    .then((data) => {
-        /// register new user here
-        if (data === false) registerNew();
-           
-    }, (err) => {
-        return res.json({ serverError: "could not do post/register request" })
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+        .then((data) => {
+            /// register new user here
+            if (data === false) registerNew();
+
+        }, (err) => {
+            return res.json({ serverError: "could not do post/register request" })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 
 
     function registerNew() {
@@ -224,18 +243,18 @@ apiRoutes.post(['/register/:token', '/register'], function (req, res) {
             });
 
         // save
-         user.save(function (err) {
+        user.save(function (err) {
             if (err) errorHandler(err, res);
 
-             res.status(200).json({
+            res.status(200).json({
                 message: 'registered new user token',
                 success: true,
                 newUser: true,
                 userExists: false,
                 data: user
             });
-        },()=>{
-          errorHandler(err, res);
+        }, () => {
+            errorHandler(err, res);
         });
     }
 });
@@ -341,7 +360,7 @@ apiRoutes.get('/:token', function (req, res) {
 
 
 //give access to these pages
-myapp.get(['/', '/application','/tc'], (req, res, next) => {
+myapp.get(['/', '/application', '/tc'], (req, res, next) => {
     res.render('index', {
         /**
          * render server address API_MAIN in index.html
@@ -351,12 +370,19 @@ myapp.get(['/', '/application','/tc'], (req, res, next) => {
 })
 
 
-app.get('/application', function (req, res, next) {
+myapp.get('/*', function (req, res, next) {
     res.redirect('/app');
 });
 
+
 app.use('/api', apiRoutes);
 app.use('/app', myapp);
+
+
+
+app.get('/*', function (req, res, next) {
+    res.redirect('/app');
+});
 
 // start server and listen
 var newport = app.get('port');

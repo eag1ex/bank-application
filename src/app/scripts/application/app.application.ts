@@ -57,8 +57,15 @@ module app.application {
         this.three = { index: 3, valid: false, className: ".step-three" };
         this.final = { index: 1, valid: false, className: ".step-final" };
 
-        this.data = Object.assign({}, { one: _t.APPFORM.one }, { two: _t.APPFORM.two },
-            { three: _t.APPFORM.three }, { final: _t.APPFORM.final });         
+        this.update = ( d=_t.APPFORM )=>{
+          console.log('what is the d value here--- ',d)
+          let data = Object.assign({}, { one: d.one }, { two: d.two },
+            { three: d.three }, { final: d.final });   
+   
+            return data;
+        }
+
+        this.data =this.update;
         
         this.nextClass = (v = val) => {
           var next = 0;
@@ -69,13 +76,14 @@ module app.application {
         }
       }
       
-      /**
-       * 
-       *  initially we check for data, then we set data to varriable, next we merge with appformClass
-       */
 
-      this.dataservice.getById(this.dummy.tok).then((data) => {
-        this.APPFORM =data.form;
+       // at this point we retreive cached data
+      this.dataservice.getCached().then((data) => {
+        console.log('got cached data! ',data)
+        if (data.form!==undefined && Object.keys(data.form).length>0){
+          this.APPFORM =data.form;
+        } 
+      
         return this.APPFORM;
       }).then((data)=>{
         this.APPFORM = _.merge(data, new appFormClass());
@@ -103,6 +111,23 @@ module app.application {
       })
       */
     }
+
+    onSave(){
+      this.APPFORM.terms=this.dataservice.GLOB().terms;
+      this.APPFORM.token = this.dataservice.GLOB().token;
+      let dataToSave = Object.assign({}, { form: this.APPFORM.data()}, { tc:this.APPFORM.terms,token:this.APPFORM.token });
+     //if (this.$scope.appForm.$invalid) return;
+ 
+      console.log('dataToSave ',dataToSave);
+      return;
+
+      this.dataservice.onSave(this.APPFORM).then((data)=>{
+        console.log('was data saved',data);
+
+      });
+
+    }
+
 
     gotoTest(state = 'welcome'){
       this.$state.go(state);

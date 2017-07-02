@@ -25,6 +25,6 @@ module app {
     //directives
     'app.validateNumber',
     'app.appNumber',
-    'app.myvalidation'
+    'app.uivalidation'
   ]);
 }  

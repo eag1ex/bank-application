@@ -4,157 +4,177 @@ module app.data {
   export class DataService {
     /* @ngInject */
 
-    private GLOBALS:any={};
+    private GLOBALS: any = {};
 
-    private user_exists:any;
-    private user_data_cached:any;
+    private user_exists: any;
+    private user_data_cached: any;
     constructor(private $http,
       private $q, private API) {
 
     }
 
-    public GLOB(){
+    public GLOB() {
+
       let cached = this.user_data_cached;
-      return {
-        terms:  (this.GLOBALS.terms) ? this.GLOBALS.terms:undefined,
-        token: (cached) ? cached.data.token:undefined,
-        cached:this.user_data_cached || undefined,
-        G:this.GLOBALS};
+      this.GLOBALS.cached = this.user_data_cached || undefined;
+      this.GLOBALS.terms = (this.GLOBALS.terms !== undefined) ? this.GLOBALS.terms : undefined;
+      this.GLOBALS.token = (cached !== undefined) ? cached.data.token : undefined;
+
+      console.log('glob data is ', this.GLOBALS)
+      return this.GLOBALS;
     }
 
     getAll() {
-      return this.$http.get(this.API.URL+"/all")
+      return this.$http.get(this.API.URL + "/all")
         .then((response) => {
           return response;
         })
         .catch(this.fail);
     }
 
-    getById(id) {
-      return this.$http.get(this.API.URL+"/"+id)
-        .then((response) => {
-          return response.data.data;
-        })
-        .catch(this.fail);
+    getCached() {
+      let deferred = this.$q.defer();
+      if (this.user_data_cached) {
+        console.log('sending existing user data to application page');
+        deferred.resolve(this.user_data_cached.data);
+      }
+      else {
+        let msg = { error: true, message: "cached data not found" };
+        deferred.reject(this.fail(msg));
+      }
+      return deferred.promise;
     }
 
-    resetExisting(){
-      this.user_exists='';
+    resetExisting() {
+      this.user_exists = '';
     }
 
-    clearAllCache(){
-      this.user_data_cached=undefined;
+    clearAllCache() {
+      this.user_data_cached = undefined;
       this.GLOBALS = {};
     }
 
-    checkDataRetention(){
+    checkDataRetention() {
       let failed = false;
-      if (this.user_data_cached && (this.GLOBALS.token==undefined || !this.GLOBALS.token) ){
-         this.clearAllCache(); failed = true;
-         console.log('token not valid, but have cached data', 'decline');
+      if (this.user_data_cached && (this.GLOBALS.token == undefined || !this.GLOBALS.token)) {
+        this.clearAllCache(); failed = true;
+        console.log('token not valid, but have cached data', 'decline');
       }
-      if(this.user_data_cached && (this.GLOBALS.terms==undefined || !this.GLOBALS.terms)){
-         this.clearAllCache(); failed = true;
-          console.log('terms not valid, but have cached data', 'decline');
+      if (this.user_data_cached && (this.GLOBALS.terms == undefined || !this.GLOBALS.terms)) {
+        this.clearAllCache(); failed = true;
+        console.log('terms not valid, but have cached data', 'decline');
       }
 
       return failed;
     }
 
-    registerUser(tok='') {
-      
-      var token = (tok) ? tok: this.GLOB().token;
+    registerUser(tok = '') {
 
-      if(this.user_data_cached){
-        console.log('sending existing user data to application page');
-         var deferred = this.$q.defer();
-         deferred.resolve(this.user_data_cached);
-         return deferred.promise;
-      };
-      
-      if (!token || token==undefined){
+      var token = (tok) ? tok : this.GLOB().token;
+
+      if (!token || token == undefined) {
         console.log('token not available!')
-        return;
-      } 
+        return this.fail({ error: true, message: 'token not available, or undefined!' });
+      }
+
 
       /**
        * we are doing retreiving data for storage as well!
        */
-     return this.$http({
-        url: this.API.URL+'/register/'+token,
+      return this.$http({
+        url: this.API.URL + '/register/' + token,
         method: "POST",
         data: {},
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
-        .then((response)=> {
-          console.log('response',response)
+        .then((response) => {
+
+          console.log('response', response)
           // so we dont have to make another request on the application page, when coming from welcome page
           // only if user already exists
           this.user_exists = response.data.userExists;
           let new_user = response.data.newUser;
           let success = response.data.success;
 
-          if(this.user_exists===true){
-              this.user_data_cached =  response.data;
-              return response.data;
+          if (response.data.invalidToken !== undefined) {
+            if (response.data.invalidToken) {
+              return { invalidToken: true };
+            }
           }
-          if(new_user && success && this.user_exists!==true){
-             this.user_data_cached =  response.data;
-             return response.data;
+
+          if (this.user_exists === true) {
+            this.user_data_cached = response.data;
+            return response.data;
           }
-          else{
+          if (new_user && success && this.user_exists !== true) {
+            this.user_data_cached = response.data;
+            return response.data;
+          }
+          else {
             this.user_data_cached = undefined;
-            return throw {error:`new_user: ${new_user} user_exists: ${this.user_exists}`}
+            return this.fail(response,'new and existing user undefind');
           }
-          
-        }, (response)=> { 
-           this.user_data_cached = undefined; 
-           return this.fail(response)
+
+        }, (response) => {
+          console.log('the else response')
+          this.user_data_cached = undefined;
+           return this.fail(response,'server error');
         });
     }
 
 
-    postUser(data) {
+    onSave(data) {
 
       return this.$http({
-        url: this.API.URL+'/'+data.id,
+        url: this.API.URL + '/' + data.token,
         method: "POST",
         data: data,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
-        .then((response)=> {
+        .then((response) => {
           return response;
-        }, (response)=> { // optional
-           return this.fail(response)
+        }, (response) => { 
+          console.log('on save resonse',response);
+          
+          let success = response.data.success;
+          let failure = response.data.failure;
+          if(response){
+            return this.success(response);
+          }
+          if(failure){
+             return this.fail(response,'failed to save data');
+          }else{
+            let msg = 'no succes or failure received';
+            return this.fail(data,msg);
+          }          
+        },(response) => {
+           return this.fail(response,'server error');
         });
-
     }
 
     updateUser(data) {
-       return this.$http({
-        url: this.API.URL+'/'+data.id,
+      return this.$http({
+        url: this.API.URL + '/' + data.id,
         method: "POST",
         data: data,
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       })
-        .then((response)=> {
+        .then((response) => {
           return response;
-        }, (response)=> { // optional
-           return this.fail(response)
+        }, (response) => { // optional
+          return this.fail(response)
         });
 
     }
 
     private success(response: any) {
-      return response.data
+      return {response:response, success:true};
     }
 
 
-    private fail(error) {
-      var deferred = this.$q.defer();
-      var msg = error;
-      var reason = 'query for people failed.';
-      return deferred.reject(error);
+    private fail(error, msg='') {
+      if(!msg)msg = 'server error';
+      return {error:error, message:msg}
     }
   }
 
