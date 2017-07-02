@@ -206,6 +206,7 @@
                         <div class="input-group w-75">
                             <label class="custom-file">
                                 <input 
+                                required
                                 ng-init="vm.APPFORM.final.utilityFile=(vm.APPFORM.final.utilityFile)? vm.APPFORM.final.utilityFile:'';"
                                 ng-model="vm.APPFORM.final.utilityFile" name="utilityFile" type="file" id="file" class="custom-file-input">
                                 <span class="custom-file-control"></span>
@@ -217,7 +218,8 @@
                         <label class="section-label">Upload Social Security Number:-</label>
                         <div class="input-group w-75">
                             <label class="custom-file">
-                                <input                               
+                                <input 
+                                required                              
                                 ng-init="vm.APPFORM.final.securityFile=(vm.APPFORM.final.securityFile)? vm.APPFORM.final.securityFile:'';"
                                 ng-model="vm.APPFORM.final.securityFile" name="securityFile" type="file" id="file" class="custom-file-input">
                                 <span class="custom-file-control"></span>

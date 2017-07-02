@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
 });
 
 apiRoutes.use(function (req, res, next) {
-    res.header({ "access-control-allow-origin": "*" });
+    //res.header({ "access-control-allow-origin": "*" });
     next();
 });
 
@@ -60,7 +60,7 @@ mongoose.connect(config.database, function (err, db) {
     } else {
         console.log('data base connected');
     }
-}); 
+});
 
 
 //https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
@@ -68,10 +68,10 @@ mongoose.connect(config.database, function (err, db) {
 
 //@upload image
 apiRoutes.post('/upload', uploadImage);
-   
-apiRoutes.get('/setup', initialSetup);
 
-apiRoutes.post('/find/:token',updateUser);
+apiRoutes.post('/setup', initialSetup);
+
+apiRoutes.post('/update/', updateUser);
 
 apiRoutes.post(['/register/:token', '/register'], registerAndSave);
 
@@ -90,16 +90,17 @@ myapp.get('/*', function (req, res, next) {
     res.redirect('/app');
 });
 
-//init routes
+//init routes  
 app.use('/api', apiRoutes);
 app.use('/app', myapp);
 
 
 // redirect non matching
+/*
 app.get('/*', function (req, res, next) {
     res.redirect('/app');
 });
-
+*/
 // start server and listen
 var newport = app.get('port');
 var server = app.listen(newport, function () {
@@ -152,14 +153,14 @@ function errorHandler(err, res, req, next) {
     throw new Error(err);
 }
 
-function registerAndSave(req, res){
+function registerAndSave(req, res) {
 
-    
+
     let token = req.params.token || "??><$%^";
     let tokenOK = token.match(/^[a-zA-Z0-9\s]*$/);
 
     if (!tokenOK) {
-        res.status(200).json({
+        return res.status(200).json({
             userExists: false,
             message: 'token invalid!',
             success: false,
@@ -169,7 +170,7 @@ function registerAndSave(req, res){
     }
 
     if (!req.params.token) {
-        res.status(200).json({
+        return res.status(200).json({
             userExists: false,
             message: 'no token found',
             success: false,
@@ -189,7 +190,7 @@ function registerAndSave(req, res){
 
     userfound.then((data) => {
         // if existing user not found move on!
-        if (!data) return false;;
+        if (!data) return false;
 
         return res.json({
             message: 'user data found!',
@@ -219,7 +220,7 @@ function registerAndSave(req, res){
         user.save(function (err) {
             if (err) errorHandler(err, res);
 
-            res.status(200).json({
+            return res.status(200).json({
                 message: 'registered new user token',
                 success: true,
                 newUser: true,
@@ -257,29 +258,28 @@ function findUser(callbackPromise, res) {
 }
 
 
-function uploadImage(req, res){
-   upload(req, res, (err) => {
+function uploadImage(req, res) {
+    upload(req, res, (err) => {
         if (err) {
             return res.end("Error uploading file.");
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             file: req.protocol + '://' + req.get('host') + '/images/' + req.file.originalname,
             response: req.file
         })
     });
 }//uploadImage
 
-function initialSetup(req, res){
+function initialSetup(req, res) {
 
     if (!jsonData.data) {
-        res.status(200).json({
+        return res.status(200).json({
             message: 'json data not available for new db',
             success: false
         });
-        return;
-    }
 
+    }
     // create
     let user1 = new Bankuser(
         {
@@ -290,7 +290,7 @@ function initialSetup(req, res){
     // save
     user1.save(function (err) {
         if (err) throw err;
-        res.status(200).json({
+        return res.status(200).json({
             message: 'populated db for jsonfile',
             success: true,
             data: user1
@@ -300,40 +300,46 @@ function initialSetup(req, res){
 
 
 function updateUser(req, res) {
-    //  let findID; //sdfsdf345sw
-    var userUpdates = req.body;
-    let tokenID = req.params.token;
-    console.log('req.body12', req.body)
+
+    if (req.body.token === undefined || req.body.token == '') {
+        return res.status(404).json({
+            message: 'no token found!',
+            success: false
+        })
+    }
+
+    let tokenID = req.body.token;
+    let newData = req.body.form;
 
     var query = Bankuser.where({ token: tokenID });
     query.findOne(function (err, obj) {
         if (obj === null) {
 
-            res.status(200).json({
+            return res.status(404).json({
                 message: 'no data found',
                 success: false
             })
-            res.status(404);
-        }
 
+        }
         if (err) errorHandler(err, res);
-        if (obj._id) saveUser(obj._id);
+        if (obj._id) saveUserToDB(obj._id, newData, res);
     })// findOne
 
-    function saveUser(findID) {
-        // get a user with ID of 1
-        Bankuser.findById(findID, function (err, user) {
-            if (err) errorHandler(err, res);
-            console.log('user.firstName', user)
-            user.form.one.firstName = 'andy'
-            // save the user
-            user.save(function (err) {
-                if (err) errorHandler(err, res);
-
-                console.log('User successfully updated!');
-                res.status(200).json(user)
-            }, () => errorHandler(err, res));
-        });
-    }// saveUser
 }//updateUser
+
+function saveUserToDB(findID, newData, res) {
+    // get a user with ID of 1
+    Bankuser.findById(findID, function (err, user) {
+        if (err) errorHandler(err, res);
+
+        user.form = newData;
+        // save the user
+        user.save(function (err) {
+            if (err) errorHandler(err, res);
+
+            // console.log('User successfully updated!');
+            return res.status(200).json({ data: user, success: true })
+        }, () => errorHandler(err, res));
+    });
+}// saveUser
 

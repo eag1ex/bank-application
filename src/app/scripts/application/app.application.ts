@@ -1,25 +1,25 @@
 module app.application {
   'use strict';
   export class MainController {
-   
-/**
- * 
- * The APPFORM models are dynamicly created on the html template with ng-init,
- * when equired we merge it with appFormClass.
- * 
- * The form name values use {common name space} for ease of use for example:
- * ngInit/ngModel=vm.APPFORM.one.homePhone  == name=homePhone
- * ngInit/ngModel=vm.APPFORM.one.homePhonePre == homePhonePre
- * 
- * First we extend our APPFORM with appFormClass then we wait for new data if available,
- * for existing user we merge the object with new data.
- * We check for validation of each steps using checkFormStepsValid()
- * which tne calls initFormSteps() to make decision of the next form STEP.
- * 
- * FUNCTION manualExecuteValidation() forces the uivalidation directive to reinitialize the ui.
- * 
- */
-   
+
+    /**
+     * 
+     * The APPFORM models are dynamicly created on the html template with ng-init,
+     * when equired we merge it with appFormClass.
+     * 
+     * The form name values use {common name space} for ease of use for example:
+     * ngInit/ngModel=vm.APPFORM.one.homePhone  == name=homePhone
+     * ngInit/ngModel=vm.APPFORM.one.homePhonePre == homePhonePre
+     * 
+     * First we extend our APPFORM with appFormClass then we wait for new data if available,
+     * for existing user we merge the object with new data.
+     * We check for validation of each steps using checkFormStepsValid()
+     * which tne calls initFormSteps() to make decision of the next form STEP.
+     * 
+     * FUNCTION manualExecuteValidation() forces the uivalidation directive to reinitialize the ui.
+     * 
+     */
+
 
 
     public APPFORM: any;
@@ -52,46 +52,48 @@ module app.application {
       let appFormClass = function (val = 'one') {
 
         this.one = { /*index: 9,*/ valid: false };
-        this.two = { /*index: 4,*/ valid: false};
+        this.two = { /*index: 4,*/ valid: false };
         this.three = { /*index: 3,*/ valid: false };
         this.final = { /*index: 1,*/ valid: false };
 
-        this.update = ( d=_t.APPFORM )=>{
-          console.log('what is the d value here--- ',d)
-          let data = Object.assign({}, { one: d.one,className: ".step-one"  }, { two: d.two,className: ".step-two"  },
-            { three: d.three,className: ".step-three" }, { final: d.final,className: ".step-final" });   
-   
-            return data;
+        this.update = (d = _t.APPFORM) => {
+          let data = {
+            one: Object.assign({}, d.one, { className: ".step-one" }),
+            two: Object.assign({}, d.two, { className: ".step-two" }),
+            three: Object.assign({}, d.three, { className: ".step-three" }),
+            final: Object.assign({}, d.final, { className: ".step-final" })
+          }
+          return data;
         }
 
-        this.data =this.update;
-        
+        this.data = this.update;
+
         this.nextClass = (v = val) => {
           var next = 0;
-          for (var key in this.data()) {
-            if (next === 1) console.log('this[key]',this[key]);
-            if (next === 1) return this[key].className;
+          var data = this.data();
+          for (var key in data) {
+            if (next === 1) return data[key].className;
             if (key === v) next++;
           }
         }
       }
-      
 
-       // at this point we retreive cached data
+
+      // at this point we retreive cached data
       this.dataservice.getCached().then((data) => {
-       // console.log('got cached data! ',data)
-        if (data.form!==undefined && Object.keys(data.form).length>0){
-          this.APPFORM =data.form;
+        // console.log('got cached data! ',data)
+        if (data.form !== undefined && Object.keys(data.form).length > 0) {
+          this.APPFORM = data.form;
           console.log('we have data with form')
-        } 
-      
+        }
+
         return this.APPFORM;
-      }).then((data)=>{
+      }).then((data) => {
         this.APPFORM = _.merge(data, new appFormClass());
-         console.log('this.APPFORM', this.APPFORM)
-      },(err)=>{
+        console.log('this.APPFORM', this.APPFORM)
+      }, (err) => {
         this.APPFORM = new appFormClass();
-        console.log('no APPFORM',err)
+        console.log('no APPFORM', err)
       })
 
       /*
@@ -113,26 +115,29 @@ module app.application {
       */
     }
 
-    onSave(){
+
+    onSave() {
+
       // cleanup and save
-      this.APPFORM.terms=this.dataservice.GLOB().terms;
+      this.APPFORM.terms = this.dataservice.GLOB().terms;
       this.APPFORM.token = this.dataservice.GLOB().token;
-      let dataToSave = Object.assign({}, { form: this.APPFORM.data()}, { tc:this.APPFORM.terms,token:this.APPFORM.token });
-      
-     //if (this.$scope.appForm.$invalid) return;
- 
-      console.log('dataToSave ',dataToSave);
-      return;
 
-      this.dataservice.onSave(this.APPFORM).then((data)=>{
-        console.log('was data saved',data);
+      let dataToSave = Object.assign({}, { form: this.APPFORM.data() }, { tc: this.APPFORM.terms, token: this.APPFORM.token });
+      //if (this.$scope.appForm.$invalid) return;
 
+      console.log('dataToSave ', dataToSave);
+
+      this.dataservice.onSave(dataToSave).then((data) => {
+        console.log('was data saved', data);
+
+      },(err)=>{
+        console.log('err',err)
       });
 
     }
 
 
-    gotoTest(state = 'welcome'){
+    gotoTest(state = 'welcome') {
       this.$state.go(state);
     }
 
@@ -196,12 +201,12 @@ module app.application {
         this.initFormSteps(data);
         // show all valid fields   
         this.manualExecuteValidation(this.APPFORM[step].className);
-        console.log('next step is?? '+step)
-        console.log('this.APPFORM.nextClass(step)',this.APPFORM.nextClass(step))
+        console.log('next step is?? ' + step)
+        console.log('this.APPFORM.nextClass(step)', this.APPFORM.nextClass(step))
       }
       if (!formValid) {
         this.APPFORM[step].valid = false;
-        
+
         let data = { "step": step, resolution: false, invals: invalidElms, next: this.APPFORM.nextClass(step) };
         this.initFormSteps(data);
         // show all invalid fields        

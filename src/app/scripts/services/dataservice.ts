@@ -76,16 +76,16 @@ module app.data {
         console.log('token not available!')
         return this.fail({ error: true, message: 'token not available, or undefined!' });
       }
-
+   
 
       /**
-       * we are doing retreiving data for storage as well!
+       * we are doing retreiving data for storag  e as well!
        */
       return this.$http({
-        url: this.API.URL + '/register/' + token,
+        url: 'api/register/' + token,
         method: "POST",
         data: {},
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        headers: {'Content-Type': 'application/json'}
       })
         .then((response) => {
 
@@ -126,15 +126,15 @@ module app.data {
     onSave(data) {
 
       return this.$http({
-        url: this.API.URL + '/' + data.token,
+        url: 'api/update/',
         method: "POST",
         data: data,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        headers: {'Content-Type': 'application/json'}
       })
         .then((response) => {
-          return response;
+          return response.data;
         }, (response) => { 
-          console.log('on save resonse',response);
+         // console.log('on save resonse',response.data);
           
           let success = response.data.success;
           let failure = response.data.failure;
