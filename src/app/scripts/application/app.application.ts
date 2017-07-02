@@ -1,7 +1,7 @@
 module app.application {
   'use strict';
   export class MainController {
-
+   
 /**
  * 
  * The APPFORM models are dynamicly created on the html template with ng-init,
@@ -19,8 +19,7 @@ module app.application {
  * FUNCTION manualExecuteValidation() forces the uivalidation directive to reinitialize the ui.
  * 
  */
-
-
+   
 
 
     public APPFORM: any;

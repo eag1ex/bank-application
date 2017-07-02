@@ -67,18 +67,18 @@ mongoose.connect(config.database, function (err, db) {
 //https://stackoverflow.com/questions/21497639/how-to-get-id-from-url-in-express-param-and-query-doesnt-seem-to-work#21498520
 
 //@upload image
-apiRoutes.post('/upload', (req, res)=>{uploadImage(req, res)});
+apiRoutes.post('/upload', uploadImage);
+   
+apiRoutes.get('/setup', initialSetup);
 
-apiRoutes.get('/setup', (req, res)=>{initialSetup(req, res)});
+apiRoutes.post('/find/:token',updateUser);
 
-apiRoutes.post('/find/:token',(req, res)=>{updateUser(req, res)});
-
-apiRoutes.post(['/register/:token', '/register'], (req, res)=>{registerAndSave(req, res)});
+apiRoutes.post(['/register/:token', '/register'], registerAndSave);
 
 //give access to these pages
 myapp.get(['/', '/application', '/tc'], (req, res, next) => {
     res.render('index', {
-        /**
+        /**      
          * render server address API_MAIN in index.html
          */
         API_MAIN: "http://localhost:" + app.get('port') + "/api"
