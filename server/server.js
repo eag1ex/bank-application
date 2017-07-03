@@ -140,13 +140,17 @@ var filter = (req, file, cb) => {
         cb('Failed: format not supported');
     }
 };
-
+//https://github.com/expressjs/multer
 // set multer config
-var upload = multer({
+var utilityFile = multer({
     storage: storage,
     fileFilter: filter
-}).single('appForm');
+}).single('utilityFile');
 
+var securityFile = multer({
+    storage: storage,
+    fileFilter: filter
+}).single('securityFile');
 
 
 function errorHandler(err, res, req, next) {
@@ -250,7 +254,6 @@ function findUser(callbackPromise, res) {
 
             if (obj) {
                 dataFound = obj;
-               // console.log('user already exists1', obj)
                 return dataFound;
             }
         });
@@ -259,7 +262,8 @@ function findUser(callbackPromise, res) {
 
 
 function uploadImage(req, res) {
-    upload(req, res, (err) => {
+    console.log('req.body.upload',req.body)
+    utilityFile(req, res, (err) => {
         if (err) {
             return res.end("Error uploading file.");
         }

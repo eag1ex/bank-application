@@ -18,7 +18,7 @@ module app {
     'app.core',
     'app.layout',
 
-    //pages
+    // states/components
     'app.welcome',
     'app.terms',
     'app.application',

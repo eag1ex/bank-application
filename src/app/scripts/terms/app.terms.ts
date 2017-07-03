@@ -23,10 +23,10 @@ module app.terms {
     acceptTerms(v) {
 
     this.dataservice.GLOBALS.terms = v;
-    
+
       this.$timeout(() => {
         this.$state.go('application');
-      }, 1000)
+      }, 1500)
     }
   }
 

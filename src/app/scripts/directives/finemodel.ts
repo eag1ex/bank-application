@@ -10,10 +10,11 @@ module app.fileModel {
                 restrict: "A",
 
                 link: function (scope, element, attrs) {
-                    var model = $parse(attrs.fileModel);
+                    var model = $parse(attrs['filemodel']);// our name
                     var modelSetter = model.assign;
 
                     element.bind('change', function () {
+                        console.log('file to upload modelSetter',modelSetter);
                         scope.$apply(function () {
                             modelSetter(scope, element[0].files[0]);
                         });

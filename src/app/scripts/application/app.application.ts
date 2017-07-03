@@ -20,8 +20,6 @@ module app.application {
      * 
      */
 
-
-
     public APPFORM: any;
     public application: Object;
     public newAppForm: any;
@@ -36,12 +34,11 @@ module app.application {
       public $q: any,
       private dataservice,
       private $state,
-
+      private fileupload
     ) {
       this.dummy = {
         tok: 'sdfsdf345sw'
-      }
-
+      };
 
       /**
        * 
@@ -86,8 +83,8 @@ module app.application {
           this.APPFORM = data.form;
           console.log('we have data with form')
         }
-
         return this.APPFORM;
+
       }).then((data) => {
         this.APPFORM = _.merge(data, new appFormClass());
         console.log('this.APPFORM', this.APPFORM)
@@ -115,6 +112,9 @@ module app.application {
       */
     }
 
+    uploadFile(vm){
+      this.fileupload.upload(vm);
+    }
 
     onSave() {
 

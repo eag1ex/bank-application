@@ -7,22 +7,28 @@ module app.fileupload {
         }
 
         upload(file) {
+            console.log('uploading file', file);
             var fd = new FormData();
             fd.append('file', file);
-            this.$http.post('api/upload', fd, {
+
+            return this.$http({
+                url: 'api/upload',
+                method: "POST",
                 transformRequest: angular.identity,
+                data: fd,
                 headers: { 'Content-Type': undefined }
-            }).success( (response)=> {
-                console.log('file uploaded succesfully',response)
-                return response;
-            }).error( (err)=> {
-                let msg = 'file did not uplead'
-                return this.fail(err, msg);
-            });
+            })
+                .then((response) => {
+                    console.log('file uploaded succesfully', response)
+                    return response;
+                }, (err) => { // optional
+                    let msg = 'file did not uplead'
+                    return this.fail(err, msg);
+                });
         }
         private fail(error, msg = '') {
             if (!msg) msg = 'server error';
-            return { error: error, message: msg }
+            return { error: error, message: msg };
         }
     }
 
