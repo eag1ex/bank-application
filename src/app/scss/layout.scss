@@ -41,7 +41,6 @@ welcome {
             font-size: 13px;
         }
         .form-group {
-            position: relative;
             span#preloader {
                 background: url($image-path+'/preregister.gif') no-repeat center center;
                 display: block;
@@ -57,6 +56,33 @@ welcome {
 
 application {
     form#application-form {
+
+        .input-group .form-control:not(:last-child){
+            border-radius: .25rem!important;
+        }
+
+        #ducument-information {
+            .input-group {
+                position: relative;
+                padding-bottom: 22px;
+                .custom-file{
+                    overflow: hidden;
+                }
+                small.upload-file-text {
+                    color: #bbb!important;
+                    position: absolute;
+                    bottom: 0px;
+                }
+                img {
+                    display: none;
+                    &.uploaded {
+                        display: block;
+                        max-width: 50px!important;
+                        border: 1px solid #fff;
+                    }
+                }
+            }
+        }
         .input-group,
         .input-group-select {
             position: relative;

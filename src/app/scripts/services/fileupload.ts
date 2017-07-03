@@ -5,20 +5,21 @@ module app.fileupload {
         /* @ngInject */
         constructor(private $http: any) {
         }
-
-        upload(file) {
+  
+        upload(file,token) {
+            if (!file || !token) return
             console.log('uploading file', file);
             var fd = new FormData();
             fd.append('file', file);
-
+             
             return this.$http({
-                url: 'api/upload',
+                url: 'api/upload/'+token,
                 method: "POST",
+                //withCredentials: false,
                 transformRequest: angular.identity,
                 data: fd,
-                headers: { 'Content-Type': undefined }
-            })
-                .then((response) => {
+                headers: { 'Content-Type': undefined, enctype: 'multipart/form-data' },
+            }).then((response) => {
                     console.log('file uploaded succesfully', response)
                     return response;
                 }, (err) => { // optional

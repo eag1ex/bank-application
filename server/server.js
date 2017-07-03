@@ -23,17 +23,25 @@ var Bankuser = require(__dirname + '/models/bank_user.js'); // orm model
 var json = require('json-file');
 var jsonData = json.read(__dirname + '/initial_data.json').data;
 
+// uploaded identifier
+let LAST_TOKEN_CACHED;
+
 // configuration =========
 app.enable('trust proxy');
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
+apiRoutes.use(bodyParser.json());
+apiRoutes.use(bodyParser.urlencoded({ extended: true }));
+
 
 //console logging 
 app.use(morgan('dev'));
 app.use(express.static(config.PUBLIC));
 
 app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
@@ -53,21 +61,62 @@ var port = app.set('port', process.env.PORT || 8002);
 // connect to database
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database, function (err, db) {
-    if (err) {
+    if (err) { 
         // throw err;
         console.log('error connecting to mongo db');
         throw err;
-    } else {
+    } else { 
         console.log('data base connected');
+    } 
+});  
+   
+// define file name and destination to save
+
+var GENERATED_FILE_IDS = {}
+
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        console.log('uploading image to ', __dirname + '\\images')
+        cb(null, __dirname + '\\images')
+    },
+    filename: (req, file, cb) => {
+
+        console.log('uploading filename122', file)
+        let ext = file.originalname.split('.');
+        //console.log('uploading filename', ext)
+        ext = ext[ext.length - 1];
+        cb(null, 'upload'+'-' + Date.now() + '.' + ext);
     }
 });
+
+
+// define what file type to accept
+var filter = (req, file, cb) => {
+    if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
+        console.log('all good uploading')
+        cb(null, true);
+    } else {
+        console.log('Failed: format not supported')
+        cb('Failed: format not supported');
+    }
+};
+
+
+var upload = multer({
+        storage: storage,
+        fileFilter: filter
+    }).single('file');
+    /** SRC : https://stackoverflow.com/questions/31530200/node-multer-unexpected-field
+     * this line troubled me for a while
+     * single "file" reffers to type="file" not the name of the input name='filename'<WRONG!
+     */
 
 
 //https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
 //https://stackoverflow.com/questions/21497639/how-to-get-id-from-url-in-express-param-and-query-doesnt-seem-to-work#21498520
 
 //@upload image
-apiRoutes.post('/upload', uploadImage);
+apiRoutes.post('/upload/:token', uploadImage);
 
 apiRoutes.post('/setup', initialSetup);
 
@@ -114,44 +163,6 @@ var server = app.listen(newport, function () {
 // FUNCTIONS
 
 
-// define file name and destination to save
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        console.log('uploading image to ', __dirname + '\\images')
-        cb(null, __dirname + '\\images')
-    },
-    filename: (req, file, cb) => {
-
-        let ext = file.originalname.split('.');
-        console.log('uploading filename', ext)
-        ext = ext[ext.length - 1];
-        cb(null, 'uploads-' + Date.now() + '.' + ext);
-    }
-});
-
-
-// define what file type to accept
-var filter = (req, file, cb) => {
-    if (file.mimetype == 'image/jpeg' || file.mimetype == 'image/png') {
-        console.log('all good uploading')
-        cb(null, true);
-    } else {
-        console.log('Failed: format not supported')
-        cb('Failed: format not supported');
-    }
-};
-//https://github.com/expressjs/multer
-// set multer config
-var utilityFile = multer({
-    storage: storage,
-    fileFilter: filter
-}).single('utilityFile');
-
-var securityFile = multer({
-    storage: storage,
-    fileFilter: filter
-}).single('securityFile');
-
 
 function errorHandler(err, res, req, next) {
     throw new Error(err);
@@ -160,8 +171,8 @@ function errorHandler(err, res, req, next) {
 function registerAndSave(req, res) {
 
 
-    let token = req.params.token || "??><$%^";
-    let tokenOK = token.match(/^[a-zA-Z0-9\s]*$/);
+    let checkTok = req.params.token || "??><$%^";
+    let tokenOK = checkTok.match(/^[a-zA-Z0-9\s]*$/);
 
     if (!tokenOK) {
         return res.status(200).json({
@@ -183,11 +194,11 @@ function registerAndSave(req, res) {
     }
 
 
-    var dymmyToken = req.params.token;//'sdfsdf345sw';
+    var _TOKEN_ = req.params.token;//'sdfsdf345sw';
     // check for existing user before registering new token
     let userfound = findUser(() => {
         let promise = new Promise((resolve, reject) => {
-            resolve({ token: dymmyToken })
+            resolve({ token: _TOKEN_ })
         })
         return promise;
     }, res);
@@ -195,6 +206,8 @@ function registerAndSave(req, res) {
     userfound.then((data) => {
         // if existing user not found move on!
         if (!data) return false;
+
+        LAST_TOKEN_CACHED = _TOKEN_;
 
         return res.json({
             message: 'user data found!',
@@ -223,6 +236,8 @@ function registerAndSave(req, res) {
         // save
         user.save(function (err) {
             if (err) errorHandler(err, res);
+
+            LAST_TOKEN_CACHED = _TOKEN_;
 
             return res.status(200).json({
                 message: 'registered new user token',
@@ -261,18 +276,36 @@ function findUser(callbackPromise, res) {
 }
 
 
+
 function uploadImage(req, res) {
-    console.log('req.body.upload',req.body)
-    utilityFile(req, res, (err) => {
+
+    let token = req.params.token || undefined;
+
+    if (token === undefined) {
+          return res.status(200).json({
+              success:false,
+              message:'token '+fileName
+          })
+    }
+    //https://github.com/expressjs/multer
+    // set multer config
+    
+
+    upload(req, res, (err) => {
         if (err) {
-            return res.end("Error uploading file.");
+             return res.status(200).json({
+              error:true,
+              message:'error uploading file'
+          })
         }
+        //console.log('req.file fileName', req.file.filename)
 
         return res.status(200).json({
             file: req.protocol + '://' + req.get('host') + '/images/' + req.file.originalname,
             response: req.file
         })
-    });
+    })
+
 }//uploadImage
 
 function initialSetup(req, res) {

@@ -12,15 +12,14 @@ module app.core {
     .constant('API', { 'URL': "http:" + API_MAIN, 'DATA': null });
 
   /* @ngInject */
-  function appRun($rootScope, $timeout, dataservice, $state, stateChecking) {
-
+  function appRun($rootScope, $timeout, dataservice, $state, stateChecking,) {
     // checking data valid, or clear all cache!
     dataservice.checkDataRetention();
 
     $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
     
       // controll page validation and rediraction
-      stateChecking.run(e, toState, $state);
+     // stateChecking.run(e, toState, $state);
 
     });
 
@@ -38,6 +37,10 @@ module app.core {
   function configure($stateProvider, $locationProvider, $urlRouterProvider, $qProvider, $httpProvider) {
 
     $qProvider.errorOnUnhandledRejections(false);
+    
+   $httpProvider.defaults.headers.post['Accept'] = 'application/json, text/javascript';
+    $httpProvider.defaults.headers.post['Content-Type'] = 'multipart/form-data; charset=utf-8';
+
     $locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise('/app');
 

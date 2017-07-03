@@ -52,11 +52,13 @@ module app.uivalidation {
                                 hd: 'has-danger',
                                 hs: 'has-success'
                             };
-                            console.log('field.$valid', field.$valid)
-                            if (field.$viewValue.length === 0 && field.$invalid === false) {
-                                //    console.log(scope.uivalidation.field)
-                                //  console.log('this element is empty or undefined')
-                                // return;
+                            //console.log('field.$valid', field.$valid)
+                            if(field.$viewValue!==undefined){
+                                if (field.$viewValue.length === 0 && field.$invalid === false) {
+                                    //    console.log(scope.uivalidation.field)
+                                    //  console.log('this element is empty or undefined')
+                                    // return;
+                                }
                             }
 
                             let message = (isvalid) => {

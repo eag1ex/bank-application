@@ -20,9 +20,10 @@ module app.application {
      * 
      */
 
-    public APPFORM: any;
+    public APPFORM: any={};
     public application: Object;
     public newAppForm: any;
+    public fileNames:any={};
     public dummy: any;
 
     /* @ngInject */
@@ -39,12 +40,12 @@ module app.application {
       this.dummy = {
         tok: 'sdfsdf345sw'
       };
+      
 
       /**
        * 
        * we need to extend our APPFORM with appFormClass
        */
-      this.APPFORM = {};
       let _t = this;
       let appFormClass = function (val = 'one') {
 
@@ -110,10 +111,21 @@ module app.application {
         console.log('errors on the form')
       })
       */
+
+      this.$scope.$on('uploadedFile',(event,data)=>{
+
+        if(data.name=="securityFile" && data.file!==''){
+          this.fileNames.securityFileName= data.file;
+        }
+        if(data.name=="utilityFile" && data.file!==''){
+          this.fileNames.utilityFileName= data.file;
+        }
+      })
     }
 
     uploadFile(vm){
-      this.fileupload.upload(vm);
+      let token = this.dataservice.GLOB().token;
+      this.fileupload.upload(vm,token);
     }
 
     onSave() {
