@@ -9,9 +9,10 @@ module app {
     'ui.router',
     'ngAnimate',
 
-    //data service
+    //services
     'app.dataservice',
     'app.core.stateChecking',
+    'app.fileupload',
 
     //structure
     'app.core',
@@ -23,6 +24,7 @@ module app {
     'app.application',
 
     //directives
+    'app.fileModel',
     'app.validateNumber',
     'app.appNumber',
     'app.uivalidation'

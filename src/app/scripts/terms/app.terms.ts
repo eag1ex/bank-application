@@ -9,22 +9,24 @@ module app.terms {
       private $document: any,
       private $timeout: any,
       private $q: any,
-      private $state:any,
+      private $state: any,
       private dataservice
     ) {
       // dummy toke id:'sdfsdf345sw'  
-     
+
     }
 
-    gotoTest(state = 'welcome'){
+    gotoTest(state = 'welcome') {
       this.$state.go(state);
     }
 
-    acceptTerms(v){
-       this.dataservice.GLOBALS.terms = v;
-       this.$timeout(()=>{
+    acceptTerms(v) {
+
+    this.dataservice.GLOBALS.terms = v;
+    
+      this.$timeout(() => {
         this.$state.go('application');
-       },100)
+      }, 1000)
     }
   }
 

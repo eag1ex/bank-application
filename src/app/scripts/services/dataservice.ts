@@ -14,12 +14,23 @@ module app.data {
     }
 
     public GLOB() {
-
       let cached = this.user_data_cached;
-      this.GLOBALS.cached = this.user_data_cached || undefined;
-      this.GLOBALS.terms = (this.GLOBALS.terms !== undefined) ? this.GLOBALS.terms : undefined;
-      this.GLOBALS.token = (cached !== undefined) ? cached.data.token : undefined;
+      // check for terms     
+      var terms = null;
+      if (cached) {
+        let form = Object.keys(cached.data).filter((key) => {
+          if (key === 'form') return true;
+        })
 
+        if (form.length > 0) {
+          terms = (cached.data.form.tc !== false) ? cached.data.form.tc : this.GLOBALS.terms;
+        }
+        else terms = this.GLOBALS.terms;
+      }
+
+      this.GLOBALS.cached = cached || undefined;
+      this.GLOBALS.terms = terms;
+      this.GLOBALS.token = (cached !== undefined) ? cached.data.token : undefined;
       console.log('glob data is ', this.GLOBALS)
       return this.GLOBALS;
     }
@@ -76,7 +87,7 @@ module app.data {
         console.log('token not available!')
         return this.fail({ error: true, message: 'token not available, or undefined!' });
       }
-   
+
 
       /**
        * we are doing retreiving data for storag  e as well!
@@ -85,7 +96,7 @@ module app.data {
         url: 'api/register/' + token,
         method: "POST",
         data: {},
-        headers: {'Content-Type': 'application/json'}
+        headers: { 'Content-Type': 'application/json' }
       })
         .then((response) => {
 
@@ -112,13 +123,13 @@ module app.data {
           }
           else {
             this.user_data_cached = undefined;
-            return this.fail(response,'new and existing user undefind');
+            return this.fail(response, 'new and existing user undefind');
           }
 
         }, (response) => {
           console.log('the else response')
           this.user_data_cached = undefined;
-           return this.fail(response,'server error');
+          return this.fail(response, 'server error');
         });
     }
 
@@ -129,26 +140,26 @@ module app.data {
         url: 'api/update/',
         method: "POST",
         data: data,
-        headers: {'Content-Type': 'application/json'}
+        headers: { 'Content-Type': 'application/json' }
       })
         .then((response) => {
           return response.data;
-        }, (response) => { 
-         // console.log('on save resonse',response.data);
-          
+        }, (response) => {
+          // console.log('on save resonse',response.data);
+
           let success = response.data.success;
           let failure = response.data.failure;
-          if(response){
+          if (response) {
             return this.success(response);
           }
-          if(failure){
-             return this.fail(response,'failed to save data');
-          }else{
+          if (failure) {
+            return this.fail(response, 'failed to save data');
+          } else {
             let msg = 'no succes or failure received';
-            return this.fail(data,msg);
-          }          
-        },(response) => {
-           return this.fail(response,'server error');
+            return this.fail(data, msg);
+          }
+        }, (response) => {
+          return this.fail(response, 'server error');
         });
     }
 
@@ -168,13 +179,13 @@ module app.data {
     }
 
     private success(response: any) {
-      return {response:response, success:true};
+      return { response: response, success: true };
     }
 
 
-    private fail(error, msg='') {
-      if(!msg)msg = 'server error';
-      return {error:error, message:msg}
+    private fail(error, msg = '') {
+      if (!msg) msg = 'server error';
+      return { error: error, message: msg }
     }
   }
 

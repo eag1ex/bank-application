@@ -33,7 +33,7 @@ module app.welcome {
     redirectingToNext(state = 'welcome') {
       this.$timeout(() => {
         this.$state.go(state);
-      }, 2000)
+      }, 2500)
     }
 
     public registerUser() {

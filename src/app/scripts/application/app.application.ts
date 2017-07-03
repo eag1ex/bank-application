@@ -119,10 +119,11 @@ module app.application {
     onSave() {
 
       // cleanup and save
-      this.APPFORM.terms = this.dataservice.GLOB().terms;
-      this.APPFORM.token = this.dataservice.GLOB().token;
-
-      let dataToSave = Object.assign({}, { form: this.APPFORM.data() }, { tc: this.APPFORM.terms, token: this.APPFORM.token });
+      let terms = this.dataservice.GLOB().terms;
+      let token = this.dataservice.GLOB().token;
+      
+      let mergedForm = _.merge(this.APPFORM.data(),{ tc: terms})
+      let dataToSave = Object.assign({}, { form: mergedForm }, { token: token });
       //if (this.$scope.appForm.$invalid) return;
 
       console.log('dataToSave ', dataToSave);

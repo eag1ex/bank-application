@@ -250,7 +250,7 @@ function findUser(callbackPromise, res) {
 
             if (obj) {
                 dataFound = obj;
-                console.log('user already exists1', obj)
+               // console.log('user already exists1', obj)
                 return dataFound;
             }
         });
