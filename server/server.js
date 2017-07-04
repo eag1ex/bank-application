@@ -52,21 +52,21 @@ app.set('view engine', 'html');
 app.set('views', config.PUBLIC);
 
 
-var port = app.set('port', process.env.PORT || 8002);
+var port = app.set('port', process.env.PORT || config.SERVER_PORT);
 //==============
 
 // connect to database
 mongoose.Promise = global.Promise;
 mongoose.connect(config.database, function (err, db) {
-    if (err) { 
+    if (err) {
         // throw err;
         console.log('error connecting to mongo db');
         throw err;
-    } else { 
+    } else {
         console.log('data base connected');
-    } 
-});  
-   
+    }
+});
+
 // define file name and destination to save
 
 
@@ -74,13 +74,13 @@ mongoose.connect(config.database, function (err, db) {
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         console.log('uploading image to ', config.PUBLIC + '\\uploaded_images')
-        cb(null, config.PUBLIC  + '\\uploaded_images')
+        cb(null, config.PUBLIC + '\\uploaded_images')
     },
     filename: (req, file, cb) => {
         console.log('uploading filename', file)
         let ext = file.originalname.split('.');
         ext = ext[ext.length - 1];
-        cb(null, 'upload'+'-' + Date.now() + '.' + ext);
+        cb(null, 'upload' + '-' + Date.now() + '.' + ext);
     }
 });
 
@@ -98,13 +98,13 @@ var filter = (req, file, cb) => {
 
 
 var upload = multer({
-        storage: storage,
-        fileFilter: filter
-    }).single('file');
-    /** SRC : https://stackoverflow.com/questions/31530200/node-multer-unexpected-field
-     * this line troubled me for a while
-     * single "file" reffers to type="file" not the name of the input name='filename'<WRONG!
-     */
+    storage: storage,
+    fileFilter: filter
+}).single('file');
+/** SRC : https://stackoverflow.com/questions/31530200/node-multer-unexpected-field
+ * this line troubled me for a while
+ * single "file" reffers to type="file" not the name of the input name='filename'<WRONG!
+ */
 
 
 //https://scotch.io/tutorials/using-mongoosejs-in-node-js-and-mongodb-applications
@@ -120,7 +120,7 @@ apiRoutes.post('/update', updateUser);
 apiRoutes.post(['/register/:token', '/register'], registerAndSave);
 
 //give access to these pages
-myapp.get(['/', '/application', '/tc','/application/*'], (req, res, next) => {
+myapp.get(['/', '/application', '/tc', '/application/*'], (req, res, next) => {
     res.render('index', {
         /**      
          * render server address API_MAIN in index.html
@@ -131,7 +131,7 @@ myapp.get(['/', '/application', '/tc','/application/*'], (req, res, next) => {
 
 // redirect non matching
 myapp.get('/*', function (req, res, next) {
-   // res.redirect('/app');
+    // res.redirect('/app');
 });
 
 //init routes  
@@ -202,7 +202,6 @@ function registerAndSave(req, res) {
         // if existing user not found move on!
         if (!data) return false;
 
-        LAST_TOKEN_CACHED = _TOKEN_;
 
         return res.json({
             message: 'user data found!',
@@ -232,7 +231,6 @@ function registerAndSave(req, res) {
         user.save(function (err) {
             if (err) errorHandler(err, res);
 
-            LAST_TOKEN_CACHED = _TOKEN_;
 
             return res.status(200).json({
                 message: 'registered new user token',
@@ -274,17 +272,17 @@ function findUser(callbackPromise, res) {
 
 function uploadImage(req, res) {
 
-  
+
     //https://github.com/expressjs/multer
     // set multer config
-    
+
 
     upload(req, res, (err) => {
         if (err) {
-             return res.status(200).json({
-              error:true,
-              message:'error uploading file'
-          })
+            return res.status(200).json({
+                error: true,
+                message: 'error uploading file'
+            })
         }
         //console.log('req.file fileName', req.file.filename)
 
@@ -343,7 +341,7 @@ function updateUser(req, res) {
             return res.status(404).json({
                 message: 'no data found',
                 success: false
-            })
+            });
 
         }
         if (err) errorHandler(err, res);
@@ -352,23 +350,31 @@ function updateUser(req, res) {
 
 }//updateUser
 
-function saveUserToDB(findID, newData, res) {
-    // get a user with ID of 1
+function saveUserToDB(findID, formData, res) {
+
     Bankuser.findById(findID, function (err, user) {
         if (err) errorHandler(err, res);
 
-        if (user.accountNumber ===undefined || user.accountNumber==''){
-            if (user.approved===true){
-                user.contactBranchNumber='';
-                user.accountNumber = Date.now().toString();
-            }if (user.approved===false){
-                user.accountNumber = '';
-                user.contactBranchNumber='+66 08-54-23-556';
+        // MAGIC HERE
+        user.form = formData;
+        console.log('user will be saved', user);
+        console.log('user will be saved accountNumber', user.form.accountNumber);
+        console.log('user will be saved approved', user.form.approved);
+        console.log('user will be saved contactBranchNumber', user.form.contactBranchNumber);
+
+        if (!user.form.accountNumber) {
+            if (user.form.approved === true) {
+                user.form.contactBranchNumber = '';
+                user.form.accountNumber = Date.now().toString();
+            } if (user.form.approved === false) {
+                user.form.accountNumber = '';
+                user.form.contactBranchNumber = '+66 08-54-23-556';
             }
-        }else{
-            
+        } else {
+            // nothing else is required
         }
-            
+
+
         // save the user
         user.save(function (err) {
             if (err) errorHandler(err, res);

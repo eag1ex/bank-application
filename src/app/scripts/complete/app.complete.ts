@@ -2,24 +2,23 @@ module app.complete {
   'use strict';
   export class MainController {
     public decission;
+    public application: any;
     /* @ngInject */
     constructor(
-      public $scope: any,
-      public $element: any,
-      private $document: any,
       private $timeout: any,
-      private $q: any,
       private $state: any,
       private dataservice,
       private $stateParams
     ) {
-      this.decission = $stateParams.decission;
 
+      this.application = {
+        decission :$stateParams.decission,
+        accountNumber: dataservice.GLOB().accountNumber,
+        contactBranchNumber: dataservice.GLOB().contactBranchNumber,
+        appNumber: dataservice.GLOB().token
+      }
     }
 
-    gotoTest(state = 'welcome') {
-      this.$state.go(state);
-    }
   }
 
   class MainComponent {

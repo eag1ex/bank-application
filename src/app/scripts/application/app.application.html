@@ -3,31 +3,8 @@
     <div class="col-11">
         <div class="application-form-wrap">
 
-            <div class="form-group inline-section mb-3 w-100">
-
-                        <div class="mb-3">
-                            <label class="section-label">Upload Utility Bill:-</label>
-                            <div class="input-group form-inline">
-                                <label class="custom-file w-25 mr-2">
-                                <input 
-                                required
-                                filemodel="file"      
-                               
-                                ng-model="file" name="file" type="file" id="file" class="custom-file-input">
-                                <span class="custom-file-control"></span></label>
-                                <button type="button" class="btn btn-info" ng-click="vm.uploadFile(file,'final','')">upload</button>
-                                <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.utilityFileName}}</small>
-                            </div>
-                            <!-- input-group -->
-                        </div>
-
-                    </div>
-
-
-            <!--  <application-form formdata="vm.formdata"></application-form> -->
-
             <form name="appForm" id="application-form" class="mb-5" novalidate ng-submit="vm.onSave();">
-                <h3 class="clearfix mb-3 strike">Personal Information, steps 1/4</h3>
+                <h5 class="clearfix mb-3 strike">Personal Information, steps 1/4</h5>
 
                 <div class="form-group row personal-information mb-5 mx-0 step-one">
                     <div class="form-inline inline-section mb-3 w-100">
@@ -49,7 +26,7 @@
                                 ng-model="vm.APPFORM.one.firstName" name="firstName" type="text" class="form-control" id="" placeholder="First Name">
                             <span class=required>*</span>
                         </div>
-                        <div uivalidation="{field:appForm.middleName, has:'input'}" class="input-group mb-2 mb-sm-0 mt-2">
+                        <div uivalidation="{field:appForm.middleName, has:'input'}" class="input-group mb-2 mb-sm-0 mt-2 mr-1">
                             <input ng-init="vm.APPFORM.one.middleName=(vm.APPFORM.one.middleName)? vm.APPFORM.one.middleName:'';" required ng-pattern='/^[a-zA-Z]*$/'
                                 ng-model="vm.APPFORM.one.middleName" name="middleName" type="text" class="form-control" id=""
                                 placeholder="Middle Name">
@@ -67,19 +44,19 @@
                     <div class="form-inline inline-section mb-3 w-100">
                         <label class="col-form-label w-100 section-label">Your Phone:-</label>
                         <div uivalidation="{field:appForm.homePhone, has:'input', 
-                            bothValid:appForm.homePhone.$valid===appForm.homePhonePre.$valid}" class="input-group mb-2 mb-sm-0 mx-0">
+                            bothValid:appForm.homePhone.$valid===appForm.homePhonePre.$valid}" class="input-group mb-2  mx-0 mt-1">
                             <input validnumber required ng-maxlength="5" ng-init="vm.APPFORM.one.homePhonePre=(vm.APPFORM.one.homePhonePre)? vm.APPFORM.one.homePhonePre:'';"
                                 ng-model="vm.APPFORM.one.homePhonePre" name="homePhonePre" type="text" class="form-control" id=""
                                 placeholder="+">
                             <span class=required>*</span>
 
                             <input ng-init="vm.APPFORM.one.homePhone=(vm.APPFORM.one.homePhone)? vm.APPFORM.one.homePhone:'';" required validnumber ng-model="vm.APPFORM.one.homePhone"
-                                name="homePhone" type="text" class="form-control w-75" id="" placeholder="Home Phone">
+                                name="homePhone" type="text" class="form-control w-75 mr-2" id="" placeholder="Home Phone">
                             <span class=required>*</span>
                         </div>
 
                         <div uivalidation="{field:appForm.mobile, has:'input',
-                                   bothValid:appForm.mobilePre.$valid===appForm.mobile.$valid}" class="input-group mb-2 mb-sm-0 mx-0">
+                                   bothValid:appForm.mobilePre.$valid===appForm.mobile.$valid}" class="input-group mb-2  mx-0 mt-1">
                             <input ng-maxlength="5" ng-init="vm.APPFORM.one.mobilePre=(vm.APPFORM.one.mobilePre)? vm.APPFORM.one.mobilePre:'';" ng-model="vm.APPFORM.one.mobilePre"
                                 name="mobilePre" type="text" validnumber class="form-control" id="" placeholder="+">
                             <input ng-init="vm.APPFORM.one.mobile=(vm.APPFORM.one.mobile)? vm.APPFORM.one.mobile:'';" ng-model="vm.APPFORM.one.mobile"
@@ -91,14 +68,14 @@
                     <div class="form-inline inline-section mb-3 w-100">
                         <label class="col-form-label w-100 section-label">Mailing Address:-</label>
 
-                        <div uivalidation="{field:appForm.address, has:'input'}" class="input-group mb-2 mb-sm-0 w-50">
+                        <div uivalidation="{field:appForm.address, has:'input'}" class="input-group mb-2 w-50">
                             <!-- no regex validation here since not sure if using thai language etc. -->
                             <input ng-init="vm.APPFORM.one.address=(vm.APPFORM.one.address)? vm.APPFORM.one.address:'';" required ng-model="vm.APPFORM.one.address"
                                 name="address" type="text" class="form-control" id="" placeholder="Address">
                             <span class=required>*</span>
                         </div>
 
-                        <div uivalidation="{field:appForm.addressOpt, has:'input'}" class="input-group mb-2 mb-sm-0 w-50">
+                        <div uivalidation="{field:appForm.addressOpt, has:'input'}" class="input-group mb-2 w-50">
                             <input ng-init="vm.APPFORM.one.addressOpt=(vm.APPFORM.one.addressOpt)? vm.APPFORM.one.addressOpt:'';" ng-model="vm.APPFORM.one.addressOpt"
                                 name="addressOpt" type="text" class="form-control" id="" placeholder="Optional">
                         </div>
@@ -124,7 +101,7 @@
                 </div>
                 <!-- personal-information -->
 
-                <h3 class="clearfix mb-3 strike">Employment Information, steps 2/4</h3>
+                <h5 class="clearfix mb-3 strike">Employment Information, steps 2/4</h5>
 
                 <div class="collapse form-group row mx-0 mb-5 step-two" id="employment-information">
                     <div class="form-inline inline-section mb-3 w-100">
@@ -174,7 +151,7 @@
                 </div>
                 <!-- employment-information -->
 
-                <h3 class="clearfix mb-3 strike">Account Information, steps 3/4</h3>
+                <h5 class="clearfix mb-3 strike">Account Information, steps 3/4</h5>
 
                 <div class="collapse form-group row  mb-5 mx-0 step-three" id='account-information'>
                     <div class="form-inline inline-section mb-3 w-100">
@@ -220,7 +197,7 @@
                 </div>
                 <!-- account-information -->
 
-                <h3 class="clearfix mb-3 w-100 strike">Documentation, steps 4/4</h3>
+                <h5 class="clearfix mb-3 w-100 strike">Documentation, steps 4/4</h5>
 
                 <div class="collapse form-group row mb-2 mx-0 step-final" id="ducument-information">
                     <div class="form-group inline-section mb-3 w-100 upload-image-wrap">
@@ -235,15 +212,15 @@
                                 ng-init="vm.APPFORM.final.utilityFile=(vm.APPFORM.final.utilityFile)? vm.APPFORM.final.utilityFile:'';"
                                 ng-model="vm.APPFORM.final.utilityFile" name="utilityFile" type="file" id="file" class="custom-file-input">
                                 <span class="custom-file-control"></span></label>
-                                <button type="button" class="btn btn-info" ng-click="vm.uploadFile(vm.APPFORM.final.utilityFile,'final','utilityFile')">upload</button>
+                                <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.utilityFile,'final','utilityFile')">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.utilityFile}}</small>
-                                     <img ng-show="vm.fileNames.utilityFile.length==0;" 
+                                     <img ng-if="vm.fileNames.utilityFile.length==0;" 
                                      ng-src="/uploaded_images/{{vm.APPFORM.final.utilityFile}}" 
-                                     class="mml-3 rounded float-left uploadimg" alt="...">
+                                     class="ml-3 rounded float-left uploadimg" alt="...">
                             </div>
                             <!-- input-group -->
                         </div>
-
+data:image/png;base64,
                     </div>
                     <!-- upload-image-wrap -->
 
@@ -258,10 +235,10 @@
                                 ng-init="vm.APPFORM.final.securityFile=(vm.APPFORM.final.securityFile)? vm.APPFORM.final.securityFile:'';"
                                 ng-model="vm.APPFORM.final.securityFile" name="securityFile" type="file" id="file" class="custom-file-input">
                                 <span class="custom-file-control"></span> </label>
-                                <button type="button" class="btn btn-info" ng-click="vm.uploadFile(vm.APPFORM.final.securityFile,'final','securityFile');">upload</button>
+                                <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.securityFile,'final','securityFile');">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.securityFile}}</small>
                            
-                                  <img ng-show="vm.fileNames.utilityFile.length==0;" 
+                                  <img ng-if="vm.fileNames.utilityFile.length==0;" 
                                   ng-src="/uploaded_images/{{vm.APPFORM.final.securityFile}}" 
                                   class="ml-3 rounded float-left uploadimg" alt="...">
 
@@ -270,14 +247,23 @@
 
                     </div>
                     <!-- upload-image-wrap -->
+
+                    <input  ng-init="vm.APPFORM.accountNumber=(vm.APPFORM.accountNumber)? vm.APPFORM.accountNumber:'';"
+                                ng-model="vm.APPFORM.accountNumber" name="accountNumber" type="hidden">
+
+                    <input ng-init="vm.APPFORM.contactBranchNumber=(vm.APPFORM.contactBranchNumber)? vm.APPFORM.contactBranchNumber:'';"
+                                ng-model="vm.APPFORM.contactBranchNumber" name="contactBranchNumber" type="hidden">                
+
                     <input required ng-init="vm.APPFORM.approved=(vm.APPFORM.approved)? vm.APPFORM.approved:'';"
                                 ng-model="vm.APPFORM.approved" name="approved" type="hidden">
                 </div>
+                <div class="input-group form-inline">
                 <button ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true;" type="submit" ng-disabled="vm.steps.final==false && appForm.$invalid"
                     class="btn-lg btn btn-success step-final mt-2">Approve</button>
 
                  <button ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false;" type="submit" ng-disabled="vm.steps.final==false && appForm.$invalid"
-                    class="btn-lg btn btn-danger step-final mt-2">Decline</button>   
+                    class="ml-2 btn-lg btn btn-danger step-final mt-2">Decline</button>  
+                 </div>    
 
                 <!-- ducument-information -->
 

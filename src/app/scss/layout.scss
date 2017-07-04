@@ -5,24 +5,24 @@
 //----------------------------
 // @layout.scss
 //----------------------------
+//$btn-primary-color, $btn-primary-bg
+//$brand-primary:   #5cb85c          $blue !default;
 nav {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    project-name {
-        display: flex;
-        flex-direction: row;
-    }
-    input.main-project-name {
-        @include reset-input();
-        font-weight: bold;
-        &::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+    .appNumber {
+        color: #999!important;
+        span.hash {
+            opacity: 0.5;
+            font-size: 19px;
         }
     }
+    .head-logo {}
     a {
         color: #fff;
     }
     &.navbar {
-        background: $bkg-color!important;
+        //theme color
+        //  background: $bkg-color!important;
     }
     .lists-menu-group {
         >button {
@@ -56,16 +56,17 @@ welcome {
 
 application {
     form#application-form {
-
-        .input-group .form-control:not(:last-child){
+        h5 {
+            color: #777!important;
+        }
+        .input-group .form-control:not(:last-child) {
             border-radius: .25rem!important;
         }
-
         #ducument-information {
             .input-group {
                 position: relative;
                 padding-bottom: 22px;
-                .custom-file{
+                .custom-file {
                     overflow: hidden;
                 }
                 small.upload-file-text {
@@ -74,7 +75,6 @@ application {
                     bottom: 0px;
                 }
                 img {
-
                     &.uploadimg {
                         max-width: 50px!important;
                         border: 1px solid #fff;
@@ -105,14 +105,17 @@ application {
             }
         }
     }
-}
+}  
 
 footer {
-    position: relative;
-    bottom: 5px;
+    height: 35px; //   position: absolute;
     width: 100%;
     justify-content: center;
     text-align: center;
+    border-top: 1px solid #ccc;
+    &:after {
+        height: 35px;
+    }
 }
 
 //buttons------------------------

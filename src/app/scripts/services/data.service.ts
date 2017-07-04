@@ -9,12 +9,15 @@ module app.data {
     private user_exists: any;
     private user_data_cached: any;
     constructor(private $http,
-      private $q, private API) {
+      private $q, private API, private $rootScope) {
 
     }
 
     public GLOB() {
+
       let cached = this.user_data_cached;
+
+      console.log('what is glob cahed?', cached)
       // check for terms     
       let terms = null;
       let approved = null;
@@ -22,22 +25,22 @@ module app.data {
       if (cached) {
         let form = Object.keys(cached.data).filter((key) => {
           if (key === 'form') return true;
-        })
+        });
 
         if (form.length > 0) {
           terms = (cached.data.form.tc !== false) ? cached.data.form.tc : this.GLOBALS.terms;
-          approved = (cached.data.form.approved !== false || cached.data.form.approved===undefined) ? cached.data.form.approved : this.GLOBALS.approved;
-        }
-        else{
+          approved = (cached.data.form.approved !== false || cached.data.form.approved === undefined) ? cached.data.form.approved : this.GLOBALS.approved;
+        } else {
           terms = this.GLOBALS.terms;
           approved = this.GLOBALS.approved;
-        } 
+        };
       }
       this.GLOBALS.approved = approved;
       this.GLOBALS.cached = cached || undefined;
       this.GLOBALS.terms = terms;
       this.GLOBALS.token = (cached !== undefined) ? cached.data.token : undefined;
       console.log('glob data is ', this.GLOBALS)
+
       return this.GLOBALS;
     }
 
@@ -106,6 +109,8 @@ module app.data {
       })
         .then((response) => {
 
+          this.$rootScope.$emit("onDataChange", true);
+
           console.log('response', response)
           // so we dont have to make another request on the application page, when coming from welcome page
           // only if user already exists
@@ -120,13 +125,17 @@ module app.data {
           }
 
           if (this.user_exists === true) {
+            console.log('user exists 11')
             this.user_data_cached = response.data;
             return response.data;
           }
           if (new_user && success && this.user_exists !== true) {
+            console.log('registerd new user11')
             this.user_data_cached = response.data;
             return response.data;
           }
+
+
           else {
             this.user_data_cached = undefined;
             return this.fail(response, 'new and existing user undefind');
@@ -143,20 +152,18 @@ module app.data {
     onSave(data) {
 
       return this.$http({
-        url: 'api/update/',
+        url: 'api/update',
         method: "POST",
         data: data,
         headers: { 'Content-Type': 'application/json' }
       })
         .then((response) => {
-          return response.data;
-        }, (response) => {
           // console.log('on save resonse',response.data);
-
+          console.log('data success12', response)
           let success = response.data.success;
           let failure = response.data.failure;
-          if (response) {
-            return this.success(response);
+          if (success) {
+            return response.data.data;
           }
           if (failure) {
             return this.fail(response, 'failed to save data');
@@ -164,6 +171,7 @@ module app.data {
             let msg = 'no succes or failure received';
             return this.fail(data, msg);
           }
+
         }, (response) => {
           return this.fail(response, 'server error');
         });

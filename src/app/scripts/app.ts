@@ -27,7 +27,6 @@ module app {
     //directives
     'app.fileModel',
     'app.validateNumber',
-    'app.appNumber',
     'app.uivalidation'
   ]);
 }  

@@ -2,9 +2,10 @@ module app.layout {
   'use strict';
 
   export class LayoutController {
-    static $inject: Array<string> = ['$scope'];
-    public category:any;
-    constructor(public scope:any) {
+
+    public appNumber: any;
+    /* @ngInject */
+    constructor(public $rootScope: any, public dataservice: any, private $timeout:any, public $scope:any) {
 
       /**
        *  The hierarchy of this app is:
@@ -15,8 +16,14 @@ module app.layout {
        *             >> form is send if the nodemailer is running.
        */
 
+        
+       $rootScope.$on('onDataChange',(e,data)=> {
+          $timeout(()=>{
+            this.appNumber = dataservice.GLOB().token
+          },100)           
+       })
 
-    }   
+    }
 
   }
   angular

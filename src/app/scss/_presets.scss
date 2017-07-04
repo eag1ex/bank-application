@@ -3,11 +3,22 @@
 //----------------------------
 
 html,
-body {  
-
-    background: $bkg-color!important;
+body {
+    // theme color  
+    // background: $bkg-color!important;
+  height: 100%;
 }
- 
+.angular-app-include {
+   min-height: 100%;
+	margin-bottom: -35px; 
+    &:after {
+    content: "";
+    display: block;
+    }
+}
+
+
+
 button, .btn{  
     cursor: pointer!important;
 }
@@ -124,6 +135,6 @@ i.c3 {
 .strike{
     width: 100%; 
 
-    border-bottom: 2px solid $body-color;
+    border-bottom: 2px solid #777;
 }
 

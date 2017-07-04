@@ -1,6 +1,6 @@
 <div ng-controller="layoutController as $ctrl">
 
-  <nav class="navbar navbar-toggleable-md navbar-inverse navbar-light">
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
       aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -8,56 +8,33 @@
 
       
     <div class="btn-group w-100" role="group">
-      <div class="btn-group w-50" role="group">
-        <appnumber></appnumber> 
-           
-      <!--  <a href="" class="navbar-brand">Design</a>-->
+      <div class="btn-group w-50" role="group" ng-show='$ctrl.appNumber'>
+        <h4  class="p-3 text-white appNumber"><span class="hash">#</span>{{$ctrl.appNumber}}</h4>
+       
       </div>
-      <div class="btn-group p-2 w-50" role="group">
-        <a href="" class="bold">UBank</a>
+      <div class="btn-group w-25 head-logo" role="group">
+        <h4 class='p-3'><a href="" class="bold">UBank</a></h4>
       </div>
-      <div class="btn-group p-2 w-75" role="group">
-        <a href=""><i class="fa fa-users pr-1" aria-hidden="true"></i>Application Form</a>
+      <div class="btn-group p-3 pl-4 w-75 text-white" role="group">
+        <h4>Application Form</h4>
       </div>   
 
-      <div class="btn-group  p-2 lists-menu-group" ng-init="$ctrl.category.name=''">
-        <button type="button" class="btn btn-secondary dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Lists</button>
-        <div class="dropdown-menu ml-3">
-          <a ng-repeat="list in $ctrl.category track by $index" 
-          class="dropdown-item" href="#" ng-click="$ctrl.category.name=list" >{{list}}</a>
-           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" ng-click="$ctrl.category.name=''">Show All</a>
-        </div>
-      </div>
-
     </div>
-
+  
 
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav mr-auto" style='opacity:0'>
         <li class="nav-item active">
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Pricing</a>
-        </li>
+       
       </ul>
-      
-       <a href="#" class="float-right pt-2"><i class="fa fa-ellipsis-h" aria-hidden="true"></i>
-       <span class=''>&nbsp;Show Menu</span></a>
 
     </div> 
   </nav>
 
   <div class="container-fluid " ng-controller="layoutController as vm">
-    <div ui-view class="col-sm-12 col-md-12 col-lg-12 mt-2"></div>
+    <div ui-view class="col-sm-12 col-md-12 col-lg-12 mt-4"></div>
   </div>
 
-  <footer>
-   <!-- <small class="text-white p-2">Ubank App is a proctical project, does not reflact on any existing brand. Copy rights reserved.</small>-->
-  </footer>
 </div>
-

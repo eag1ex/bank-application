@@ -13,7 +13,6 @@ module app.terms {
       private dataservice
     ) {
       // dummy toke id:'sdfsdf345sw'  
-
     }
 
     gotoTest(state = 'welcome') {

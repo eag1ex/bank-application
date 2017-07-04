@@ -20,10 +20,10 @@ module app.application {
      * 
      */
 
-    public APPFORM: any={};
+    public APPFORM: any = {};
     public application: Object;
     public newAppForm: any;
-    public fileNames:any;
+    public fileNames: any;
     public dummy: any;
 
     /* @ngInject */
@@ -35,12 +35,13 @@ module app.application {
       public $q: any,
       private dataservice,
       private $state,
-      private fileupload
+      private fileupload,
+      private $location
     ) {
       this.dummy = {
         tok: 'sdfsdf345sw'
       };
-      
+
 
       /**
        * 
@@ -74,105 +75,105 @@ module app.application {
             if (key === v) next++;
           }
         }
-      }
+      };
 
+      //initially anyway
+      this.APPFORM = _.merge(this.APPFORM, new appFormClass());
 
       // at this point we retreive cached data
       this.dataservice.getCached().then((data) => {
         // console.log('got cached data! ',data)
         if (data.form !== undefined && Object.keys(data.form).length > 0) {
-          this.APPFORM = data.form;
-          console.log('we have data with form')
+          this.APPFORM = _.merge(this.APPFORM, data.form);
+          console.log('we have data with form', this.APPFORM);
         }
         return this.APPFORM;
-
-      }).then((data) => {
-        this.APPFORM = _.merge(data, new appFormClass());
-        console.log('this.APPFORM', this.APPFORM)
       }, (err) => {
-        this.APPFORM = new appFormClass();
         console.log('no APPFORM', err)
-      })
+      });
 
-      /*
-      for (var key in this.APPFORM) {
-        Object.defineProperty(this.APPFORM[key], 'deferred', {
-          value: this.$q.defer()
-        });
-
-      }
-      */
-
-      /*
-      this.APPFORM[step].deferred(true)
-      this.APPFORM.one.deferred.then(()=>{
-        console.log('form validated')
-      },()=>{
-        console.log('errors on the form')
-      })
-      */
       //for reference
-      this.fileNames ={
-        utilityFile:'',
-        securityFile:''      
+      this.fileNames = {
+        utilityFile: '',
+        securityFile: ''
       }
 
-      this.$scope.$on('uploadedFile',(event,data)=>{
-        console.log('uploadedFile',data)
-        if(data.name && data.file!==''){
-          this.fileNames[data.name]= data.file;         
+      this.$scope.$on('uploadedFile', (event, data) => {
+        console.log('uploadedFile', data)
+        if (data.name && data.file !== '') {
+          this.fileNames[data.name] = data.file;
         }
       })
+    };
+
+    completeRedirectTo(decission) {
+      let goTo='';
+      if (decission==true) goTo ='approved';
+      else goTo ='declined';
+
+      this.$timeout(() => {
+        this.$location.path(`app/application/${goTo}`);
+      }, 1500);
     }
 
-    completeRedirectTo(approved){
-      //https://stackoverflow.com/questions/25647454/how-to-pass-parameters-using-ui-sref-in-ui-router-to-controller
-      if(approved){
-          this.$state.go('application.complete');
-      }else{
-        
-      }
+    uploadFile(vm, step, fieldName) {
+      this.fileupload.upload(vm).then((data) => {
+        if (!data.filename) return;
 
-    }
+        let uploadedFileName = data.filename;
+        this.fileNames[fieldName] = ''; //hide description when we have file from server
+        this.APPFORM[step][fieldName] = uploadedFileName;
 
-    uploadFile(vm,step,fieldName){
-      this.fileupload.upload(vm).then((data)=>{
-          if(!data.filename )return;
-
-          let uploadedFileName = data.filename;
-          this.fileNames[fieldName]=''; //hide description when we have file from server
-          this.APPFORM[step][fieldName] = uploadedFileName;
-
-          console.log('this.APPFORM[step][fieldName]',this.APPFORM[step][fieldName])
-      },(err)=>{
-        console.log('error getting file name',err)
+        console.log('this.APPFORM[step][fieldName]', this.APPFORM[step][fieldName])
+      }, (err) => {
+        console.log('error getting file name', err)
       });
     }
 
-    onSave() {
-
+    dataToSave() {
       // cleanup and save
       let terms = this.dataservice.GLOB().terms;
       let token = this.dataservice.GLOB().token;
-      
-      let mergedForm = _.merge(this.APPFORM.data(),{ tc: terms})
+      //update globals
+      let approved = this.APPFORM.approved;
+      let accountNumber = this.APPFORM.accountNumber;
+      let contactBranchNumber = this.APPFORM.contactBranchNumber;
+
+      this.dataservice.GLOBALS.approved = this.APPFORM.approved;
+      this.dataservice.GLOBALS.accountNumber = accountNumber;
+      this.dataservice.GLOBALS.contactBranchNumber = contactBranchNumber;
+
+      let updateVars = {
+        tc: terms,
+        approved: approved,
+        accountNumber: accountNumber,
+        contactBranchNumber: contactBranchNumber
+      };
+
+      let mergedForm = _.merge(this.APPFORM.data(), updateVars)
       let dataToSave = Object.assign({}, { form: mergedForm }, { token: token });
+
+      return dataToSave;
+    }
+
+    onSave() {
+      let dataToSave = this.dataToSave();
+
       //if (this.$scope.appForm.$invalid) return;
 
       console.log('dataToSave ', dataToSave);
 
+      // return;
       this.dataservice.onSave(dataToSave).then((data) => {
-        console.log('was data saved', data);
+        if (!data) return;
 
-      },(err)=>{
-        console.log('err',err)
+        console.log('was data saved', data);
+        this.completeRedirectTo(data.form.approved);
+
+      }, (err) => {
+        console.log('err', err)
       });
 
-    }
-
-
-    gotoTest(state = 'welcome') {
-      this.$state.go(state);
     }
 
     initFormSteps(data) {
@@ -232,9 +233,9 @@ module app.application {
         //revalidate fields
         $(this.APPFORM[step].className).find('.input-group').mouseup();
         let data = { step: step, resolution: true, next: this.APPFORM.nextClass(step) }
-        
+
         this.initFormSteps(data);
-        // show all valid fields   
+        // show all valid fields     
         this.manualExecuteValidation(this.APPFORM[step].className);
         console.log('next step is?? ' + step)
         console.log('this.APPFORM.nextClass(step)', this.APPFORM.nextClass(step))
@@ -249,7 +250,7 @@ module app.application {
         console.log('this.APPFORM.nextClass()', step, this.APPFORM.nextClass(step))
       }
 
-    }//
+    }//  
 
     manualExecuteValidation(el) {
 
