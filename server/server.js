@@ -23,9 +23,6 @@ var Bankuser = require(__dirname + '/models/bank_user.js'); // orm model
 var json = require('json-file');
 var jsonData = json.read(__dirname + '/initial_data.json').data;
 
-// uploaded identifier
-let LAST_TOKEN_CACHED;
-
 // configuration =========
 app.enable('trust proxy');
 app.use(cors());
@@ -72,18 +69,16 @@ mongoose.connect(config.database, function (err, db) {
    
 // define file name and destination to save
 
-var GENERATED_FILE_IDS = {}
+
 
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log('uploading image to ', __dirname + '\\images')
-        cb(null, __dirname + '\\images')
+        console.log('uploading image to ', config.PUBLIC + '\\uploaded_images')
+        cb(null, config.PUBLIC  + '\\uploaded_images')
     },
     filename: (req, file, cb) => {
-
-        console.log('uploading filename122', file)
+        console.log('uploading filename', file)
         let ext = file.originalname.split('.');
-        //console.log('uploading filename', ext)
         ext = ext[ext.length - 1];
         cb(null, 'upload'+'-' + Date.now() + '.' + ext);
     }
@@ -116,16 +111,16 @@ var upload = multer({
 //https://stackoverflow.com/questions/21497639/how-to-get-id-from-url-in-express-param-and-query-doesnt-seem-to-work#21498520
 
 //@upload image
-apiRoutes.post('/upload/:token', uploadImage);
+apiRoutes.post('/upload', uploadImage);
 
 apiRoutes.post('/setup', initialSetup);
 
-apiRoutes.post('/update/', updateUser);
+apiRoutes.post('/update', updateUser);
 
 apiRoutes.post(['/register/:token', '/register'], registerAndSave);
 
 //give access to these pages
-myapp.get(['/', '/application', '/tc'], (req, res, next) => {
+myapp.get(['/', '/application', '/tc','/application/*'], (req, res, next) => {
     res.render('index', {
         /**      
          * render server address API_MAIN in index.html
@@ -136,7 +131,7 @@ myapp.get(['/', '/application', '/tc'], (req, res, next) => {
 
 // redirect non matching
 myapp.get('/*', function (req, res, next) {
-    res.redirect('/app');
+   // res.redirect('/app');
 });
 
 //init routes  
@@ -279,14 +274,7 @@ function findUser(callbackPromise, res) {
 
 function uploadImage(req, res) {
 
-    let token = req.params.token || undefined;
-
-    if (token === undefined) {
-          return res.status(200).json({
-              success:false,
-              message:'token '+fileName
-          })
-    }
+  
     //https://github.com/expressjs/multer
     // set multer config
     
@@ -369,7 +357,18 @@ function saveUserToDB(findID, newData, res) {
     Bankuser.findById(findID, function (err, user) {
         if (err) errorHandler(err, res);
 
-        user.form = newData;
+        if (user.accountNumber ===undefined || user.accountNumber==''){
+            if (user.approved===true){
+                user.contactBranchNumber='';
+                user.accountNumber = Date.now().toString();
+            }if (user.approved===false){
+                user.accountNumber = '';
+                user.contactBranchNumber='+66 08-54-23-556';
+            }
+        }else{
+            
+        }
+            
         // save the user
         user.save(function (err) {
             if (err) errorHandler(err, res);

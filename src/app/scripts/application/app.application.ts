@@ -23,7 +23,7 @@ module app.application {
     public APPFORM: any={};
     public application: Object;
     public newAppForm: any;
-    public fileNames:any={};
+    public fileNames:any;
     public dummy: any;
 
     /* @ngInject */
@@ -111,21 +111,42 @@ module app.application {
         console.log('errors on the form')
       })
       */
+      //for reference
+      this.fileNames ={
+        utilityFile:'',
+        securityFile:''      
+      }
 
       this.$scope.$on('uploadedFile',(event,data)=>{
-
-        if(data.name=="securityFile" && data.file!==''){
-          this.fileNames.securityFileName= data.file;
-        }
-        if(data.name=="utilityFile" && data.file!==''){
-          this.fileNames.utilityFileName= data.file;
+        console.log('uploadedFile',data)
+        if(data.name && data.file!==''){
+          this.fileNames[data.name]= data.file;         
         }
       })
     }
 
-    uploadFile(vm){
-      let token = this.dataservice.GLOB().token;
-      this.fileupload.upload(vm,token);
+    completeRedirectTo(approved){
+      //https://stackoverflow.com/questions/25647454/how-to-pass-parameters-using-ui-sref-in-ui-router-to-controller
+      if(approved){
+          this.$state.go('application.complete');
+      }else{
+        
+      }
+
+    }
+
+    uploadFile(vm,step,fieldName){
+      this.fileupload.upload(vm).then((data)=>{
+          if(!data.filename )return;
+
+          let uploadedFileName = data.filename;
+          this.fileNames[fieldName]=''; //hide description when we have file from server
+          this.APPFORM[step][fieldName] = uploadedFileName;
+
+          console.log('this.APPFORM[step][fieldName]',this.APPFORM[step][fieldName])
+      },(err)=>{
+        console.log('error getting file name',err)
+      });
     }
 
     onSave() {
@@ -211,6 +232,7 @@ module app.application {
         //revalidate fields
         $(this.APPFORM[step].className).find('.input-group').mouseup();
         let data = { step: step, resolution: true, next: this.APPFORM.nextClass(step) }
+        
         this.initFormSteps(data);
         // show all valid fields   
         this.manualExecuteValidation(this.APPFORM[step].className);

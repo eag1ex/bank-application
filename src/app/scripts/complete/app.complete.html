@@ -1,0 +1,21 @@
+<!-- add app.terms -->
+<div class="row justify-content-center">
+    <div class="col-8 mt-3 mb-5">
+        <h3>Application Complete</h3>
+        
+        <div ng-if='vm.decission=="approved"' id="complete" class="complete-{{vm.decission}}">
+            <p class="lead">Your application has been approved</p>
+           decission {{vm.decission}}
+         </div>
+          <div ng-if='vm.decission=="declined"' id="complete" class="complete-{{vm.decission}}">
+              <p class="lead">Your application has been declined, sorry!</p>
+           decission {{vm.decission}}
+         </div>
+        <!-- complete -->
+
+    </div>
+    <!-- col -->
+</div>
+<!-- row -->
+
+<button type="submit" class="btn btn-primary mt-2" ng-click="vm.gotoTest('application')">got to</button>

@@ -22,6 +22,7 @@ module app {
     'app.welcome',
     'app.terms',
     'app.application',
+    'app.complete',
 
     //directives
     'app.fileModel',

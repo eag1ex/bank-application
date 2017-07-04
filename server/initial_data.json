@@ -19,7 +19,8 @@
                     "securityFile":"234sdfrsdfrr.jpg",
                     "utilityFile":"sef56drftgrt.jpg",
                     "valid":true
-             }
+             },
+             "approved":true
          }
       },
       {
@@ -41,7 +42,8 @@
                     "securityFile":"sdf456.jpg",
                     "utilityFile":"sdf345.jpg",
                     "valid":true
-             }
+             },
+             "approved":false
          }
       }
    ]

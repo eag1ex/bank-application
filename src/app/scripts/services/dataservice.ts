@@ -16,7 +16,9 @@ module app.data {
     public GLOB() {
       let cached = this.user_data_cached;
       // check for terms     
-      var terms = null;
+      let terms = null;
+      let approved = null;
+
       if (cached) {
         let form = Object.keys(cached.data).filter((key) => {
           if (key === 'form') return true;
@@ -24,10 +26,14 @@ module app.data {
 
         if (form.length > 0) {
           terms = (cached.data.form.tc !== false) ? cached.data.form.tc : this.GLOBALS.terms;
+          approved = (cached.data.form.approved !== false || cached.data.form.approved===undefined) ? cached.data.form.approved : this.GLOBALS.approved;
         }
-        else terms = this.GLOBALS.terms;
+        else{
+          terms = this.GLOBALS.terms;
+          approved = this.GLOBALS.approved;
+        } 
       }
-
+      this.GLOBALS.approved = approved;
       this.GLOBALS.cached = cached || undefined;
       this.GLOBALS.terms = terms;
       this.GLOBALS.token = (cached !== undefined) ? cached.data.token : undefined;

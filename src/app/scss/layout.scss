@@ -74,9 +74,8 @@ application {
                     bottom: 0px;
                 }
                 img {
-                    display: none;
-                    &.uploaded {
-                        display: block;
+
+                    &.uploadimg {
                         max-width: 50px!important;
                         border: 1px solid #fff;
                     }

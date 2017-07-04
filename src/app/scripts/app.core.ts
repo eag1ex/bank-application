@@ -84,7 +84,19 @@ module app.core {
           settings: {
             nav: 1
           },
-        }
+        },
+        
+      },
+      {
+        state: 'complete',
+        config: {
+          url: '/app/application/:decission',
+          template: '<complete></complete>',
+          title: 'Complete',
+          settings: {
+            nav: 1
+          },
+        }        
       }
     ];
   }
