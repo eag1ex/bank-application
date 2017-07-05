@@ -3,7 +3,7 @@
     <div class="col-11">
         <div class="application-form-wrap">
 
-            <form name="appForm" id="application-form" class="mb-5" novalidate ng-submit="vm.onSave();">
+            <form name="appForm" id="application-form" class="mb-5" novalidate ng-submit="vm.onSave('final');">
                 <h5 class="clearfix mb-3 strike">Personal Information, steps 1/4</h5>
 
                 <div class="form-group row personal-information mb-5 mx-0 step-one">
@@ -95,8 +95,10 @@
 
                     </div>
                     <!-- inline-section -->
-
-                    <button data-toggle="collapse" ng-click="vm.checkFormStepsValid('one');" type="button" class="btn-lg btn btn-secondary step-one mt-2">Next</button>
+                    <div class="form-group form-inline">
+                        <button ng-init='step1=false' data-toggle="collapse" ng-click="vm.checkFormStepsValid('one'); step1=true;" type="button" class="btn-lg btn btn-secondary step-one mt-2">Next</button>
+                        <span ng-show='vm.sectionSaved==false && step1==true;' id="preloader" class='ml-3 mt-2'></span>
+                    </div>
 
                 </div>
                 <!-- personal-information -->
@@ -146,7 +148,11 @@
 
                     </div>
                     <!-- inline-section -->
-                    <button data-toggle="collapse" ng-click="vm.checkFormStepsValid('two');" type="button" class="btn-lg btn btn-secondary step-two mt-2">Next</button>
+                    <div class="form-group form-inline">
+                        <button ng-init='step2=false' data-toggle="collapse" ng-click="vm.checkFormStepsValid('two');step2=true" type="button" class="btn-lg btn btn-secondary step-two mt-2">Next</button>
+                        <span ng-show='vm.sectionSaved==false && step2==true;' id="preloader" class='ml-3 mt-2'></span>
+                    </div>
+
 
                 </div>
                 <!-- employment-information -->
@@ -193,7 +199,15 @@
                         </div>
                     </div>
 
-                    <button data-toggle="collapse" ng-click="vm.checkFormStepsValid('three');" type="button" class="btn-lg btn btn-secondary step-three mt-2">Next</button>
+                    <div class="form-group form-inline">
+                        <button ng-init="step3=false;" data-toggle="collapse" ng-click="vm.checkFormStepsValid('three');step3=true;" type="button"
+                            class="btn-lg btn btn-secondary step-three mt-2">Next</button>
+                        <span ng-show='vm.sectionSaved==false && step3==true;' id="preloader" class='ml-3 mt-2'></span>
+                    </div>
+
+
+
+
                 </div>
                 <!-- account-information -->
 
@@ -214,13 +228,14 @@
                                 <span class="custom-file-control"></span></label>
                                 <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.utilityFile,'final','utilityFile')">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.utilityFile}}</small>
-                                     <img ng-if="vm.fileNames.utilityFile.length==0;" 
-                                     ng-src="/uploaded_images/{{vm.APPFORM.final.utilityFile}}" 
-                                     class="ml-3 rounded float-left uploadimg" alt="...">
+
+                                <img ng-init="PATH='/uploaded_images/'; DUMMY='/dist/styles/images/imgdummy.gif';" ng-if="vm.fileNames.utilityFile.length==0;"
+                                    ng-src="{{(vm.APPFORM.final.utilityFile.length) ? PATH+vm.APPFORM.final.utilityFile:DUMMY}}"
+                                    class="ml-3 rounded float-left uploadimg" alt="...">
                             </div>
                             <!-- input-group -->
                         </div>
-data:image/png;base64,
+
                     </div>
                     <!-- upload-image-wrap -->
 
@@ -237,10 +252,10 @@ data:image/png;base64,
                                 <span class="custom-file-control"></span> </label>
                                 <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.securityFile,'final','securityFile');">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.securityFile}}</small>
-                           
-                                  <img ng-if="vm.fileNames.utilityFile.length==0;" 
-                                  ng-src="/uploaded_images/{{vm.APPFORM.final.securityFile}}" 
-                                  class="ml-3 rounded float-left uploadimg" alt="...">
+
+                                <img ng-init="PATH='/uploaded_images/'; DUMMY='/dist/styles/images/imgdummy.gif';" ng-if="vm.fileNames.securityFile.length==0;"
+                                    ng-src="{{(vm.APPFORM.final.securityFile.length) ? PATH+vm.APPFORM.final.securityFile:DUMMY}}"
+                                    class="ml-3 rounded float-left uploadimg" alt="...">
 
                             </div>
                         </div>
@@ -248,22 +263,27 @@ data:image/png;base64,
                     </div>
                     <!-- upload-image-wrap -->
 
-                    <input  ng-init="vm.APPFORM.accountNumber=(vm.APPFORM.accountNumber)? vm.APPFORM.accountNumber:'';"
-                                ng-model="vm.APPFORM.accountNumber" name="accountNumber" type="hidden">
+                    <input ng-init="vm.APPFORM.accountNumber=(vm.APPFORM.accountNumber)? vm.APPFORM.accountNumber:'';" ng-model="vm.APPFORM.accountNumber"
+                        name="accountNumber" type="hidden">
 
-                    <input ng-init="vm.APPFORM.contactBranchNumber=(vm.APPFORM.contactBranchNumber)? vm.APPFORM.contactBranchNumber:'';"
-                                ng-model="vm.APPFORM.contactBranchNumber" name="contactBranchNumber" type="hidden">                
+                    <input ng-init="vm.APPFORM.contactBranchNumber=(vm.APPFORM.contactBranchNumber)? vm.APPFORM.contactBranchNumber:'';" ng-model="vm.APPFORM.contactBranchNumber"
+                        name="contactBranchNumber" type="hidden">
 
-                    <input required ng-init="vm.APPFORM.approved=(vm.APPFORM.approved)? vm.APPFORM.approved:'';"
-                                ng-model="vm.APPFORM.approved" name="approved" type="hidden">
+                    <input required ng-init="vm.APPFORM.approved=(vm.APPFORM.approved)? vm.APPFORM.approved:'';" ng-model="vm.APPFORM.approved"
+                        name="approved" type="hidden">
                 </div>
-                <div class="input-group form-inline">
-                <button ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true;" type="submit" ng-disabled="vm.steps.final==false && appForm.$invalid"
-                    class="btn-lg btn btn-success step-final mt-2">Approve</button>
+                <div ng-init='step4' class="input-group form-inline">
 
-                 <button ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false;" type="submit" ng-disabled="vm.steps.final==false && appForm.$invalid"
-                    class="ml-2 btn-lg btn btn-danger step-final mt-2">Decline</button>  
-                 </div>    
+                    <button ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true; step4=true" type="submit" ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid"
+                        class="btn-lg btn btn-success step-final mt-2">Approve</button>
+
+                    <button ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false; step4=true" type="submit" ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid"
+                        class="ml-2 btn-lg btn btn-danger step-final mt-2">Decline</button>
+
+                    <span ng-show='vm.sectionSaved==false && step4==true;' id="preloader" class='ml-3 mt-2'></span>
+                   
+
+                </div>
 
                 <!-- ducument-information -->
 
@@ -275,5 +295,3 @@ data:image/png;base64,
     <!-- col -->
 </div>
 <!-- row-->
-
-<button type="submit" class="btn btn-primary mt-2" ng-click="vm.gotoTest('welcome')">got to</button>

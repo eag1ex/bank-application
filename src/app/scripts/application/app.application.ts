@@ -19,8 +19,8 @@ module app.application {
      * FUNCTION manualExecuteValidation() forces the uivalidation directive to reinitialize the ui.
      * 
      */
-
     public APPFORM: any = {};
+    public sectionSaved:any;
     public application: Object;
     public newAppForm: any;
     public fileNames: any;
@@ -53,7 +53,7 @@ module app.application {
         this.one = { /*index: 9,*/ valid: false };
         this.two = { /*index: 4,*/ valid: false };
         this.three = { /*index: 3,*/ valid: false };
-        this.final = { /*index: 1,*/ valid: false };
+        this.final = { /*index: 1,*/ valid: null };// inportant for server decission to not final save
 
         this.update = (d = _t.APPFORM) => {
           let data = {
@@ -107,9 +107,9 @@ module app.application {
     };
 
     completeRedirectTo(decission) {
-      let goTo='';
-      if (decission==true) goTo ='approved';
-      else goTo ='declined';
+      let goTo = '';
+      if (decission == true) goTo = 'approved';
+      else goTo = 'declined';
 
       this.$timeout(() => {
         this.$location.path(`app/application/${goTo}`);
@@ -130,14 +130,15 @@ module app.application {
       });
     }
 
+
     dataToSave() {
       // cleanup and save
-      let terms = this.dataservice.GLOB().terms;
-      let token = this.dataservice.GLOB().token;
+      let terms = this.dataservice.GLOBALS.terms;
+      let token = this.dataservice.GLOBALS.token;
       //update globals
       let approved = this.APPFORM.approved;
-      let accountNumber = this.APPFORM.accountNumber;
-      let contactBranchNumber = this.APPFORM.contactBranchNumber;
+      let accountNumber = (approved) ? this.APPFORM.accountNumber : '';
+      let contactBranchNumber = (!approved) ? this.APPFORM.contactBranchNumber : '';
 
       this.dataservice.GLOBALS.approved = this.APPFORM.approved;
       this.dataservice.GLOBALS.accountNumber = accountNumber;
@@ -151,24 +152,36 @@ module app.application {
       };
 
       let mergedForm = _.merge(this.APPFORM.data(), updateVars)
-      let dataToSave = Object.assign({}, { form: mergedForm }, { token: token });
 
+      console.log('mergedForm', mergedForm)
+      let dataToSave = Object.assign({}, { form: mergedForm }, { token: token });
+      console.log('dataToSave', dataToSave)
       return dataToSave;
     }
 
-    onSave() {
+    finalValidStep(step) {
+      return (this.APPFORM[step].valid && this.$scope.appForm.$valid && step == 'final');
+    }
+
+    onSave(step = null) {
+
+      if (step !== null) {
+        if (this.finalValidStep(step) === false) {
+          console.log('final step invalid!')
+          return;
+        }
+      }
+      console.log('dataToSave ', this.dataToSave());
       let dataToSave = this.dataToSave();
 
-      //if (this.$scope.appForm.$invalid) return;
-
-      console.log('dataToSave ', dataToSave);
+      this.sectionSaved = false
 
       // return;
       this.dataservice.onSave(dataToSave).then((data) => {
         if (!data) return;
-
+        this.sectionSaved = true;
         console.log('was data saved', data);
-        this.completeRedirectTo(data.form.approved);
+        if (step !== null) this.completeRedirectTo(data.form.approved);
 
       }, (err) => {
         console.log('err', err)
@@ -181,6 +194,9 @@ module app.application {
       if (data.resolution) {
         this.collapse(data.next, 'show');
         console.log(data, 'form stage valid');
+        // we execute onSave('final') via ng-submit
+        if (data.onSave !== null && data.step !== 'final') data.onSave();// callback, for final 
+
         console.log(this.APPFORM[data.step])
       }
 
@@ -190,6 +206,10 @@ module app.application {
         console.log('invalid elms', data.invals)
       }
 
+    }
+
+    filesUploadedAre() {
+      return (this.fileNames.securityFile && this.fileNames.utilityFile);
     }
 
     checkFormStepsValid(step) {
@@ -215,6 +235,14 @@ module app.application {
             invalidElms[key] = elements[key];
             formValid = false;
           }
+
+          //bypass for final step, manual validation for upload fields
+          if (step == 'final' && this.filesUploadedAre() === true) {
+            formValid = true;
+          } else if (step == 'final' && this.filesUploadedAre() === false) {
+            formValid = false;
+          }
+
         }//IF
       }//FOR
 
@@ -231,8 +259,18 @@ module app.application {
         this.APPFORM[step].valid = true;
 
         //revalidate fields
-        $(this.APPFORM[step].className).find('.input-group').mouseup();
-        let data = { step: step, resolution: true, next: this.APPFORM.nextClass(step) }
+        //  $(this.APPFORM[step].className).find('.input-group').mouseup();
+        //&& this.APPFORM[step].valid && this.$scope.appForm.$valid
+        let notFinalsave = (step !== 'final');
+
+        let data = {
+          step: step,
+          resolution: true,
+          next: this.APPFORM.nextClass(step),
+          onSave: () => {
+            return (notFinalsave === true) ? this.onSave() : false;
+          }
+        }
 
         this.initFormSteps(data);
         // show all valid fields     
@@ -243,7 +281,13 @@ module app.application {
       if (!formValid) {
         this.APPFORM[step].valid = false;
 
-        let data = { "step": step, resolution: false, invals: invalidElms, next: this.APPFORM.nextClass(step) };
+        let data = {
+          "step": step, resolution: false,
+          invals: invalidElms,
+          next: this.APPFORM.nextClass(step),
+          onSave: null
+        };
+
         this.initFormSteps(data);
         // show all invalid fields        
         this.manualExecuteValidation(this.APPFORM[step].className);

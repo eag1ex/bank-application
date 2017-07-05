@@ -19,54 +19,41 @@ module app.core.stateChecking {
         run(e, toState, state) {
             if (this.dataservice === undefined) {
                 console.log('this.dataservice not available');
-                return;
+                e.preventDefault();
+                state.go('welcome');
             }
-            console.log('what is token',this.dataservice.GLOB().token)
+            console.log('what is token', this.dataservice.GLOBALS.token)
+
             // if not registered to not let to TC page
-            if (this.dataservice.GLOB().token !== undefined && toState.name == "welcome") {
+            if (!this.dataservice.GLOBALS.token && toState.name !== "welcome") {
+                e.preventDefault();
+                state.go('welcome');
+                console.log('you are not registered, declined')
+            }
+
+            // if not registered to not let to TC page
+            if (this.dataservice.GLOBALS.token && toState.name == "welcome") {
                 e.preventDefault();
                 state.go('terms');
                 console.log('You have token, redirecting to terms')
             }
 
             // if not registered to not let to TC page
-            if (this.dataservice.GLOB().terms === true && toState.name == "terms") {
+            if (this.dataservice.GLOBALS.terms === true && toState.name == "terms") {
                 e.preventDefault();
                 state.go('application');
                 console.log('You already accepted terms, redirecting to application')
             }
 
 
-            /// if no cached data, only allow on welcome page!
-            if (this.dataservice.GLOB().cached === undefined && toState.name !== "welcome") {
-                e.preventDefault();
-                state.go('welcome');
-                console.log('no cached data availabe, declined')
-            }
-
-            // if not registered to not let to TC page
-            if (this.dataservice.GLOB().token === undefined && toState.name == "terms") {
-                e.preventDefault();
-                state.go('welcome');
-                console.log('you are not registered, declined')
-            }
 
             if (toState.name == 'application') {
-                if (this.dataservice.GLOB().terms == false || this.dataservice.GLOB().terms == undefined) {
+                if (this.dataservice.GLOBALS.terms == false || this.dataservice.GLOBALS.terms == undefined) {
                     e.preventDefault();
                     state.go('terms');
                     console.log('terms not accepted')
                 }
-
-                if (this.dataservice.GLOB().terms == true) {
-                    console.log('terms accepted')
-                }
-
-            } else if (toState.module === 'public') {
-                e.preventDefault();
-                // state.go('tool.suggestions');
-            };
-
+            }
         }
 
     }

@@ -5,7 +5,7 @@
         <div ng-if='vm.application.decission=="approved"' id="complete" class="complete-{{vm.application.decission}} ">
             <p>Your application has been approved, congratulation!</p>
             <div class="bg-success text-black my-3 p-4 container">
-                <h5>This is your account number <strong>{{vm.application.accountNumber}}</strong></h5>
+                <h5>This is your account number: <br><strong>{{vm.application.accountNumber}}</strong></h5>
             </div>
 
         </div>
@@ -15,10 +15,10 @@
 
             <div class="bg-warning text-black my-3 p-4 container">
 
-                <h5>Please call you at the Branch <strong>
+                <h5>Please call as at the Branch <strong>
                     <a href="callto:322342" class="white">
                         {{vm.application.contactBranchNumber}}</a></strong></h5>
-                <h5> Your application number/token is: <strong>{{vm.application.appNumber}}</strong></h5>
+                <h5> Your application number/token is: <br><strong>{{vm.application.appNumber}}</strong></h5>
 
             </div>
         </div>
@@ -27,4 +27,3 @@
     <!-- col -->
 </div>
 <!-- row -->
-<button type="submit" class="btn btn-primary mt-2" ng-click="vm.gotoTest('application')">got to</button>

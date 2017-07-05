@@ -2,7 +2,7 @@
 <div class="row justify-content-center" ng-init='vm.terms=false;'>
     <div class="col-sm-12 col-lg-8 col-md-8 mt-3 mb-5">
         <h3>Terms and conditions</h3>
-            Please read and accept to proceed.
+        Please read and accept to proceed.
         </p>
         <div id="terms">
             <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in dolor imperdiet, venenatis sem ac, dictum nulla.
@@ -28,11 +28,14 @@
                 blandit nec libero vel, mollis ullamcorper orci. Vestibulum in sodales mauris. Pellentesque eu posuere mauris.</p>
         </div>
         <!-- terms -->
-        <button ng-click="vm.terms=true; vm.acceptTerms(vm.terms);" type="submit" 
-                        class="btn btn-primary mt-3">Accept</button>
+
+        <div class="form-group form-inline">
+            <button ng-click="vm.terms=true; vm.acceptTerms(vm.terms);" type="submit" class="btn btn-primary mt-3">Accept</button>
+            <span ng-show='vm.terms' id="preloader" class='ml-3 mt-3'></span>
+        </div>
+
+
     </div>
     <!-- col -->
 </div>
 <!-- row -->
-
-<button type="submit" class="btn btn-primary mt-2" ng-click="vm.gotoTest('application')">got to</button>

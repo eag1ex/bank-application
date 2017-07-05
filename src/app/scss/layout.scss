@@ -41,21 +41,20 @@ welcome {
             font-size: 13px;
         }
         .form-group {
-            span#preloader {
-                background: url($image-path+'/preregister.gif') no-repeat center center;
-                display: block;
-                width: 32px;
-                height: 32px;
-                position: absolute;
-                top: 5px;
-                right: 0px;
-            }
+            @include preloader();
         }
     }
 }
 
 application {
     form#application-form {
+        .form-group,
+        .input-group {
+            @include preloader(); //overite
+            span#preloader {
+                position: static!important;
+            }
+        }
         h5 {
             color: #777!important;
         }
@@ -105,7 +104,16 @@ application {
             }
         }
     }
-}  
+}
+
+terms {
+    .form-group {
+        @include preloader(); //overite
+        span#preloader {
+            position: static!important;
+        }
+    }
+}
 
 footer {
     height: 35px; //   position: absolute;

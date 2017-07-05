@@ -49,7 +49,7 @@ module app.welcome {
 
       this.formOnsubmit = true;
       let token = this.registerNewUser.token;
-
+      
       this.dataservice.registerUser(token).then((data) => {
         console.log('what is the data',data)
        // if 
@@ -70,6 +70,10 @@ module app.welcome {
           this.existingUser = true;
           console.log('newData userExists', newData);
           // got to next page
+          if(newData.data.form!==undefined){
+           this.dataservice.GLOBALS.terms=newData.data.form.tc;
+          }
+
           this.clickToContinue =true;
           this.redirectingToNext('terms');
 
@@ -77,6 +81,7 @@ module app.welcome {
           // data is already cached at this point   
           this.existingUser = false;
           this.registerNewUser.valid = true;
+         
 
           // got to next page
           

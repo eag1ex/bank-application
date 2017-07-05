@@ -1,7 +1,6 @@
 //----------------------------
 // @_mixins.scss
 //----------------------------
-
 @mixin box-shadow($shadow1, $shadow2:false, $shadow3:false, $shadow4:false, $shadow5:false) {
     $params: $shadow1;
     @if $shadow2 {
@@ -31,6 +30,18 @@
     color: #fff!important;
 }
 
+@mixin preloader() {
+    span#preloader {
+        background: url($image-path+'/preregister.gif') no-repeat center center;
+        display: block;
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 5px;
+        right: 0px;
+    }
+}
+
 @mixin reset-input() {
     border: none!important;
     border-color: transparent!important;
@@ -40,4 +51,3 @@
     padding: 0;
     margin: 0;
 }
-

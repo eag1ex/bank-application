@@ -13,9 +13,9 @@ module app.complete {
 
       this.application = {
         decission :$stateParams.decission,
-        accountNumber: dataservice.GLOB().accountNumber,
-        contactBranchNumber: dataservice.GLOB().contactBranchNumber,
-        appNumber: dataservice.GLOB().token
+        accountNumber: dataservice.GLOBALS.accountNumber,
+        contactBranchNumber: dataservice.GLOBALS.contactBranchNumber,
+        appNumber: dataservice.GLOBALS.token
       }
     }
 

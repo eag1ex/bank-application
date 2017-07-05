@@ -361,17 +361,23 @@ function saveUserToDB(findID, formData, res) {
         console.log('user will be saved accountNumber', user.form.accountNumber);
         console.log('user will be saved approved', user.form.approved);
         console.log('user will be saved contactBranchNumber', user.form.contactBranchNumber);
+        console.log('user.form.final.valid', user.form['final'].valid);
+        
+        if (user.form['final'].valid === true) {
+            if (!user.form.accountNumber) {
+                if (user.form.approved === true) {
+                    user.form.contactBranchNumber = '';
+                    user.form.accountNumber = Date.now().toString();
+                } if (user.form.approved === false) {
+                    user.form.accountNumber = '';
+                    user.form.contactBranchNumber = '+66 08-54-23-556';
+                }
 
-        if (!user.form.accountNumber) {
-            if (user.form.approved === true) {
-                user.form.contactBranchNumber = '';
-                user.form.accountNumber = Date.now().toString();
-            } if (user.form.approved === false) {
-                user.form.accountNumber = '';
-                user.form.contactBranchNumber = '+66 08-54-23-556';
+                console.log('saving final application', user);
+
+            } else {
+                // nothing else is required
             }
-        } else {
-            // nothing else is required
         }
 
 

@@ -7,39 +7,17 @@ module app.data {
     private GLOBALS: any = {};
 
     private user_exists: any;
-    private user_data_cached: any;
+    private GLOBALS.cache: any;
     constructor(private $http,
       private $q, private API, private $rootScope) {
 
     }
 
     public GLOB() {
-
-      let cached = this.user_data_cached;
-
-      console.log('what is glob cahed?', cached)
-      // check for terms     
-      let terms = null;
-      let approved = null;
-
-      if (cached) {
-        let form = Object.keys(cached.data).filter((key) => {
-          if (key === 'form') return true;
-        });
-
-        if (form.length > 0) {
-          terms = (cached.data.form.tc !== false) ? cached.data.form.tc : this.GLOBALS.terms;
-          approved = (cached.data.form.approved !== false || cached.data.form.approved === undefined) ? cached.data.form.approved : this.GLOBALS.approved;
-        } else {
-          terms = this.GLOBALS.terms;
-          approved = this.GLOBALS.approved;
-        };
-      }
-      this.GLOBALS.approved = approved;
-      this.GLOBALS.cached = cached || undefined;
-      this.GLOBALS.terms = terms;
-      this.GLOBALS.token = (cached !== undefined) ? cached.data.token : undefined;
-      console.log('glob data is ', this.GLOBALS)
+      let config = {
+        cached: this.GLOBALS.cache
+      };
+      this.GLOBALS.cached = config.cached || undefined;
 
       return this.GLOBALS;
     }
@@ -54,9 +32,10 @@ module app.data {
 
     getCached() {
       let deferred = this.$q.defer();
-      if (this.user_data_cached) {
+      if (this.GLOBALS.form !== undefined) {
+
         console.log('sending existing user data to application page');
-        deferred.resolve(this.user_data_cached.data);
+        deferred.resolve(this.GLOBALS);
       }
       else {
         let msg = { error: true, message: "cached data not found" };
@@ -70,27 +49,21 @@ module app.data {
     }
 
     clearAllCache() {
-      this.user_data_cached = undefined;
       this.GLOBALS = {};
     }
 
     checkDataRetention() {
       let failed = false;
-      if (this.user_data_cached && (this.GLOBALS.token == undefined || !this.GLOBALS.token)) {
+      if (this.GLOBALS.token == undefined || !this.GLOBALS.token || this.GLOBALS.terms) {
         this.clearAllCache(); failed = true;
-        console.log('token not valid, but have cached data', 'decline');
+        console.log('YOU ARE NOT VIALID', 'decline');
       }
-      if (this.user_data_cached && (this.GLOBALS.terms == undefined || !this.GLOBALS.terms)) {
-        this.clearAllCache(); failed = true;
-        console.log('terms not valid, but have cached data', 'decline');
-      }
-
       return failed;
     }
 
     registerUser(tok = '') {
 
-      var token = (tok) ? tok : this.GLOB().token;
+      var token = (tok) ? tok : this.GLOBALS.token;
 
       if (!token || token == undefined) {
         console.log('token not available!')
@@ -126,24 +99,26 @@ module app.data {
 
           if (this.user_exists === true) {
             console.log('user exists 11')
-            this.user_data_cached = response.data;
+            this.GLOBALS = response.data.data;
+            console.log('this.GLOBALS user exists 11', this.GLOBALS)
             return response.data;
           }
           if (new_user && success && this.user_exists !== true) {
             console.log('registerd new user11')
-            this.user_data_cached = response.data;
+            this.GLOBALS = response.data.data;
+            console.log('this.GLOBALS registerd new user11', this.GLOBALS)
             return response.data;
           }
 
 
           else {
-            this.user_data_cached = undefined;
+            this.GLOBALS = undefined;
             return this.fail(response, 'new and existing user undefind');
           }
 
         }, (response) => {
           console.log('the else response')
-          this.user_data_cached = undefined;
+          this.GLOBALS = undefined;
           return this.fail(response, 'server error');
         });
     }
@@ -158,11 +133,16 @@ module app.data {
         headers: { 'Content-Type': 'application/json' }
       })
         .then((response) => {
-          // console.log('on save resonse',response.data);
           console.log('data success12', response)
           let success = response.data.success;
           let failure = response.data.failure;
           if (success) {
+
+            let d = response.data.data;
+            // to be available on complete page
+            this.GLOBALS.accountNumber = d.form.accountNumber;
+            this.GLOBALS.contactBranchNumber = d.form.contactBranchNumber;
+            
             return response.data.data;
           }
           if (failure) {
