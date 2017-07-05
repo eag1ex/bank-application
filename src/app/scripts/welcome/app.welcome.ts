@@ -5,6 +5,7 @@ module app.welcome {
     public existingUser;
     public formOnsubmit:boolean;
     public clickToContinue:boolean;
+    public welcomeUser:any
     /* @ngInject */
     constructor(
       public $scope: any,
@@ -71,6 +72,7 @@ module app.welcome {
           console.log('newData userExists', newData);
           // got to next page
           if(newData.data.form!==undefined){
+            this.welcomeUser = newData.data.form.one.firstName;
            this.dataservice.GLOBALS.terms=newData.data.form.tc;
           }
 

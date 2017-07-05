@@ -33,70 +33,25 @@ module app.application {
       public $document: any,
       public $timeout: any,
       public $q: any,
+      private Form:any,
       private dataservice,
       private $state,
       private fileupload,
       private $location
     ) {
-      this.dummy = {
-        tok: 'sdfsdf345sw'
-      };
-
-
       /**
-       * 
-       * we need to extend our APPFORM with appFormClass
+       * we need to extend our APPFORM model
        */
-      let _t = this;
-      let appFormClass = function (val = 'one') {
+      let form= new Form(this.dataservice, this,this.APPFORM);
+      form.model().then((data)=>{
+        this.APPFORM = data;
+      })
 
-        this.one = { /*index: 9,*/ valid: false };
-        this.two = { /*index: 4,*/ valid: false };
-        this.three = { /*index: 3,*/ valid: false };
-        this.final = { /*index: 1,*/ valid: null };// inportant for server decission to not final save
-
-        this.update = (d = _t.APPFORM) => {
-          let data = {
-            one: Object.assign({}, d.one, { className: ".step-one" }),
-            two: Object.assign({}, d.two, { className: ".step-two" }),
-            three: Object.assign({}, d.three, { className: ".step-three" }),
-            final: Object.assign({}, d.final, { className: ".step-final" })
-          }
-          return data;
-        }
-
-        this.data = this.update;
-
-        this.nextClass = (v = val) => {
-          var next = 0;
-          var data = this.data();
-          for (var key in data) {
-            if (next === 1) return data[key].className;
-            if (key === v) next++;
-          }
-        }
-      };
-
-      //initially anyway
-      this.APPFORM = _.merge(this.APPFORM, new appFormClass());
-
-      // at this point we retreive cached data
-      this.dataservice.getCached().then((data) => {
-        // console.log('got cached data! ',data)
-        if (data.form !== undefined && Object.keys(data.form).length > 0) {
-          this.APPFORM = _.merge(this.APPFORM, data.form);
-          console.log('we have data with form', this.APPFORM);
-        }
-        return this.APPFORM;
-      }, (err) => {
-        console.log('no APPFORM', err)
-      });
-
-      //for reference
       this.fileNames = {
         utilityFile: '',
         securityFile: ''
       }
+      this.sectionSaved=false
 
       this.$scope.$on('uploadedFile', (event, data) => {
         console.log('uploadedFile', data)
@@ -113,7 +68,7 @@ module app.application {
 
       this.$timeout(() => {
         this.$location.path(`app/application/${goTo}`);
-      }, 1500);
+      }, 2000);
     }
 
     uploadFile(vm, step, fieldName) {
@@ -123,6 +78,9 @@ module app.application {
         let uploadedFileName = data.filename;
         this.fileNames[fieldName] = ''; //hide description when we have file from server
         this.APPFORM[step][fieldName] = uploadedFileName;
+
+        // validate last step
+        this.checkFormStepsValid(step);
 
         console.log('this.APPFORM[step][fieldName]', this.APPFORM[step][fieldName])
       }, (err) => {
@@ -166,6 +124,8 @@ module app.application {
     onSave(step = null) {
 
       if (step !== null) {
+        console.log('stuck?? step',step)
+        console.log('finalValidStep? ',this.finalValidStep(step))
         if (this.finalValidStep(step) === false) {
           console.log('final step invalid!')
           return;
@@ -195,7 +155,7 @@ module app.application {
         this.collapse(data.next, 'show');
         console.log(data, 'form stage valid');
         // we execute onSave('final') via ng-submit
-        if (data.onSave !== null && data.step !== 'final') data.onSave();// callback, for final 
+        if (data.onSave !== null && data.step !== 'final') data.onSave();// callback, for onSave
 
         console.log(this.APPFORM[data.step])
       }
@@ -258,9 +218,6 @@ module app.application {
       if (formValid) {
         this.APPFORM[step].valid = true;
 
-        //revalidate fields
-        //  $(this.APPFORM[step].className).find('.input-group').mouseup();
-        //&& this.APPFORM[step].valid && this.$scope.appForm.$valid
         let notFinalsave = (step !== 'final');
 
         let data = {

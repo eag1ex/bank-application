@@ -10,6 +10,7 @@ module app {
     'ngAnimate',
 
     //services
+    'app.formModel',
     'app.dataservice',
     'app.core.stateChecking',
     'app.fileupload',

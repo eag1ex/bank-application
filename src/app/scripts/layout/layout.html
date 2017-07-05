@@ -6,31 +6,19 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-      
-    <div class="btn-group w-100" role="group">
-      <div class="btn-group w-50" role="group" ng-show='$ctrl.appNumber'>
-        <h4  class="p-3 text-white appNumber"><span class="hash">#</span>{{$ctrl.appNumber}}</h4>
-       
-      </div>
-      <div class="btn-group w-25 head-logo" role="group">
-        <h4 class='p-3'><a href="" class="bold">UBank</a></h4>
-      </div>
-      <div class="btn-group p-3 pl-4 w-75 text-white" role="group">
-        <h4>Application Form</h4>
-      </div>   
-
+  <div class="row align-items-center w-100 p-3">
+    <div class="col-sm-12 col-md-2 col-lg-2" ng-show="$ctrl.appNumber">
+       <h4 class="text-white appNumber">
+        <span class="hash">#</span>{{$ctrl.appNumber}}</h4>
     </div>
-  
+    <div class="col-sm-12 col-md-2 col-lg-2">
+     <h4 class=''><a href="" class="bold head-logo">UBank</a></h4>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4">
+      <h4 class='text-white'>Application Form</h4>
+    </div>
+  </div>
 
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto" style='opacity:0'>
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-       
-      </ul>
-
-    </div> 
   </nav>
 
   <div class="container-fluid " ng-controller="layoutController as vm">

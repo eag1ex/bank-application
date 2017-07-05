@@ -1,6 +1,6 @@
 <!-- app.application -->
 <div class="row justify-content-center">
-    <div class="col-11">
+    <div class="col-11 m-0 p-0">
         <div class="application-form-wrap">
 
             <form name="appForm" id="application-form" class="mb-5" novalidate ng-submit="vm.onSave('final');">
@@ -218,8 +218,10 @@
 
                         <div class="mb-3">
                             <label class="section-label">Upload Utility Bill:-</label>
-                            <div class="input-group form-inline">
-                                <label class="custom-file w-25 mr-2">
+                            <div 
+                            uivalidation="{field:appForm.utilityFile, has:'input'}"
+                            class="input-group form-inline">
+                                <label class="custom-file w-25 mr-2"> 
                                 <input 
                                 required
                                 filemodel="vm.APPFORM.final.utilityFile"      
@@ -229,7 +231,8 @@
                                 <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.utilityFile,'final','utilityFile')">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.utilityFile}}</small>
 
-                                <img ng-init="PATH='/uploaded_images/'; DUMMY='/dist/styles/images/imgdummy.gif';" ng-if="vm.fileNames.utilityFile.length==0;"
+                                <img ng-init="PATH='/uploaded_images/'; DUMMY='/dist/styles/images/imgdummy.gif';" ng-if="vm.fileNames.utilityFile
+                                .length==0;"
                                     ng-src="{{(vm.APPFORM.final.utilityFile.length) ? PATH+vm.APPFORM.final.utilityFile:DUMMY}}"
                                     class="ml-3 rounded float-left uploadimg" alt="...">
                             </div>
@@ -242,7 +245,10 @@
                     <div class="form-group inline-section mb-3 w-100 upload-image-wrap">
                         <div class=" mb-3 ">
                             <label class="section-label">Upload Social Security Number:-</label>
-                            <div class="input-group form-inline">
+                            <div 
+                            
+                            uivalidation="{field:appForm.securityFile, has:'input'}"
+                            class="input-group form-inline">
 
                                 <label class="custom-file w-25 mr-2">
                                 <input required   
@@ -269,20 +275,22 @@
                     <input ng-init="vm.APPFORM.contactBranchNumber=(vm.APPFORM.contactBranchNumber)? vm.APPFORM.contactBranchNumber:'';" ng-model="vm.APPFORM.contactBranchNumber"
                         name="contactBranchNumber" type="hidden">
 
-                    <input required ng-init="vm.APPFORM.approved=(vm.APPFORM.approved)? vm.APPFORM.approved:'';" ng-model="vm.APPFORM.approved"
+                    <input  ng-init="vm.APPFORM.approved=(vm.APPFORM.approved)? vm.APPFORM.approved:'';" ng-model="vm.APPFORM.approved"
                         name="approved" type="hidden">
                 </div>
-                <div ng-init='step4' class="input-group form-inline">
+                <div ng-init='step4=false' class="input-group form-inline">
 
-                    <button ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true; step4=true" type="submit" ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid"
-                        class="btn-lg btn btn-success step-final mt-2">Approve</button>
+                    <button                  
+                    ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true; step4=true" type="submit" 
+                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid || vm.sectionSaved"
+                        class="btn-lg btn btn-success step-final mt-2 mr-2">Approve</button>
 
-                    <button ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false; step4=true" type="submit" ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid"
-                        class="ml-2 btn-lg btn btn-danger step-final mt-2">Decline</button>
+                    <button    
+                    ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false; step4=true" type="submit" 
+                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid || vm.sectionSaved"
+                        class=" btn-lg btn btn-danger step-final mt-2">Decline</button>
 
-                    <span ng-show='vm.sectionSaved==false && step4==true;' id="preloader" class='ml-3 mt-2'></span>
-                   
-
+                    <span ng-show='step4==true;' id="preloader" class='ml-3 mt-2'></span>
                 </div>
 
                 <!-- ducument-information -->

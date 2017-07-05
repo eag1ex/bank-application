@@ -10,12 +10,15 @@ module app.complete {
       private dataservice,
       private $stateParams
     ) {
-
-      this.application = {
-        decission :$stateParams.decission,
-        accountNumber: dataservice.GLOBALS.accountNumber,
-        contactBranchNumber: dataservice.GLOBALS.contactBranchNumber,
-        appNumber: dataservice.GLOBALS.token
+      this.application = {};
+      if (dataservice.GLOBALS) {
+        this.application = {
+          applicant: `${dataservice.GLOBALS.form.one.title} ${dataservice.GLOBALS.form.one.firstName} ${dataservice.GLOBALS.form.one.lastName}`,
+          decission: $stateParams.decission,
+          accountNumber: dataservice.GLOBALS.accountNumber,
+          contactBranchNumber: dataservice.GLOBALS.contactBranchNumber,
+          appNumber: dataservice.GLOBALS.token
+        }
       }
     }
 

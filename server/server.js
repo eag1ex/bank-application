@@ -6,7 +6,7 @@ var apiRoutes = express.Router();
 var myapp = express.Router();
 var app = express();
 
-//http 
+//http  
 var cors = require('cors');
 var multer = require('multer');
 var fs = require('fs');
@@ -75,7 +75,7 @@ var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         console.log('uploading image to ', config.PUBLIC + '\\uploaded_images')
         cb(null, config.PUBLIC + '\\uploaded_images')
-    },
+    }, 
     filename: (req, file, cb) => {
         console.log('uploading filename', file)
         let ext = file.originalname.split('.');

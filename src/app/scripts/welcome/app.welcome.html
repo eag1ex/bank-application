@@ -10,8 +10,8 @@
 
                 <div class="form-group mx-0" ng-class='{"has-danger":welcomeForm.$invalid && welcomeForm.$dirty || vm.registerNewUser.invalid, 
                             "has-success":welcomeForm.$valid && welcomeForm.$dirty}'>
-
-                    <input ng-pattern="/^[a-zA-Z0-9\s]*$/" ng-change="vm.formOnsubmit=false;" ng-class='{"form-control-danger":welcomeForm.$invalid===true || vm.registerNewUser.invalid, 
+            
+                    <input ng-pattern="/^[a-zA-Z0-9]*$/" ng-change="vm.formOnsubmit=false;" ng-class='{"form-control-danger":welcomeForm.$invalid===true || vm.registerNewUser.invalid, 
                             "form-control-success":welcomeForm.$valid}' ng-model="vm.registerNewUser.token" ng-minlength="5"
                         ng-maxlength="11" required name="registerNewUser" type="text" class="form-control" id="inputnumber" placeholder="Enter token">
 
@@ -31,7 +31,9 @@
                             </div>
                         </div>
 
-                        <div ng-show="vm.existingUser===true && welcomeForm.$dirty && vm.formOnsubmit===true" class=" form-control-feedback ml-1 w-100">You are already registered!
+                        <div ng-show="vm.existingUser===true && welcomeForm.$dirty && vm.formOnsubmit===true" 
+                        class=" form-control-feedback ml-1 w-100"><span ng-show='vm.welcomeUser'>Hey {{vm.welcomeUser}}, </span>
+                        You are already registered!
                             <div class="text-white">Redirecting now...</div>
                             <span id="preloader"></span>
                         </div>
