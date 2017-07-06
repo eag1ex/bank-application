@@ -5,8 +5,7 @@
 //----------------------------
 // @layout.scss
 //----------------------------
-//$btn-primary-color, $btn-primary-bg
-//$brand-primary:   #5cb85c          $blue !default;
+
 nav {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     .appNumber {
@@ -22,8 +21,7 @@ nav {
         color: #fff;
     }
     &.navbar {
-        //theme color
-        //  background: $bkg-color!important;
+
     }
     .lists-menu-group {
         >button {
@@ -117,7 +115,7 @@ terms {
 }
 
 footer {
-    height: 35px; //   position: absolute;
+    height: 35px; 
     width: 100%;
     justify-content: center;
     text-align: center;
@@ -125,11 +123,4 @@ footer {
     &:after {
         height: 35px;
     }
-}
-
-//buttons------------------------
-// forms -----------------------
-textarea.form-control {
-    border: 1px solid rgba(0, 0, 0, .03);
-    @include box-shadow(1px 1px 2px rgba(0, 0, 0, .03));
 }

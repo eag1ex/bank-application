@@ -96,8 +96,10 @@
                     </div>
                     <!-- inline-section -->
                     <div class="form-group form-inline">
-                        <button ng-init='step1=false' data-toggle="collapse" ng-click="vm.checkFormStepsValid('one'); step1=true;" type="button" class="btn-lg btn btn-secondary step-one mt-2">Next</button>
-                        <span ng-show='vm.sectionSaved==false && step1==true;' id="preloader" class='ml-3 mt-2'></span>
+                        <button ng-init='step1=false' data-toggle="collapse" 
+                        ng-click="vm.checkFormStepsValid('one'); step1=true;" type="button" 
+                        class="btn-lg btn btn-secondary step-one mt-2" ng-class='{"btn-danger":vm.APPFORM.one.valid===false}'>Next</button> 
+                        <span ng-show='vm.sectionSaved==false && step1==true && vm.APPFORM.one.valid===true;' id="preloader" class='ml-3 mt-2'></span>
                     </div>
 
                 </div>
@@ -149,8 +151,10 @@
                     </div>
                     <!-- inline-section -->
                     <div class="form-group form-inline">
-                        <button ng-init='step2=false' data-toggle="collapse" ng-click="vm.checkFormStepsValid('two');step2=true" type="button" class="btn-lg btn btn-secondary step-two mt-2">Next</button>
-                        <span ng-show='vm.sectionSaved==false && step2==true;' id="preloader" class='ml-3 mt-2'></span>
+                        <button ng-init='step2=false' data-toggle="collapse" 
+                        ng-click="vm.checkFormStepsValid('two');step2=true" type="button" 
+                        class="btn-lg btn btn-secondary step-two mt-2" ng-class='{"btn-danger":vm.APPFORM.two.valid===false}'>Next</button>
+                        <span ng-show='vm.sectionSaved==false && step2==true && vm.APPFORM.two.valid===true;' id="preloader" class='ml-3 mt-2'></span>
                     </div>
 
 
@@ -201,8 +205,8 @@
 
                     <div class="form-group form-inline">
                         <button ng-init="step3=false;" data-toggle="collapse" ng-click="vm.checkFormStepsValid('three');step3=true;" type="button"
-                            class="btn-lg btn btn-secondary step-three mt-2">Next</button>
-                        <span ng-show='vm.sectionSaved==false && step3==true;' id="preloader" class='ml-3 mt-2'></span>
+                            class="btn-lg btn btn-secondary step-three mt-2" ng-class='{"btn-danger":vm.APPFORM.three.valid===false}'>Next</button>
+                        <span ng-show='vm.sectionSaved==false && step3==true && vm.APPFORM.three.valid===true;' id="preloader" class='ml-3 mt-2'></span>
                     </div>
 
 
@@ -227,6 +231,7 @@
                                 filemodel="vm.APPFORM.final.utilityFile"      
                                 ng-init="vm.APPFORM.final.utilityFile=(vm.APPFORM.final.utilityFile)? vm.APPFORM.final.utilityFile:'';"
                                 ng-model="vm.APPFORM.final.utilityFile" name="utilityFile" type="file" id="file" class="custom-file-input">
+                                <span class=required>*</span>
                                 <span class="custom-file-control"></span></label>
                                 <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.utilityFile,'final','utilityFile')">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.utilityFile}}</small>
@@ -255,6 +260,7 @@
                                 filemodel="vm.APPFORM.final.securityFile"                        
                                 ng-init="vm.APPFORM.final.securityFile=(vm.APPFORM.final.securityFile)? vm.APPFORM.final.securityFile:'';"
                                 ng-model="vm.APPFORM.final.securityFile" name="securityFile" type="file" id="file" class="custom-file-input">
+                                <span class=required>*</span>
                                 <span class="custom-file-control"></span> </label>
                                 <button type="button" class="btn btn-secondary" ng-click="vm.uploadFile(vm.APPFORM.final.securityFile,'final','securityFile');">upload</button>
                                 <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.securityFile}}</small>
@@ -282,17 +288,16 @@
 
                     <button                  
                     ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true; step4=true" type="submit" 
-                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid || vm.sectionSaved"
+                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid==true || vm.finalSave==true"
                         class="btn-lg btn btn-success step-final mt-2 mr-2">Approve</button>
 
                     <button    
                     ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false; step4=true" type="submit" 
-                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid || vm.sectionSaved"
+                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid==true || vm.finalSave==true"
                         class=" btn-lg btn btn-danger step-final mt-2">Decline</button>
 
                     <span ng-show='step4==true;' id="preloader" class='ml-3 mt-2'></span>
                 </div>
-
                 <!-- ducument-information -->
 
             </form>

@@ -12,14 +12,14 @@ module app.core {
     .constant('API', { 'URL': "http:" + API_MAIN, 'DATA': null });
 
   /* @ngInject */
-  function appRun($rootScope, $timeout, dataservice, $state, stateChecking,) {
+  function appRun($rootScope, $timeout, dataservice, $state, stateChecking,$location) {
     // checking data valid, or clear all cache!
     dataservice.checkDataRetention();
 
     $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
-    
+
       // controll page validation and rediraction
-      stateChecking.run(e, toState, $state);
+      stateChecking.run(e, toState, $state,$location);
 
     });
 
@@ -27,7 +27,7 @@ module app.core {
     $rootScope._ = window._;
     $rootScope.angularLoader = 0;
     $rootScope.$on("$stateChangeSuccess", () => {
-      console.info('angular Loaded');
+      console.info('Angular Loaded');
     });
 
   };
@@ -37,8 +37,7 @@ module app.core {
   function configure($stateProvider, $locationProvider, $urlRouterProvider, $qProvider, $httpProvider) {
 
     $qProvider.errorOnUnhandledRejections(false);
-    
-   $httpProvider.defaults.headers.post['Accept'] = 'application/json, text/javascript';
+    $httpProvider.defaults.headers.post['Accept'] = 'application/json, text/javascript';
     $httpProvider.defaults.headers.post['Content-Type'] = 'multipart/form-data; charset=utf-8';
 
     $locationProvider.html5Mode(true);
@@ -85,7 +84,7 @@ module app.core {
             nav: 1
           },
         },
-        
+
       },
       {
         state: 'complete',
@@ -96,7 +95,7 @@ module app.core {
           settings: {
             nav: 1
           },
-        }        
+        }
       }
     ];
   }

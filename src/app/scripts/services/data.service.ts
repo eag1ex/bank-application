@@ -2,39 +2,27 @@ module app.data {
   'use strict';
 
   export class DataService {
-    /* @ngInject */
-
     private GLOBALS: any = {};
-
     private user_exists: any;
-    private GLOBALS.cache: any;
+
+    /**
+     * api calls are initiated from here, we return cached defered promise after token registration,
+     * and every subsequent return of an existing user will return the cached devered object from welcome page
+     * accross to application page, all on save is not cashed until user return again.
+     * We make call to DB on every save and update the GLOBAL OBJECT
+     */
+
+    /* @ngInject */
     constructor(private $http,
       private $q, private API, private $rootScope) {
 
     }
-
-    public GLOB() {
-      let config = {
-        cached: this.GLOBALS.cache
-      };
-      this.GLOBALS.cached = config.cached || undefined;
-
-      return this.GLOBALS;
-    }
-
-    getAll() {
-      return this.$http.get(this.API.URL + "/all")
-        .then((response) => {
-          return response;
-        })
-        .catch(this.fail);
-    }
+    
 
     getCached() {
       let deferred = this.$q.defer();
       if (this.GLOBALS.form !== undefined) {
-
-        console.log('sending existing user data to application page');
+        console.info('getCached(), sending existing user data across');
         deferred.resolve(this.GLOBALS);
       }
       else {
@@ -56,24 +44,24 @@ module app.data {
       let failed = false;
       if (this.GLOBALS.token == undefined || !this.GLOBALS.token || this.GLOBALS.terms) {
         this.clearAllCache(); failed = true;
-        console.log('YOU ARE NOT VIALID', 'decline');
+        console.info('YOU ARE NOT VIALID', 'decline');
       }
       return failed;
     }
+
+    /**
+     * updating GLOBALS and returning response
+     * sending data and and url var token
+     */
 
     registerUser(tok = '') {
 
       var token = (tok) ? tok : this.GLOBALS.token;
 
       if (!token || token == undefined) {
-        console.log('token not available!')
         return this.fail({ error: true, message: 'token not available, or undefined!' });
       }
 
-
-      /**
-       * we are doing retreiving data for storag  e as well!
-       */
       return this.$http({
         url: 'api/register/' + token,
         method: "POST",
@@ -81,48 +69,53 @@ module app.data {
         headers: { 'Content-Type': 'application/json' }
       })
         .then((response) => {
-
+          // just to update the token id display on dashboard
           this.$rootScope.$emit("onDataChange", true);
 
-          console.log('response', response)
           // so we dont have to make another request on the application page, when coming from welcome page
           // only if user already exists
           this.user_exists = response.data.userExists;
           let new_user = response.data.newUser;
           let success = response.data.success;
 
+          /**
+           * server validation returns invalid token response
+           */
           if (response.data.invalidToken !== undefined) {
             if (response.data.invalidToken) {
               return { invalidToken: true };
             }
           }
 
+          // user token found in database
           if (this.user_exists === true) {
-            console.log('user exists 11')
+            console.info('user found in DB');
             this.GLOBALS = response.data.data;
-            console.log('this.GLOBALS user exists 11', this.GLOBALS)
-            return response.data;
-          }
-          if (new_user && success && this.user_exists !== true) {
-            console.log('registerd new user11')
-            this.GLOBALS = response.data.data;
-            console.log('this.GLOBALS registerd new user11', this.GLOBALS)
             return response.data;
           }
 
+          // registering new user
+          if (new_user && success && this.user_exists !== true) {
+            console.info('new user registered');
+            this.GLOBALS = response.data.data;
+            return response.data;
+          }
 
           else {
             this.GLOBALS = undefined;
-            return this.fail(response, 'new and existing user undefind');
+            return this.fail(response, 'new and existing user undefined');
           }
 
         }, (response) => {
-          console.log('the else response')
           this.GLOBALS = undefined;
           return this.fail(response, 'server error');
         });
     }
 
+    /**
+     * updating existing data for every on step save request,
+     * and returning 'contactBranchNumber' and 'accountNumber' on the final/ ng-submit
+     */
 
     onSave(data) {
 
@@ -133,7 +126,6 @@ module app.data {
         headers: { 'Content-Type': 'application/json' }
       })
         .then((response) => {
-          console.log('data success12', response)
           let success = response.data.success;
           let failure = response.data.failure;
           if (success) {
@@ -143,6 +135,10 @@ module app.data {
             this.GLOBALS.accountNumber = d.form.accountNumber;
             this.GLOBALS.contactBranchNumber = d.form.contactBranchNumber;
             
+            if(d.form.final.valid==true){
+              this.GLOBALS = d;
+            }
+
             return response.data.data;
           }
           if (failure) {
@@ -157,20 +153,6 @@ module app.data {
         });
     }
 
-    updateUser(data) {
-      return this.$http({
-        url: this.API.URL + '/' + data.id,
-        method: "POST",
-        data: data,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-      })
-        .then((response) => {
-          return response;
-        }, (response) => { // optional
-          return this.fail(response)
-        });
-
-    }
 
     private success(response: any) {
       return { response: response, success: true };

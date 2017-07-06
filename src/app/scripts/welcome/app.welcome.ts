@@ -5,7 +5,16 @@ module app.welcome {
     public existingUser;
     public formOnsubmit:boolean;
     public clickToContinue:boolean;
-    public welcomeUser:any
+    public welcomeUser:any;
+
+/**
+ * app.welcome script registers new or existing token, call gets made to dataservice.registerUser
+ * and if user is new then it will register or prompt that it exists and will redirect to terms page.
+ * after post request is made, the data then gets cashed to the subsequent page, unless you refress the page,
+ * no persistante cache have been integrated at this stage only RESTFUL api.
+ */
+
+
     /* @ngInject */
     constructor(
       public $scope: any,
@@ -16,19 +25,12 @@ module app.welcome {
       private dataservice:any,
       private $state: any
     ) {
-      // dummy toke id:'sdfsdf345sw'  
 
       this.formOnsubmit = false;
-
       this.registerNewUser = {
-        token: '',
         valid: '',
         invalid:''
       }
-    }
-
-    gotoTest(state = 'welcome'){
-      this.$state.go(state);
     }
 
     redirectingToNext(state = 'welcome') {
@@ -52,8 +54,6 @@ module app.welcome {
       let token = this.registerNewUser.token;
       
       this.dataservice.registerUser(token).then((data) => {
-        console.log('what is the data',data)
-       // if 
 
         let newData = data;
         this.existingUser = false;
@@ -66,10 +66,10 @@ module app.welcome {
         }
 
         if (newData.userExists === true) {
+          console.log('newData exists',newData)
           // data is already cached at this point           
           this.registerNewUser.valid = false;
           this.existingUser = true;
-          console.log('newData userExists', newData);
           // got to next page
           if(newData.data.form!==undefined){
             this.welcomeUser = newData.data.form.one.firstName;
@@ -83,18 +83,13 @@ module app.welcome {
           // data is already cached at this point   
           this.existingUser = false;
           this.registerNewUser.valid = true;
-         
-
           // got to next page
-          
         }
-
       },(err)=>{
-        console.log('before chatch')
         return err;
       }).catch((err) => {
         this.registerNewUser.valid = false;
-        console.log('what is the error?',err)
+        console.log('server error ',err)
       })
     }
 

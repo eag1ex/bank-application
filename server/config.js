@@ -4,6 +4,6 @@ module.exports = {
     'database': 'mongodb://localhost/bankapplication2',
     APP_PATH: gulpConfig.APP_PATH,
     DIST_PATH: gulpConfig.DIST_PATH,
-    PUBLIC:"./public",
+    PUBLIC: "./public",
     SERVER_PORT: gulpConfig.SERVER_PORT
 };

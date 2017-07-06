@@ -1,7 +1,7 @@
-module.exports ={
+module.exports = {
   APP_PATH: "./src/app",
   DIST_PATH: "./public/dist",
-  SERVER_PORT: 8011,
+  SERVER_PORT: 8018,
   SERVER_PATH: './server/',
-  SERVER_FILE:'./server/server.js'
+  SERVER_FILE: './server/server.js'
 }

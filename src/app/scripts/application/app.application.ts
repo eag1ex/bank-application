@@ -25,6 +25,7 @@ module app.application {
     public newAppForm: any;
     public fileNames: any;
     public dummy: any;
+    public finalSave:any;
 
     /* @ngInject */
     constructor(
@@ -40,37 +41,37 @@ module app.application {
       private $location
     ) {
       /**
-       * we need to extend our APPFORM model
+       * we extend our APPFORM model dynamicly, and obj's are rendered on form ng-init
        */
       let form= new Form(this.dataservice, this,this.APPFORM);
       form.model().then((data)=>{
         this.APPFORM = data;
+      },(err)=>{
+      //  console.info(err);
       })
 
       this.fileNames = {
         utilityFile: '',
         securityFile: ''
       }
-      this.sectionSaved=false
+      this.sectionSaved=false;
+      this.finalSave = false
 
+      /**
+       * sending accross from directive,
+       * update display text of uploaded file
+       */
       this.$scope.$on('uploadedFile', (event, data) => {
-        console.log('uploadedFile', data)
         if (data.name && data.file !== '') {
           this.fileNames[data.name] = data.file;
         }
       })
     };
 
-    completeRedirectTo(decission) {
-      let goTo = '';
-      if (decission == true) goTo = 'approved';
-      else goTo = 'declined';
-
-      this.$timeout(() => {
-        this.$location.path(`app/application/${goTo}`);
-      }, 2000);
-    }
-
+    /**
+     * once file is selected it is uploaded, and we check and validate last form step here
+     * to allow final ng-submit/ disabled to false.
+     */
     uploadFile(vm, step, fieldName) {
       this.fileupload.upload(vm).then((data) => {
         if (!data.filename) return;
@@ -81,13 +82,31 @@ module app.application {
 
         // validate last step
         this.checkFormStepsValid(step);
-
-        console.log('this.APPFORM[step][fieldName]', this.APPFORM[step][fieldName])
       }, (err) => {
-        console.log('error getting file name', err)
+        console.log(err)
       });
     }
 
+    /**
+     * redirect to complete/:decision page, uppon form succession.
+     */
+    
+    completeRedirectTo(decission) {
+      let goTo = '';
+      if (decission == true) goTo = 'approved';
+      else goTo = 'declined';
+
+      this.$timeout(() => {
+        
+         //this.$state.go('complete',{goTo:goTo});
+          this.$location.path(`app/application/${goTo}`);
+      }, 2000);
+    };
+
+    /**
+     * on every subsequent / onSave we first perform new  object iterration to send to DB.
+     * we aldo update GLOBALS to display on complete page
+     */
 
     dataToSave() {
       // cleanup and save
@@ -98,7 +117,8 @@ module app.application {
       let accountNumber = (approved) ? this.APPFORM.accountNumber : '';
       let contactBranchNumber = (!approved) ? this.APPFORM.contactBranchNumber : '';
 
-      this.dataservice.GLOBALS.approved = this.APPFORM.approved;
+
+      this.dataservice.GLOBALS.approved = approved;
       this.dataservice.GLOBALS.accountNumber = accountNumber;
       this.dataservice.GLOBALS.contactBranchNumber = contactBranchNumber;
 
@@ -110,10 +130,8 @@ module app.application {
       };
 
       let mergedForm = _.merge(this.APPFORM.data(), updateVars)
-
-      console.log('mergedForm', mergedForm)
       let dataToSave = Object.assign({}, { form: mergedForm }, { token: token });
-      console.log('dataToSave', dataToSave)
+      console.info('dataToSave() iterrating now object to send to DB', dataToSave );
       return dataToSave;
     }
 
@@ -121,49 +139,58 @@ module app.application {
       return (this.APPFORM[step].valid && this.$scope.appForm.$valid && step == 'final');
     }
 
+    /**
+     * We send information of every step/valid and completed to the db.
+     * uppon finalValidStep() true, we redirect to complete page.
+     * Server will return accountNumber and contactBranchNumber info on final POST success.
+     * 
+     * onSave is executed from ng-submit on the final step, approve or decline
+     */
+
     onSave(step = null) {
 
       if (step !== null) {
-        console.log('stuck?? step',step)
-        console.log('finalValidStep? ',this.finalValidStep(step))
         if (this.finalValidStep(step) === false) {
-          console.log('final step invalid!')
           return;
         }
       }
-      console.log('dataToSave ', this.dataToSave());
+
       let dataToSave = this.dataToSave();
-
       this.sectionSaved = false
-
-      // return;
+      this.finalSave = false;
       this.dataservice.onSave(dataToSave).then((data) => {
         if (!data) return;
         this.sectionSaved = true;
-        console.log('was data saved', data);
-        if (step !== null) this.completeRedirectTo(data.form.approved);
+        if (step !== null) {
+          this.finalSave = true;
+          this.completeRedirectTo(data.form.approved);
+        }
+        
+        console.info('onSave(), data saved', data);
 
       }, (err) => {
-        console.log('err', err)
+        console.info(err);
       });
 
     }
+
+    /**
+     * This function handles the received validation of each step, and transition to the next.
+     * On final step we do not execute onSave() here. 
+     */
 
     initFormSteps(data) {
 
       if (data.resolution) {
         this.collapse(data.next, 'show');
-        console.log(data, 'form stage valid');
-        // we execute onSave('final') via ng-submit
-        if (data.onSave !== null && data.step !== 'final') data.onSave();// callback, for onSave
-
-        console.log(this.APPFORM[data.step])
+        console.info('initFormSteps(), form step valid')
+        // callback, for onSave
+        if (data.onSave !== null && data.step !== 'final') data.onSave();
       }
 
       if (!data.resolution) {
         this.collapse(data.next, 'hide');
-        console.log(data, 'form stage not valid');
-        console.log('invalid elms', data.invals)
+        console.info('initFormSteps(), invalid form elements', data.invals);
       }
 
     }
@@ -171,6 +198,13 @@ module app.application {
     filesUploadedAre() {
       return (this.fileNames.securityFile && this.fileNames.utilityFile);
     }
+
+    /**
+     *  validation each step here, at this pont the APPFORM model has all the keys.
+     *  the $scope.appForm (form oject) has the same property keys as our APPFORM model,
+     *  so we match each step that gets executed and then validate it.
+     *  If keys of each input are returned as valid, then the step is valid.
+     */
 
     checkFormStepsValid(step) {
       if (!step) return false;
@@ -187,11 +221,9 @@ module app.application {
           index++;
           formValid = false;
 
-          //  elements[key].$setPristine()
           checkIndex.push(elements[key].$valid);
 
           if (elements[key].$invalid === true) {
-            console.log('invals', elements[key])
             invalidElms[key] = elements[key];
             formValid = false;
           }
@@ -202,9 +234,8 @@ module app.application {
           } else if (step == 'final' && this.filesUploadedAre() === false) {
             formValid = false;
           }
-
-        }//IF
-      }//FOR
+        }//if
+      }//for
 
       for (let i = 0; i < checkIndex.length; i++) {
         if (checkIndex[i] === false) {
@@ -217,7 +248,6 @@ module app.application {
 
       if (formValid) {
         this.APPFORM[step].valid = true;
-
         let notFinalsave = (step !== 'final');
 
         let data = {
@@ -227,17 +257,16 @@ module app.application {
           onSave: () => {
             return (notFinalsave === true) ? this.onSave() : false;
           }
-        }
+        };
 
         this.initFormSteps(data);
-        // show all valid fields     
+        // show all valid field UI with the help of 'uivalidation' directive.    
         this.manualExecuteValidation(this.APPFORM[step].className);
-        console.log('next step is?? ' + step)
-        console.log('this.APPFORM.nextClass(step)', this.APPFORM.nextClass(step))
-      }
-      if (!formValid) {
-        this.APPFORM[step].valid = false;
+      }//if
 
+      if (!formValid) {
+
+        this.APPFORM[step].valid = false;
         let data = {
           "step": step, resolution: false,
           invals: invalidElms,
@@ -246,15 +275,16 @@ module app.application {
         };
 
         this.initFormSteps(data);
-        // show all invalid fields        
         this.manualExecuteValidation(this.APPFORM[step].className);
-        console.log('this.APPFORM.nextClass()', step, this.APPFORM.nextClass(step))
       }
 
-    }//  
+    }
 
+    /**
+     * JQ jezz
+     * manually invoke the onchange event from uivalidation
+     */
     manualExecuteValidation(el) {
-
       /**
        * ==DOTOS
        * STILL MISSING THE 'SELECT' LOGIC
@@ -268,22 +298,21 @@ module app.application {
         }).change().off('change')
       }
       else {
-        console.log('manualExecuteValidation', 'no selector');
+        console.info('manualExecuteValidation', 'no selector');
         return;
       }
     }
 
+    /**
+     * collapse plugin part of bootstrap 4 alpha framework.
+     */
     public collapse(id, decission) {
-      console.log('fire colapse', id, decission)
       var action = (decission === 'show') ? 'show' : 'hide';
       $(id).collapse(action);
     }
-
-
   }
 
   class MainComponent {
-
     constructor() { }
     restrict = 'E';
     controllerAs = 'vm';

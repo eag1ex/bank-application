@@ -6,17 +6,17 @@ module app.uivalidation {
         constructor(public $rootScope: any) { }
     }
 
-/**
- * uivalidation="{field:appForm.firstName, has:'input'}"
- * This validator sits on the input-group element and checks for inputs and select changes
- * It is a visual interpretor if/then errors accur.
- * It binds and watches for chages
- */
+    /**
+     * uivalidation="{field:appForm.firstName, has:'input'}"
+     * This validator sits on the input-group element and checks for input and select changes
+     * It is a visual interpretor if/then errors accur.
+     * It binds and watches for chages
+     */
 
 
     angular.module('app.uivalidation', []);
     angular.module('app.uivalidation')
-        .directive("uivalidation", [() => {
+        .directive("uivalidation", () => {
 
             return {
                 restrict: "A",
@@ -28,12 +28,13 @@ module app.uivalidation {
                 link: (scope, el, attrs, ctrl: DirectiveController) => {
 
                     scope.$watch('uivalidation', () => {
+
                         el.bind('change', (event) => {
+                            
                             event.preventDefault();
                             event.stopPropagation();
 
                             if (!el.hasClass('input-group')) {
-                                console.log('element is not part of input-group');
                                 return;
                             }
 
@@ -42,9 +43,6 @@ module app.uivalidation {
                             let bothValid = scope.uivalidation.bothValid;
                             bothValid = (bothValid === undefined) ? true : bothValid;
 
-                            console.log('bothValid', bothValid)
-                            console.log('field name', field.$name)
-
                             //classes
                             let formClass = {
                                 fs: 'form-control-success',
@@ -52,26 +50,15 @@ module app.uivalidation {
                                 hd: 'has-danger',
                                 hs: 'has-success'
                             };
-                            //console.log('field.$valid', field.$valid)
-                            if(field.$viewValue!==undefined){
-                                if (field.$viewValue.length === 0 && field.$invalid === false) {
-                                    //    console.log(scope.uivalidation.field)
-                                    //  console.log('this element is empty or undefined')
-                                    // return;
-                                }
-                            }
 
                             let message = (isvalid) => {
                                 let output;
-                                if (isvalid) {
-                                    output = "field is valid";
-                                } else {
-                                    output = "field is not valid";
-                                }
+                                if (isvalid)  output = "field is valid";
+                                else output = "field is not valid";
                                 return `<small class="form-text text-muted hide">${output}</small>`;
                             }
 
-
+                            // if input is $valid
                             if (field.$valid && bothValid !== false) {
                                 $(el).removeClass(formClass.hd)
                                 $(el).removeClass(formClass.hs).addClass(formClass.hs);
@@ -81,15 +68,11 @@ module app.uivalidation {
                                         $(value).removeClass(formClass.fd)
                                         $(value).removeClass(formClass.fs).addClass(formClass.fs);
                                     }
-
                                 });
-
                             }
-                            if (field.$invalid || bothValid === false) {// || (field.$dirty === false && field.$viewValue.length > 0)
-                                console.log('field.$valid', field.$valid)
-                                console.log('field.$invalid', field.$invalid)
-                                //elements[key].$setPristine()
-                                // field.$setValidity("youAreFat", false);
+
+                            // if input is $invalid
+                            if (field.$invalid || bothValid === false) {
                                 $(el).removeClass(formClass.hs)
                                 $(el).removeClass(formClass.hd).addClass(formClass.hd);
 
@@ -100,11 +83,10 @@ module app.uivalidation {
                                         $(value).removeClass(formClass.fd).addClass(formClass.fd);
                                     }
                                 });
-
                             }
-                        });
-                    });
-                }
+                        });//bind
+                    });// $watch
+                }//link
             };
-        }]);
+        });
 }

@@ -1,6 +1,15 @@
 module app.formModel {
     export class Form {
 
+        /**
+         * We seperated our login for the form model and created a class object.
+         * We assign one, two, three.. so we know what forms steps we are dealing with.
+         * We creted the update method to help us with the nextClass function which returns
+         * the next step css class for colapse to display.
+         * 
+         * We then return the deffered object with the help of 'dataservice'
+         */
+
         constructor(private dataservice: any, private _t:any, private APPFORM:any) {
 
         }
@@ -11,10 +20,10 @@ module app.formModel {
 
             let appFormClass = function (val = 'one') {
 
-                this.one = { /*index: 9,*/ valid: false };
-                this.two = { /*index: 4,*/ valid: false };
-                this.three = { /*index: 3,*/ valid: false };
-                this.final = { /*index: 1,*/ valid: null };// inportant for server decission to not final save
+                this.one = { /*index: 9,*/ valid: null };
+                this.two = { /*index: 4,*/ valid: null };
+                this.three = { /*index: 3,*/ valid: null };
+                this.final = { /*index: 1,*/ valid: null };// inportant for server decission to not final save.
 
                 this.update = (d = _t.APPFORM) => {
                     let data = {
@@ -23,6 +32,7 @@ module app.formModel {
                         three: Object.assign({}, d.three, { className: ".step-three" }),
                         final: Object.assign({}, d.final, { className: ".step-final" })
                     }
+                    console.info('Form.model.update() called');
                     return data;
                 }
 
@@ -42,10 +52,8 @@ module app.formModel {
 
             // at this point we retreive cached data
             let deff = this.dataservice.getCached().then((data) => {
-                // console.log('got cached data! ',data)
                 if (data.form !== undefined && Object.keys(data.form).length > 0) {
                     this.APPFORM = _.merge(this.APPFORM, data.form);
-                    console.log('we have data with form', this.APPFORM);
                 }
                 return this.APPFORM;
             });

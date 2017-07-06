@@ -4,7 +4,7 @@ module app.complete {
     public decission;
     public application: any;
     /* @ngInject */
-    constructor(
+    constructor(  
       private $timeout: any,
       private $state: any,
       private dataservice,
@@ -15,8 +15,8 @@ module app.complete {
         this.application = {
           applicant: `${dataservice.GLOBALS.form.one.title} ${dataservice.GLOBALS.form.one.firstName} ${dataservice.GLOBALS.form.one.lastName}`,
           decission: $stateParams.decission,
-          accountNumber: dataservice.GLOBALS.accountNumber,
-          contactBranchNumber: dataservice.GLOBALS.contactBranchNumber,
+          accountNumber: dataservice.GLOBALS.form.accountNumber,
+          contactBranchNumber: dataservice.GLOBALS.form.contactBranchNumber,
           appNumber: dataservice.GLOBALS.token
         }
       }
