@@ -32,7 +32,7 @@
                         </div>
 
                         <div ng-show="vm.existingUser===true && welcomeForm.$dirty && vm.formOnsubmit===true" 
-                        class=" form-control-feedback ml-1 w-100"><span ng-show='vm.welcomeUser'>Hey {{vm.welcomeUser}}, </span>
+                        class=" form-control-feedback ml-1 w-100"><span ng-show='vm.welcomeUser'>Hey <strong>{{vm.welcomeUser}}</strong>, </span>
                         You are already registered!
                             <div class="text-white">Redirecting now...</div>
                             <span id="preloader"></span>

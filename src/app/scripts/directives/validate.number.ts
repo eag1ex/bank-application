@@ -12,7 +12,7 @@ module app.validateNumber {
             return {
                 require: 'ngModel',
                 controller: DirectiveController,
-                link: (scope, elem, attr, ctrl: DirectiveController) => {
+                link: (scope, elem, attr, ctrl: any) => {
                     if (!ctrl) {
                         return;
                     }

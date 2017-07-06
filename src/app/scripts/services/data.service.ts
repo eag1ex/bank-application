@@ -15,7 +15,6 @@ module app.data {
     /* @ngInject */
     constructor(private $http,
       private $q, private API, private $rootScope) {
-
     }
     
 

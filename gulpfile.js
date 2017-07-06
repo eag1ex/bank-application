@@ -55,7 +55,7 @@ gulp.task('clean', function (done) {
 function reloadBrowserSync() {
   if (INITIAL_LOAD === true)
     browserSync.reload();
-    console.log('reloading browser?')
+   console.log('reloading browser')
 }
 
 /**
@@ -135,12 +135,12 @@ gulp.task('typescript', function () {
     APP_PATH + '/scripts/**/*.ts'];
 
   return gulp.src(tsSources)
-    
+
     .pipe(tsProject())
     .pipe(ngAnnotate())
     .pipe(rename({ dirname: '' }))// remove dir structure copy
     .pipe(sourcemaps.init())
-    .pipe(sourcemaps.write('.'))  
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST_PATH + '/js'))
     .on('finish', function () {
       reloadBrowserSync();
@@ -276,11 +276,7 @@ gulp.task('wiredep', ['styles', 'move-html-templates', 'typescript',], function 
 
 gulp.task('all', ['clean'], function (done) {
 
-  gulp.start('wiredep', function () {
-    gutil.log('-------------------------');
-    // gutil.log('Ready!', 'local:', gutil.colors.magenta('http:localhost:' + port));
-    gutil.log('-------------------------');
-  })
+  gulp.start('wiredep', function () { })
   done();
 });
 
@@ -307,7 +303,7 @@ gulp.task('default', ['all', 'watch'], function () {
     port: 8080,
     browser: ["chrome"],//, "firefox"],
     // files: ["public/**/*.*","public/*.*","public/"],
-    ghostMode: { // these are the defaults t,f,t,t
+    ghostMode: { 
       clicks: true,
       location: false,
       forms: true,

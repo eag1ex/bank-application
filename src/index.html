@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app" ng-strict-di>
+<html lang="en" ng-app="app">
 
 <head>
   <base href="/app">
@@ -25,7 +25,7 @@
     <img class="loader-icon spinning-cog " src="./dist/styles/cog09.svg" data-cog="cog09">
   </div>
 
-  <footer>
+  <footer class='hideFooter' ng-class='{"ng-show ng-animate":angularLoader==1}'>
     <small class="p-2">UBANK App is a proctical project, and does not reflact on existing brand. Copy rights reserved.</small>
   </footer>
 

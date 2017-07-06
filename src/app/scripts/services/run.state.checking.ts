@@ -1,7 +1,7 @@
 module app.core.stateChecking {
     'use strict';
 
-    export class MockData {
+    export class StateChecking {
 
         /**
          * we have moved the functionaliti from the on .run to its seperate module, its more clear 
@@ -77,5 +77,6 @@ module app.core.stateChecking {
 
     angular
         .module('app.core.stateChecking')
-        .service('stateChecking', MockData)
+        /* @ngInject */
+        .service('stateChecking', StateChecking)
 }

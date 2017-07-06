@@ -14,6 +14,10 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var port = app.set('port', process.env.PORT || config.SERVER_PORT);
 
+/// for generating new db from json file
+var json = require('json-file');
+var jsonData = json.read(__dirname + '/initial_data.json').data;
+
 var contrl = require('./config/controllers');
 
 
@@ -24,10 +28,6 @@ var mongoDB = require('./config/mongodb')(config);
 //multer and file storage
 var multer = require('./config/multer.file.storage')(config);
   
-
-/// for generating new db from json file
-var json = require('json-file');
-var jsonData = json.read(__dirname + '/initial_data.json').data;
 
 // configuration =========
 app.enable('trust proxy');
@@ -66,8 +66,9 @@ var Bankuser = mongoDB.bankuser;
 
 // multer upload
 var upload = multer.upload();
+
 // initialize controllers
-var controller = contrl(upload, Bankuser);
+var controller = contrl(upload, Bankuser,jsonData);
 
 apiRoutes.post('/upload', controller.uploadImage);
 

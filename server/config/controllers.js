@@ -1,12 +1,27 @@
+/**
+ * controller.registerAndSave
+ * controller.uploadImage
+ * controller.initialSetup
+ * controller.updateUser
+ */
 
-module.exports = (upload, Bankuser) => {
+
+module.exports = (upload, Bankuser, jsonData) => {
 
     function errorHandler(err, res, req, next) {
         throw new Error(err);
     }
 
-    function registerAndSave(req, res) {
 
+    /**
+     * controller.registerAndSave
+     * 
+     * this function has 2 purpouses, it registers a new user to DB, and also it returns existing user and skips registration.
+     * the registration function has a callback promiss that saves  data to DB for new user, or returns existing user.
+     * function retuires a token
+     */
+
+    function registerAndSave(req, res) {
 
         let checkTok = req.params.token || "??><$%^";
         let tokenOK = checkTok.match(/^[a-zA-Z0-9\s]*$/);
@@ -33,6 +48,7 @@ module.exports = (upload, Bankuser) => {
 
         var _TOKEN_ = req.params.token;
         // check for existing user before registering new token
+        //
         let userfound = findUser(() => {
             let promise = new Promise((resolve, reject) => {
                 resolve({ token: _TOKEN_ })
@@ -51,14 +67,14 @@ module.exports = (upload, Bankuser) => {
                 newUser: false,
                 data: data
             });
-        })
-            .then((data) => {
-                /// register new user here
-                if (data === false) registerNew();
 
-            }, (err) => {
-                return res.json({ serverError: "could not do post/register request" })
-            }).catch((err) => console.log(err));
+        }).then((data) => {
+            /// register new user here
+            if (data === false) registerNew();
+
+        }, (err) => {
+            return res.json({ serverError: "could not do post/register request" })
+        }).catch((err) => console.log(err));
 
 
         function registerNew() {
@@ -72,7 +88,6 @@ module.exports = (upload, Bankuser) => {
             // save
             user.save(function (err) {
                 if (err) errorHandler(err, res);
-
 
                 return res.status(200).json({
                     message: 'registered new user token',
@@ -110,14 +125,15 @@ module.exports = (upload, Bankuser) => {
         });
     }
 
-
+    /**
+     * controller.uploadImage
+     * 
+     * the upload function uses multer and storage to work.
+     * it also returns new generated image/file name saved on server back to the client, 
+     * to save back to DB on final post request.
+     */
 
     function uploadImage(req, res) {
-
-
-        //https://github.com/expressjs/multer
-        // set multer config
-
 
         upload(req, res, (err) => {
             if (err) {
@@ -126,8 +142,6 @@ module.exports = (upload, Bankuser) => {
                     message: 'error uploading file'
                 })
             }
-            //console.log('req.file fileName', req.file.filename)
-
             return res.status(200).json({
                 file: req.protocol + '://' + req.get('host') + '/images/' + req.file.originalname,
                 response: req.file
@@ -136,33 +150,16 @@ module.exports = (upload, Bankuser) => {
 
     }//uploadImage
 
-    function initialSetup(req, res) {
 
-        if (!jsonData.data) {
-            return res.status(200).json({
-                message: 'json data not available for new db',
-                success: false
-            });
-
-        }
-        // create
-        let user1 = new Bankuser(
-            {
-                token: jsonData.data[0].token,
-                form: jsonData.data[0].form
-            });
-
-        // save
-        user1.save(function (err) {
-            if (err) throw err;
-            return res.status(200).json({
-                message: 'populated db for jsonfile',
-                success: true,
-                data: user1
-            });
-        });
-    }//initialSetup
-
+    /**
+     * controller.updateUser
+     * 
+     * we update user and require token to perform search, then we update the user
+     * if user.form.final.valid===true  then we save additional fields and handle on 
+     * client side.
+     * 
+     * This function calls on every subsequent save of the falid steps.
+     */
 
     function updateUser(req, res) {
 
@@ -192,6 +189,10 @@ module.exports = (upload, Bankuser) => {
 
     }//updateUser
 
+    /**
+     * saveUserToDB works with updateUser
+     */
+
     function saveUserToDB(findID, formData, res) {
 
         Bankuser.findById(findID, function (err, user) {
@@ -199,12 +200,6 @@ module.exports = (upload, Bankuser) => {
 
             // MAGIC HERE
             user.form = formData;
-            console.log('user will be saved', user);
-            console.log('user will be saved accountNumber', user.form.accountNumber);
-            console.log('user will be saved approved', user.form.approved);
-            console.log('user will be saved contactBranchNumber', user.form.contactBranchNumber);
-            console.log('user.form.final.valid', user.form['final'].valid);
-
             if (user.form['final'].valid === true) {
                 if (!user.form.accountNumber) {
                     if (user.form.approved === true) {
@@ -221,20 +216,45 @@ module.exports = (upload, Bankuser) => {
                     // nothing else is required
                 }
             }
+            console.log('user will be saved', user);
 
-
-            // save the user
             user.save(function (err) {
                 if (err) errorHandler(err, res);
-
-                // console.log('User successfully updated!');
                 return res.status(200).json({ data: user, success: true })
             }, () => errorHandler(err, res));
         });
     }// saveUser
 
 
+    /**
+     * an initial function to populate 1 user database from jsonfile './server/initial_data.json'
+     */
 
+    function initialSetup(req, res) {
+        if (!jsonData.data) {
+            return res.status(200).json({
+                message: 'json data not available for new db',
+                success: false
+            });
+
+        }
+        // create
+        let user1 = new Bankuser(
+            {
+                token: jsonData.data[0].token,
+                form: jsonData.data[0].form
+            });
+
+        // save
+        user1.save(function (err) {
+            if (err) throw err;
+            return res.status(200).json({
+                message: 'populated db for jsonfile',
+                success: true,
+                data: user1
+            });
+        });
+    }//initialSetup
 
 
     return {
