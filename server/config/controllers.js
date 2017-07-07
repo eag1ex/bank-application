@@ -228,7 +228,7 @@ module.exports = (upload, Bankuser, jsonData) => {
 
 
     /**
-     * an initial function to populate 1 user database from jsonfile './server/initial_data.json'
+     * an initial function to populate 1 user database from jsonfile './server/config/initial_data.json'
      */
 
     function initialSetup(req, res) {

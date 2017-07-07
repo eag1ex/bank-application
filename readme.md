@@ -1,13 +1,14 @@
 #### - [ Developed by Creative At Work ](http://creativeatwork.net)
 
 #### - Bank Application -
-A practical bank application for superficial brand name UBANK. A fully responvise cross browser 
-application using Angular 1.6 MVC framework with OOP/Typescript and RESTFul API/ and data retreival. Backend mongodb/mongoose ORM with CRUD. Multer for uploading and storing files for retreival.
-You can register as new user, and return later to complete the application.
+Practical bank application project for superficial brand name UBANK. A fully responsive cross browser application using Angular 1.6 MVC framework with OOP/Typescript and RESTFul API/ and data retrieval. Backend mongodb/mongoose ORM with CRUD. Multer for uploading and storing files for retrieval.
+You can register as new user, and return later to complete the application..
 - A fully automated Gulp task runner with browsersync proxy to nodemon.
 - Access to Bootstrap sass configuration using global.vars with the help of 'Wiredeb' package.
 - All files are rendered using view HTML engine.
 - Fully documented.
+
+[ Link to Application video preview ](http://creativeatwork.net/portfolio/bank-application-angular-mongodb/)
 
 
 ###### Instalation
@@ -39,6 +40,11 @@ $/ npm install
 $/ mongod #or mongod --dbpath /to/data
 $/ npm start
 ```
+
+##### Optional
+* You can populate DB with dummy data from provided json ./server/config/initial_data.json
+  just run **http://localhost:8080/api/createnew**
+  and use the 'token' as your application number.
 
 ***
 ##### Stack/Setup
@@ -75,8 +81,11 @@ $/ npm start
 ##### -- Remarks --
 * Tested and works without bugs on lates Chrome and Firefox, not tested on IE(SORRY!).
 * All files are well documented.
+* you can preview a working app via this link **http://creativeatwork.net/portfolio/bank-application-angular-mongodb/**
 * Video clip orientation included.
 * npm CLI complains about some undefind methonds, its due to not compiling in ES6 - so ignore it! 
+* If your server crashed and you get this error in the CLI **Error: listen EADDRINUSE :::8018**
+  you will have to change the port in the ./config.js file
 ***
 
 ###### TODOS ?

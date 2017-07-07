@@ -42,6 +42,17 @@
     }
 }
 
+
+@mixin reset_mar{
+    margin-left: 0px!important;
+    margin-right: 0px!important;
+}
+
+@mixin reset_pad{
+    padding-right: 0px!important;
+    padding-left: 0px!important;
+}
+
 @mixin reset-input() {
     border: none!important;
     border-color: transparent!important;

@@ -14,19 +14,21 @@
 
   <!-- inject:css -->
   <!-- endinject -->
-  
+
 </head>
 
-<body>
-  <div ng-init="angularLoader=1" ng-include="'dist/js/layout.html'" ng-class='{"ng-show ng-animate":angularLoader==1}' class='angular-app-include'></div>
+<body class='preloaderbk' ng-class='{"ng-show ng-animate loaded":angularLoader==1}'>
+  <div ng-init="angularLoader=1" ng-include="'dist/js/layout.html'" ng-class='{"ng-show ng-animate loaded":angularLoader==1}'
+    class='angular-app-include mb-1'></div>
 
   <div id="preloader" class="overlay-loader" ng-if="false" class='fade-out'>
     <div class="loader-background"></div>
     <img class="loader-icon spinning-cog " src="./dist/styles/cog09.svg" data-cog="cog09">
   </div>
 
+  <div class='clearfix mb-3'></div>
   <footer class='hideFooter' ng-class='{"ng-show ng-animate":angularLoader==1}'>
-    <small class="p-2">UBANK App is a proctical project, and does not reflact on existing brand. Copy rights reserved.</small>
+    <p class="p-2 m-0">UBANK App is a proctical project, and does not reflact on existing brand. Copy rights reserved.</p>
   </footer>
 
   <!-- bower:js -->

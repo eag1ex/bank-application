@@ -5,6 +5,35 @@
 //----------------------------
 // @layout.scss
 //----------------------------
+///mobile responsive overites
+@media (max-width: 668px) {
+    application {
+        .input-group {
+            @include reset_mar();
+            @include reset_pad();
+        }
+        select{
+
+        }
+        input {
+            @include reset_mar();
+           
+            &[name="homePhonePre"],
+            &[name="mobilePre"],
+            &[name="workPhonePre"] {
+                padding-left: .25rem!important;
+                padding-right: .25rem!important;
+            }
+        }
+
+        h5 {
+            font-size: 18px;
+            span {
+                display: block;
+            }
+        }
+    }
+}
 
 nav {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -20,9 +49,7 @@ nav {
     a {
         color: #fff;
     }
-    &.navbar {
-
-    }
+    &.navbar {}
     .lists-menu-group {
         >button {
             &:hover {
@@ -114,8 +141,22 @@ terms {
     }
 }
 
+// STICLY FOOTER  
+.angular-app-include {
+    min-height: 100%;
+    margin-bottom: -52px!important;
+    &:after {
+        content: "";
+        display: block;
+    }
+}
+
 footer {
-    height: 35px; 
+    p {
+        line-height: 15px;
+        font-size: 11px;
+    }
+    height: 35px;
     width: 100%;
     justify-content: center;
     text-align: center;

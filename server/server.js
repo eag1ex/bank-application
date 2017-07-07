@@ -74,7 +74,7 @@ var controller = contrl(upload, Bankuser,jsonData);
 apiRoutes.post('/upload', controller.uploadImage);
 
 //well its technically a post, but you may not have Postman.
-apiRoutes.get('/setup', controller.initialSetup);
+apiRoutes.get('/createnew', controller.initialSetup);
 
 apiRoutes.post('/update', controller.updateUser);
 
@@ -92,7 +92,7 @@ myapp.get(['/', '/application', '/tc', '/application/*'], (req, res, next) => {
 
 // redirect non matching
 myapp.get('/*', function (req, res, next) {
-    // res.redirect('/app');
+     res.redirect('/app');
 });
 
 //init routes  

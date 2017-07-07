@@ -19,7 +19,7 @@ module app.core {
     $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
 
       // controll page validation and rediraction
-      stateChecking.run(e, toState, $state,$location);
+     // stateChecking.run(e, toState, $state,$location);
 
     });
 

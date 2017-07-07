@@ -4,18 +4,10 @@
 html,
 body {
     // theme color  
-    // background: $bkg-color!important;
+    
     height: 100%;
 }
 
-.angular-app-include {
-    min-height: 100%;
-    margin-bottom: -35px;
-    &:after {
-        content: "";
-        display: block;
-    }
-}
 
 button,
 .btn {

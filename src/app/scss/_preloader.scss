@@ -2,6 +2,16 @@
 // @_preloader.scss
 //----------------------------
 
+
+body.preloaderbk{
+
+      background: #292b2c!important;
+    &.loaded{
+        background: #fff!important;
+    } 
+}
+
+
 #preloader {
     &.hide {
         display: none;
@@ -20,7 +30,7 @@
         left: 50%;
         margin: -48px 0 0 -48px;
         font-size: 96px;
-        color: #FFF;
+        color: #000;
     }
     .spinning-cog {
         -webkit-animation: spinning-cog 1.3s infinite ease;
