@@ -80,8 +80,8 @@ $/ npm start
 ***
 
 ###### TODOS ?
-* No persistane cache included as yet, only DATA retreival.
-* User authentication not yet intergated 
+* No persistant cache included as yet, only DATA retreival.
+* User authentication not yet intergated.
 
 ***
 

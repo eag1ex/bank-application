@@ -16,12 +16,13 @@ var port = app.set('port', process.env.PORT || config.SERVER_PORT);
 
 /// for generating new db from json file
 var json = require('json-file');
-var jsonData = json.read(__dirname + '/initial_data.json').data;
-
-var contrl = require('./config/controllers');
-
+var jsonData = json.read(__dirname+'/config/initial_data.json').data;
 
 var config = require(__dirname + '/config');
+
+// controller methodes
+var contrl = require('./config/controllers');
+
 //mongodb and mongoose model
 var mongoDB = require('./config/mongodb')(config);
 

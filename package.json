@@ -1,6 +1,6 @@
 {
   "name": "bank-application",
-  "version": "1.0",
+  "version": "0.1.0",
   "description": "Angular MVC with MongoDB RESTfull, bank application",
   "scripts": {
     "fix": "npm update& npm i node-sass -g& npm rebuild node-sass",
