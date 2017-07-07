@@ -77,6 +77,7 @@ $/ npm start
 * Tested and works without bugs on lates Chrome and Firefox, not tested on IE(SORRY!).
 * All files are well documented.
 * Video clip orientation included.
+* npm CLI complains about some undefind methonds, its due to not compiling in ES6 - so ignore it! 
 ***
 
 ###### TODOS ?
