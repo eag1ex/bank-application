@@ -29,9 +29,7 @@ module app.core {
     $rootScope.$on("$stateChangeSuccess", () => {
       console.info('Angular Loaded');
     });
-
-  };
-
+  }
 
   /* @ngInject */
   function configure($stateProvider, $locationProvider, $urlRouterProvider, $qProvider, $httpProvider) {
@@ -99,4 +97,4 @@ module app.core {
       }
     ];
   }
-};
+}

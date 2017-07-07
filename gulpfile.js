@@ -43,20 +43,24 @@ var INITIAL_LOAD = false;
  * 
  */
 
-gulp.task('clean', function (done) {
-  del(['./public/dist/'], done);
+gulp.task('clean', function () {
+ // del(['./public/dist/'], done());
 });
+
 
 /**
  * 
  * @reload browserSync
  * 
  */
+
 function reloadBrowserSync() {
-  if (INITIAL_LOAD === true)
-    browserSync.reload();
-   console.log('reloading browser')
+  if (INITIAL_LOAD === true){
+     browserSync.reload();
+     console.log('reloading browser')
+  }
 }
+
 
 /**
  * 
@@ -67,13 +71,6 @@ function reloadBrowserSync() {
 
 gulp.task('styles', function () {
 
-  // move svg image for preloader only
-  gulp.src(APP_PATH + '/scss/*.svg')
-    .pipe(gulp.dest(DIST_PATH + '/styles'));
-
-  //  mobe images  
-  gulp.src(APP_PATH + '/scss/images/*.*')
-    .pipe(gulp.dest(DIST_PATH + '/styles/images'));
 
   // move font-awesome to dist  manually
   var fontAwesomePath = './public/bower_components/font-awesome/';
@@ -83,6 +80,14 @@ gulp.task('styles', function () {
       .pipe(gulp.dest(DIST_PATH + '/styles/fonts'));
     gutil.log('fontAwesomePath exists', gutil.colors.magenta(fontAwesomePath));
   });
+
+  // move svg image for preloader only
+  gulp.src(APP_PATH + '/scss/*.svg')
+    .pipe(gulp.dest(DIST_PATH + '/styles'));
+
+  //  mobe images  
+  gulp.src(APP_PATH + '/scss/images/*.*')
+    .pipe(gulp.dest(DIST_PATH + '/styles/images'));
 
   var injectAppFiles = gulp.src([APP_PATH + '/scss/layout.scss'], { read: false });
   var injectGlobalFiles = gulp.src(APP_PATH + '/scss/global.vars.scss', { read: false });
@@ -119,7 +124,7 @@ gulp.task('styles', function () {
     .pipe(csso())
     .pipe(gulp.dest(DIST_PATH + '/styles'))
     .on('finish', function () {
-      reloadBrowserSync();
+      reloadBrowserSync()
     });
 });
 
@@ -135,7 +140,6 @@ gulp.task('typescript', function () {
     APP_PATH + '/scripts/**/*.ts'];
 
   return gulp.src(tsSources)
-
     .pipe(tsProject())
     .pipe(ngAnnotate())
     .pipe(rename({ dirname: '' }))// remove dir structure copy
@@ -143,9 +147,22 @@ gulp.task('typescript', function () {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST_PATH + '/js'))
     .on('finish', function () {
-      reloadBrowserSync();
+      reloadBrowserSync()
     });
 })
+
+/*
+gulp.task('typescript-to-js', ['typescript'], function (done) {
+  var jssource =  DIST_PATH + '/*.js';
+  gulp.src(jssource)
+    .pipe(concat('prototype.js'))
+   // .pipe(uglify())
+    .pipe(gulp.dest(DIST_PATH + '/js/test'))
+    .on('error', (err)=>{
+      console.log('error with concat',err)
+    });
+})
+*/
 
 
 gulp.task('move-html-templates', function () {
@@ -154,12 +171,11 @@ gulp.task('move-html-templates', function () {
   glob(htmlfiles, {}, function (er, files) {
     gulp.src(files)
       .pipe(gulp.dest(DIST_PATH + '/js'))
-      .on('finish', () => {
-        reloadBrowserSync();
-      })
+        .on('finish', function () {
+        reloadBrowserSync()
+      });
   })
 });
-
 
 
 /**
@@ -182,13 +198,11 @@ gulp.task('vet-js', function () {
 
 
 
-
-
 gulp.task('watch', function () {
   gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript']);
   gulp.watch(APP_PATH + "/scss/*.scss", ['styles']);
   gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates']);
-  gulp.watch('./src' + "/index.html", ['wiredep-index']);
+ // gulp.watch('./src' + "/index.html", ['wiredep-index']);
 });
 
 
@@ -198,7 +212,7 @@ gulp.task('watch', function () {
  * 
  */
 
-gulp.task('wiredep-index', function (cb) {
+gulp.task('wiredep-index',['clean','typescript', 'styles', 'move-html-templates'], function () {
 
   var injectJSFiles = gulp.src([
     DIST_PATH + '/js/*.js',
@@ -215,6 +229,8 @@ gulp.task('wiredep-index', function (cb) {
   };
 
   var injectJSOptions = {
+    starttag: '<!-- inject:prototype:{{ext}} -->',
+    endtag: '<!-- endinject -->',
     addRootSlash: false,
     ignorePath: ['src', 'public']
   };
@@ -226,8 +242,9 @@ gulp.task('wiredep-index', function (cb) {
     directory: './public/bower_components'
   }
 
-  return gulp.src('src/index.html')
+  return gulp.src('./src/index.html')
     .pipe(wiredep(wireupConf))
+
     .pipe(inject(gulp.src(DIST_PATH + '/js/app.js', { read: false }),
       {
         starttag: '<!-- inject:app:{{ext}} -->',
@@ -241,45 +258,14 @@ gulp.task('wiredep-index', function (cb) {
         addRootSlash: false,
         ignorePath: ['src', 'public']
       }))
-    .pipe(inject(injectCSSFiles, injectCSSOptions))
     .pipe(inject(injectJSFiles, injectJSOptions))
-    .pipe(gulp.dest('./public')).on('finish', function () {
+    .pipe(inject(injectCSSFiles, injectCSSOptions))
+
+    .pipe(gulp.dest('./public'))
+    .on('finish', function () {
       WIREDEB_FINISHED = true;
-      reloadBrowserSync();
     });
 })
-
-
-/**
- * 
- * @wiredep
- * 
- */
-
-gulp.task('wiredep', ['styles', 'move-html-templates', 'typescript',], function (done) {
-
-  gulp.start('wiredep-index', function () {
-    gutil.log('-------------------------');
-    gutil.log(gutil.colors.magenta('wiredep-index loaded'));
-    gutil.log('-------------------------');
-
-  });
-  done();
-});
-
-
-/** 
- * 
- * @all
- * 
- */
-
-gulp.task('all', ['clean'], function (done) {
-
-  gulp.start('wiredep', function () { })
-  done();
-});
-
 
 /** 
  * 
@@ -290,7 +276,7 @@ gulp.task('all', ['clean'], function (done) {
  * we cleartimer and execute browserSync
  */
 
-gulp.task('default', ['all', 'watch'], function () {
+gulp.task('default', ['wiredep-index', 'watch'], function () {
 
   var browserTimer;
 
@@ -303,7 +289,7 @@ gulp.task('default', ['all', 'watch'], function () {
     port: 8080,
     browser: ["chrome"],//, "firefox"],
     // files: ["public/**/*.*","public/*.*","public/"],
-    ghostMode: { 
+    ghostMode: {
       clicks: true,
       location: false,
       forms: true,
@@ -311,7 +297,7 @@ gulp.task('default', ['all', 'watch'], function () {
     },
     injectChanges: true,
     logFileChanges: true,
-    logLevel: 'debug',
+  //  logLevel: 'debug',
     logPrefix: 'gulp-patterns',
     notify: true,
     reloadDelay: 0 //1000
@@ -325,7 +311,7 @@ gulp.task('default', ['all', 'watch'], function () {
         browserSync.init(null, browserSyncOptions);
       } else {
         setTimeout(function () {
-          browserSync.reload();
+           reloadBrowserSync()
           browserSync.notify('reloading browserSync now ...');
         }, 2300);
       }

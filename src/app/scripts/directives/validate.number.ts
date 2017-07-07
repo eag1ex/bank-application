@@ -4,7 +4,7 @@ module app.validateNumber {
     class DirectiveController {
 
         constructor() { }
-    }
+    }   
 
     angular.module('app.validateNumber', []);
     angular.module('app.validateNumber')
@@ -17,9 +17,7 @@ module app.validateNumber {
                         return;
                     }
                     ctrl.$parsers.push(function (val) {
-                        if (angular.isUndefined(val)) {
-                            var val = '';
-                        }
+   
                         var good = val.replace(/[^0-9]+/g, '');
                         if (val !== good) {
                             ctrl.$setViewValue(good);
@@ -36,4 +34,3 @@ module app.validateNumber {
             };
         });
 }
-
