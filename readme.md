@@ -54,10 +54,9 @@ $/ npm start
 ##### File structure
 
 ##### **APP**
-
 ![App dir](http://creativeatwork.net/git_images/app.dir.screen.png)
 
-##### **sERVER**
+##### **SERVER**
 ![Server dir](http://creativeatwork.net/git_images/app.server.dir.screen.png)
 
 
