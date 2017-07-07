@@ -1,3 +1,5 @@
+#### - [ Developed by Creative At Work ](http://creativeatwork.net)
+
 #### - Bank Application -
 A practical bank application for superficial brand name UBANK. A fully responvise cross browser 
 application using Angular 1.6 MVC framework with OOP/Typescript and RESTFul API/ and data retreival. Backend mongodb/mongoose ORM with CRUD. Multer for uploading and storing files for retreival.
@@ -7,14 +9,13 @@ You can register as new user, and return later to complete the application.
 - All files are rendered using view HTML engine.
 - Fully documented.
 
-#### - [ Developed by Creative At Work ](http://creativeatwork.net)
 
 ###### Instalation
-* You need to install mongoDB before running this application. Instructions to install on your OS here:
+* You need to **install mongoDB** before running this application. Instructions to install on your OS here:
   https://docs.mongodb.com/manual/installation/
   make sure you assing mongod to global path, or run it from the /bin folder, and assing new database path.
 * If you have problems with Sass run **$/ npm run fix** to rebuild
-
+* npm install will install all node_modules and bower_components.
 ```
 #!python
 
