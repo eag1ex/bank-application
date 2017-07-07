@@ -177,7 +177,7 @@
                         </div>
 
                         <div uivalidation="{field:appForm.bankPurpouse,has:'input'}" class="input-group mb-2 mb-sm-0 w-75">
-                            <input ng-init="vm.APPFORM.three.bankPurpouse=(vm.APPFORM.three.bankPurpouse)? vm.APPFORM.three.bankPurpouse:'';" ng-pattern="/^[a-zA-Z0-9\s]*$/"
+                            <input ng-init="vm.APPFORM.three.bankPurpouse=(vm.APPFORM.three.bankPurpouse)? vm.APPFORM.three.bankPurpouse:'';" ng-pattern="/^[ A-Za-z0-9_@./#&?*+-]*$/"
                                 ng-model="vm.APPFORM.three.bankPurpouse" name="bankPurpouse" type="text" class="form-control"
                                 ng-maxlength="100" id="" placeholder="Purpose of bank account">
                             <span class=required>*</span>
@@ -187,7 +187,7 @@
 
                     <div class="form-inline inline-section mb-3 w-100">
                         <div uivalidation="{field:appForm.money, has:'input'}" class="input-group mb-2 mb-sm-0 w-100">
-                            <input ng-init="vm.APPFORM.three.money=(vm.APPFORM.three.money)? vm.APPFORM.three.money:'';" required ng-pattern="/^[a-zA-Z0-9\s]*$/"
+                            <input ng-init="vm.APPFORM.three.money=(vm.APPFORM.three.money)? vm.APPFORM.three.money:'';" required ng-pattern="/^[ A-Za-z0-9_@./#&?*+-]*$/"
                                 ng-maxlength="100" ng-model="vm.APPFORM.three.money" name="money" type="text" class="form-control w-100"
                                 id="" placeholder="Where will the money come from?">
                             <span class=required>*</span>
@@ -196,7 +196,7 @@
                     <!-- inline-section -->
                     <div class="form-inline inline-section mb-3 w-100">
                         <div uivalidation="{field:appForm.hearAboutUs, has:'input'}" class="input-group mb-2 mb-sm-0 w-100">
-                            <input ng-init="vm.APPFORM.three.hearAboutUs=(vm.APPFORM.three.hearAboutUs)? vm.APPFORM.three.hearAboutUs:'';" required ng-pattern="/^[a-zA-Z0-9\s]*$/"
+                            <input ng-init="vm.APPFORM.three.hearAboutUs=(vm.APPFORM.three.hearAboutUs)? vm.APPFORM.three.hearAboutUs:'';" required ng-pattern="/^[ A-Za-z0-9_@./#&?*+-]*$/"
                                 ng-model="vm.APPFORM.three.hearAboutUs" name="hearAboutUs" type="text" class="form-control w-100"
                                 ng-maxlength="100" id="" placeholder="How did you hear about us?">
                             <span class=required>*</span>

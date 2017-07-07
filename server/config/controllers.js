@@ -143,6 +143,7 @@ module.exports = (upload, Bankuser, jsonData) => {
                 })
             }
             return res.status(200).json({
+                success:true,
                 file: req.protocol + '://' + req.get('host') + '/images/' + req.file.originalname,
                 response: req.file
             })
@@ -241,7 +242,7 @@ module.exports = (upload, Bankuser, jsonData) => {
         // create
         let user1 = new Bankuser(
             {
-                token: jsonData.data[0].token,
+                token: jsonData.data[0].token, // token length should be max 11 in length
                 form: jsonData.data[0].form
             });
 

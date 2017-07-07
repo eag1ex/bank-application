@@ -11,7 +11,7 @@ module app.complete {
       private $stateParams
     ) {
       this.application = {};
-      if (dataservice.GLOBALS) {
+      if (dataservice.GLOBALS.form!==undefined) {
         this.application = {
           applicant: `${dataservice.GLOBALS.form.one.title} ${dataservice.GLOBALS.form.one.firstName} ${dataservice.GLOBALS.form.one.lastName}`,
           decission: $stateParams.decission,

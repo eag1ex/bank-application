@@ -1,10 +1,10 @@
 {
     "data": [
         {
-            "token": "sdfsdf345sw",
+            "token": "094abctoken",
             "form": {
                 "contactBranchNumber": "",
-                "accountNumber": "1499343506381",
+                "accountNumber": "",
                 "approved": true,
                 "tc": true,
                 "one": {
@@ -37,9 +37,9 @@
                     "valid": true
                 },
                 "final": {
-                    "securityFile": "234sdfrsdfrr.jpg",
-                    "utilityFile": "sef56drftgrt.jpg",
-                    "valid": true
+                    "securityFile": "",
+                    "utilityFile": "",
+                    "valid": ""
                 }
             }
         }

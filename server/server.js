@@ -56,7 +56,7 @@ apiRoutes.use(function (req, res, next) {
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 app.set('views', config.PUBLIC);
-
+  
 
 
 //==============
@@ -67,13 +67,14 @@ var Bankuser = mongoDB.bankuser;
 
 // multer upload
 var upload = multer.upload();
-
+  
 // initialize controllers
 var controller = contrl(upload, Bankuser,jsonData);
 
 apiRoutes.post('/upload', controller.uploadImage);
 
-apiRoutes.post('/setup', controller.initialSetup);
+//well its technically a post, but you may not have Postman.
+apiRoutes.get('/setup', controller.initialSetup);
 
 apiRoutes.post('/update', controller.updateUser);
 

@@ -68,19 +68,23 @@ module app.application {
       })
     };
 
+
     /**
      * once file is selected it is uploaded, and we check and validate last form step here
      * to allow final ng-submit/ disabled to false.
      */
+    
     uploadFile(vm, step, fieldName) {
       if (!vm || !step || !fieldName) return;
       
+      if(typeof this.APPFORM[step][fieldName]==='string'){
+        return;
+      }
+
       this.fileupload.upload(vm).then((data) => {
         if (data===false){
-          this.APPFORM[step][fieldName]=''
           let uploadedFileName = '';
           this.fileNames[fieldName] = 'Allow only image, jpeg/png'; //hide description when we have file from server
-          this.APPFORM[step][fieldName] ='';
           return;
         }
         if (!data.filename) return;

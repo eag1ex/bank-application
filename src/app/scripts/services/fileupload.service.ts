@@ -26,8 +26,11 @@ module app.fileupload {
                 if (response.data.error){
                     console.info('File uploaded= ', response.data)
                     return false;
-                }            
-                return response.data.response;
+                }
+                if(response.data.success){
+                    return response.data.response;
+                }
+                
             }, (err) => {
                 let msg = 'file did not upload';
                 return this.fail(err, msg);
