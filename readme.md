@@ -16,6 +16,7 @@ You can register as new user, and return later to complete the application.
   make sure you assing mongod to global path, or run it from the /bin folder, and assing new database path.
 * If you have problems with Sass run **$/ npm run fix** to rebuild
 * npm install will install all node_modules and bower_components.
+
 ```
 #!python
 
