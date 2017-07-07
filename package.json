@@ -1,22 +1,26 @@
 {
   "name": "bank-application",
-  "version": "0.0.1",
-  "description": "prototype",
+  "version": "1.0",
+  "description": "Angular MVC with MongoDB RESTfull, bank application",
   "scripts": {
-    "hot": "npm update& npm i node-sass -g& npm rebuild node-sass",
+    "fix": "npm update& npm i node-sass -g& npm rebuild node-sass",
     "postinstall": "bower install -g",
     "server": "nodemon ./server/server.js",
     "start": "gulp"
   },
   "keywords": [
-    "trello",
+    "mongodb",
     "angular",
-    "nodemailer",
+    "orm",
     "typescript",
-    "nodemailer",
-    "karma",
-    "jasmine",
-    "unit testing"
+    "mongoose",
+    "express",
+    "OOP",
+    "Multer",
+    "Bootstrap 4 alpha",
+    "Jquery",
+    "Wiredeb",
+    "RESTfull API"
   ],
   "author": "Michael",
   "url": "http://creativeatwork.net",

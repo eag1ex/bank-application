@@ -15,6 +15,5 @@
     "./src/app/scripts/**/*.ts",
     "./src/app/scripts/*.ts",
     "./src/app/**/**/*.ts"
-  ]
-  
+  ]  
 }
