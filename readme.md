@@ -21,7 +21,7 @@ You can register as new user, and return later to complete the application..
 
 ```
 #!python
-
+$/ npm install node-sass -g # unless you have it, or run >  "npm run fix" 
 $/ npm install
 ```
 
