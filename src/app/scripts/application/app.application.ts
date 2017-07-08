@@ -20,12 +20,12 @@ module app.application {
      * 
      */
     public APPFORM: any = {};
-    public sectionSaved:any;
+    public sectionSaved: any;
     public application: Object;
     public newAppForm: any;
     public fileNames: any;
     public dummy: any;
-    public finalSave:any;
+    public finalSave: any;
 
     /* @ngInject */
     constructor(
@@ -34,7 +34,7 @@ module app.application {
       public $document: any,
       public $timeout: any,
       public $q: any,
-      private Form:any,
+      private Form: any,
       private dataservice,
       private $state,
       private fileupload,
@@ -43,18 +43,18 @@ module app.application {
       /**
        * we extend our APPFORM model dynamicly, and obj's are rendered on form ng-init
        */
-      let form= new Form(this.dataservice, this,this.APPFORM);
-      form.model().then((data)=>{
+      let form = new Form(this.dataservice, this, this.APPFORM);
+      form.model().then((data) => {
         this.APPFORM = data;
-      },(err)=>{
-      //  console.info(err);
+      }, (err) => {
+        //  console.info(err);
       })
 
       this.fileNames = {
         utilityFile: '',
         securityFile: ''
       }
-      this.sectionSaved=false;
+      this.sectionSaved = false;
       this.finalSave = false
 
       /**
@@ -73,16 +73,16 @@ module app.application {
      * once file is selected it is uploaded, and we check and validate last form step here
      * to allow final ng-submit/ disabled to false.
      */
-    
+
     uploadFile(vm, step, fieldName) {
       if (!vm || !step || !fieldName) return;
-      
-      if(typeof this.APPFORM[step][fieldName]==='string'){
+
+      if (typeof this.APPFORM[step][fieldName] === 'string') {
         return;
       }
 
       this.fileupload.upload(vm).then((data) => {
-        if (data===false){
+        if (data === false) {
           let uploadedFileName = '';
           this.fileNames[fieldName] = 'Allow only image, jpeg/png'; //hide description when we have file from server
           return;
@@ -103,16 +103,16 @@ module app.application {
     /**
      * redirect to complete/:decision page, uppon form succession.
      */
-    
+
     completeRedirectTo(decission) {
       let goTo = '';
-      if (decission == true) goTo = 'approved';
+      if (decission === true) goTo = 'approved';
       else goTo = 'declined';
 
       this.$timeout(() => {
-        
-         //this.$state.go('complete',{goTo:goTo});
-          this.$location.path(`app/application/${goTo}`);
+
+        //this.$state.go('complete',{goTo:goTo});
+        this.$location.path(`app/application/${goTo}`);
       }, 2000);
     };
 
@@ -144,12 +144,12 @@ module app.application {
 
       let mergedForm = _.merge(this.APPFORM.data(), updateVars)
       let dataToSave = Object.assign({}, { form: mergedForm }, { token: token });
-      console.info('dataToSave() iterrating now object to send to DB', dataToSave );
+      console.info('dataToSave() iterrating now object to send to DB', dataToSave);
       return dataToSave;
     }
 
     finalValidStep(step) {
-      return (this.APPFORM[step].valid && this.$scope.appForm.$valid && step == 'final');
+      return (this.APPFORM[step].valid && this.$scope.appForm.$valid && step === 'final');
     }
 
     /**
@@ -178,7 +178,7 @@ module app.application {
           this.finalSave = true;
           this.completeRedirectTo(data.form.approved);
         }
-        
+
         console.info('onSave(), data saved', data);
 
       }, (err) => {
@@ -242,9 +242,9 @@ module app.application {
           }
 
           //bypass for final step, manual validation for upload fields
-          if (step == 'final' && this.filesUploadedAre() === true) {
+          if (step === 'final' && this.filesUploadedAre() === true) {
             formValid = true;
-          } else if (step == 'final' && this.filesUploadedAre() === false) {
+          } else if (step === 'final' && this.filesUploadedAre() === false) {
             formValid = false;
           }
         }//if
@@ -254,8 +254,7 @@ module app.application {
         if (checkIndex[i] === false) {
           formValid = false;
           break;
-        }
-        else formValid = true;
+        } else formValid = true;
       }
 
 
@@ -309,8 +308,7 @@ module app.application {
           var orgVal = $(el.target).val();
           $(el.target).val(orgVal);
         }).change().off('change')
-      }
-      else {
+      } else {
         console.info('manualExecuteValidation', 'no selector');
         return;
       }

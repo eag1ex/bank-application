@@ -1,9 +1,7 @@
-var multer = require('multer');
-
-
 
 module.exports = (config) => {
-
+    
+var multer = require('multer');
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
         //console.log('uploading image to ', config.PUBLIC + '\\uploaded_images')

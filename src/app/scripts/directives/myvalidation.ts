@@ -64,7 +64,7 @@ module app.uivalidation {
                                 $(el).removeClass(formClass.hs).addClass(formClass.hs);
                                 angular.forEach(el.children(childSelector), function (value, inx) {
                                     //ONLY LOOP IF WE HAVE 2 INPUTS OR SELECT
-                                    if (value.nodeName == 'INPUT' || value.nodeName == 'SELECT') {
+                                    if (value.nodeName === 'INPUT' || value.nodeName === 'SELECT') {
                                         $(value).removeClass(formClass.fd)
                                         $(value).removeClass(formClass.fs).addClass(formClass.fs);
                                     }
@@ -78,15 +78,15 @@ module app.uivalidation {
 
                                 angular.forEach(el.children(childSelector), function (value, inx) {
                                     //ONLY LOOP IF WE HAVE 2 INPUTS OR SELECT
-                                    if (value.nodeName == 'INPUT' || value.nodeName == 'SELECT') {
+                                    if (value.nodeName === 'INPUT' || value.nodeName === 'SELECT') {
                                         $(value).removeClass(formClass.fs)
                                         $(value).removeClass(formClass.fd).addClass(formClass.fd);
                                     }
                                 });
                             }
-                        });//bind
-                    });// $watch
-                }//link
+                        }); //bind
+                    }); // $watch
+                } //link
             };
         });
 }

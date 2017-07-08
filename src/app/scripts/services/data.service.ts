@@ -16,15 +16,14 @@ module app.data {
     constructor(private $http,
       private $q, private API, private $rootScope) {
     }
-    
+
 
     getCached() {
       let deferred = this.$q.defer();
       if (this.GLOBALS.form !== undefined) {
         console.info('getCached(), sending existing user data across');
         deferred.resolve(this.GLOBALS);
-      }
-      else {
+      }else {
         let msg = { error: true, message: "cached data not found" };
         deferred.reject(this.fail(msg));
       }
@@ -41,7 +40,7 @@ module app.data {
 
     checkDataRetention() {
       let failed = false;
-      if (this.GLOBALS.token == undefined || !this.GLOBALS.token || this.GLOBALS.terms) {
+      if (this.GLOBALS.token === undefined || !this.GLOBALS.token || this.GLOBALS.terms) {
         this.clearAllCache(); failed = true;
         console.info('YOU ARE NOT VIALID', 'decline');
       }
@@ -57,7 +56,7 @@ module app.data {
 
       var token = (tok) ? tok : this.GLOBALS.token;
 
-      if (!token || token == undefined) {
+      if (!token || token === undefined) {
         return this.fail({ error: true, message: 'token not available, or undefined!' });
       }
 
@@ -98,9 +97,7 @@ module app.data {
             console.info('new user registered');
             this.GLOBALS = response.data.data;
             return response.data;
-          }
-
-          else {
+          } else {
             this.GLOBALS = undefined;
             return this.fail(response, 'new and existing user undefined');
           }
@@ -133,8 +130,8 @@ module app.data {
             // to be available on complete page
             this.GLOBALS.accountNumber = d.form.accountNumber;
             this.GLOBALS.contactBranchNumber = d.form.contactBranchNumber;
-            
-            if(d.form.final.valid==true){
+
+            if (d.form.final.valid === true) {
               this.GLOBALS = d;
             }
 

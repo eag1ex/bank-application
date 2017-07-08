@@ -7,6 +7,7 @@ You can register as new user, and return later to complete the application..
 - Access to Bootstrap sass configuration using global.vars with the help of 'Wiredeb' package.
 - All files are rendered using view HTML engine.
 - Fully documented.
+- JSHINT, TSLINT 
 
 [ Link to Application video preview ](http://creativeatwork.net/portfolio/bank-application-angular-mongodb/)
 

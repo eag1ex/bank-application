@@ -29,7 +29,7 @@
     background-color: transparent!important;
     color: #fff!important;
 }
-
+   
 @mixin preloader() {
     span#preloader {
         background: url($image-path+'/preregister.gif') no-repeat center center;

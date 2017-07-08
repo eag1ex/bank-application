@@ -96,7 +96,7 @@ module.exports = (upload, Bankuser, jsonData) => {
                     userExists: false,
                     data: user
                 });
-            }, () => errorHandler(err, res));
+            });
         }
     }//registerAndSave
 

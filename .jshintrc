@@ -1,7 +1,7 @@
 {
     "bitwise": true,
     "camelcase": true,
-    "curly": true,
+    "curly": false,
     "eqeqeq": true,
     "es3": false,
     "esversion": 6,
@@ -16,7 +16,7 @@
     "nonbsp": true,
     "nonew": true,
     "plusplus": false,
-    "quotmark": "double",
+    "quotemark": false,
     "undef": true,
     "unused": false,
     "strict": false,

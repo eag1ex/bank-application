@@ -1,4 +1,6 @@
 module app.formModel {
+
+
     export class Form {
 
         /**
@@ -9,8 +11,9 @@ module app.formModel {
          * 
          * We then return the deffered object with the help of 'dataservice'
          */
+        static Object: ObjectConstructor;
 
-        constructor(private dataservice: any, private _t:any, private APPFORM:any) {
+        constructor(private dataservice: any, private _t: any, private APPFORM: any) {
 
         }
 
@@ -23,7 +26,7 @@ module app.formModel {
                 this.one = { /*index: 9,*/ valid: null };
                 this.two = { /*index: 4,*/ valid: null };
                 this.three = { /*index: 3,*/ valid: null };
-                this.final = { /*index: 1,*/ valid: null };// inportant for server decission to not final save.
+                this.final = { /*index: 1,*/ valid: null }; // inportant for server decission to not final save.
 
                 this.update = (d = _t.APPFORM) => {
                     let data = {
@@ -31,7 +34,7 @@ module app.formModel {
                         two: Object.assign({}, d.two, { className: ".step-two" }),
                         three: Object.assign({}, d.three, { className: ".step-three" }),
                         final: Object.assign({}, d.final, { className: ".step-final" })
-                    }
+                    };
                     console.info('Form.model.update() called');
                     return data;
                 }

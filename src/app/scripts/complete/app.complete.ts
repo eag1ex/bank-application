@@ -4,14 +4,14 @@ module app.complete {
     public decission;
     public application: any;
     /* @ngInject */
-    constructor(  
+    constructor(
       private $timeout: any,
       private $state: any,
       private dataservice,
       private $stateParams
     ) {
       this.application = {};
-      if (dataservice.GLOBALS.form!==undefined) {
+      if (dataservice.GLOBALS.form !== undefined) {
         this.application = {
           applicant: `${dataservice.GLOBALS.form.one.title} ${dataservice.GLOBALS.form.one.firstName} ${dataservice.GLOBALS.form.one.lastName}`,
           decission: $stateParams.decission,
@@ -21,9 +21,7 @@ module app.complete {
         }
       }
     }
-
   }
-
   class MainComponent {
 
     constructor() { }

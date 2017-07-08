@@ -23,14 +23,13 @@ module app.fileupload {
                 data: fd,
                 headers: { 'Content-Type': undefined, enctype: 'multipart/form-data' },
             }).then((response) => {
-                if (response.data.error){
+                if (response.data.error) {
                     console.info('File uploaded= ', response.data)
                     return false;
-                }
-                if(response.data.success){
+                } if (response.data.success) {
                     return response.data.response;
                 }
-                
+
             }, (err) => {
                 let msg = 'file did not upload';
                 return this.fail(err, msg);

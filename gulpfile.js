@@ -1,3 +1,4 @@
+
 "use strict"
 
 var gulp = require('gulp');
@@ -27,7 +28,6 @@ var print = require('gulp-print');
 var jscs = require('gulp-jscs');
 var jsStylish = require('jshint-stylish');
 var jshint = require('gulp-jshint');
-
 
 var port = process.env.PORT || config.SERVER_PORT;
 
@@ -152,6 +152,9 @@ gulp.task('typescript', function () {
 })
 
 /*
+
+// @ for production
+
 gulp.task('typescript-to-js', ['typescript'], function (done) {
   var jssource =  DIST_PATH + '/*.js';
   gulp.src(jssource)
@@ -163,7 +166,6 @@ gulp.task('typescript-to-js', ['typescript'], function (done) {
     });
 })
 */
-
 
 gulp.task('move-html-templates', function () {
 
@@ -179,11 +181,11 @@ gulp.task('move-html-templates', function () {
 
 
 /**
- * 
+ * for testing only
  * vet the code and create coverage report
  * @return {Stream}
  */
-
+/*
 gulp.task('vet-js', function () {
   gutil.log('Analyzing source with TSLint, JSHint and JSCS');
 
@@ -195,7 +197,7 @@ gulp.task('vet-js', function () {
     // .pipe( jshint.reporter('fail'))
     .pipe(jscs());
 });
-
+*/
 
 
 gulp.task('watch', function () {
@@ -235,7 +237,6 @@ gulp.task('wiredep-index',['clean','typescript', 'styles', 'move-html-templates'
     ignorePath: ['src', 'public']
   };
 
-
   var wireupConf = {
     'ignorePath': '../public/',
     exclude: ['sass-bem', 'bootstrap-sass', 'angular-bootstrap'],
@@ -268,10 +269,7 @@ gulp.task('wiredep-index',['clean','typescript', 'styles', 'move-html-templates'
 })
 
 /** 
- * 
  * @default
- * 
- * 
  * due to wiredep and compass have to complete long tasks we wait until "WIREDEB_FINISHED" is true then 
  * we cleartimer and execute browserSync
  */
@@ -315,7 +313,6 @@ gulp.task('default', ['wiredep-index', 'watch'], function () {
           browserSync.notify('reloading browserSync now ...');
         }, 2300);
       }
-
       stopInterval();
       gutil.log(gutil.colors.magenta('browserSync executed after WIREDEB'));
     }

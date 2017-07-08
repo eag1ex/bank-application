@@ -15,7 +15,7 @@
 
   "rules": {
     "class-name": true,
-    "curly": true,
+    "curly": false,
     "eofline": false,
     "forin": false,
     "indent": [true, 4],
@@ -24,7 +24,7 @@
     "max-line-length": [true, 220],
     "no-arg": true,
     "no-bitwise": true,
-    "no-console": [true,
+    "no-console": [false,
       "debug",
       "info",
       "time",
@@ -40,7 +40,7 @@
     "no-imports": true,
     "no-string-literal": false,
     "no-trailing-comma": true,
-    "no-trailing-whitespace": true,
+    "no-trailing-whitespace": false,
     "no-unused-variable": false,
     "no-unreachable": true,
     "no-use-before-declare": true,
@@ -50,9 +50,9 @@
       "check-else",
       "check-whitespace"
     ],
-    "quotemark": [true, "single"],
+    "quotemark": [false, "double","single"],
     "radix": true,
-    "semicolon": true,
+    "semicolon": [false],
     "triple-equals": [true, "allow-null-check"],
     "variable-name": false,
     "whitespace": [true,

@@ -12,14 +12,14 @@ module app.core {
     .constant('API', { 'URL': "http:" + API_MAIN, 'DATA': null });
 
   /* @ngInject */
-  function appRun($rootScope, $timeout, dataservice, $state, stateChecking,$location) {
+  function appRun($rootScope, $timeout, dataservice, $state, stateChecking, $location) {
     // checking data valid, or clear all cache!
     dataservice.checkDataRetention();
 
     $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
 
       // controll page validation and rediraction
-     // stateChecking.run(e, toState, $state,$location);
+      stateChecking.run(e, toState, $state, $location);
 
     });
 

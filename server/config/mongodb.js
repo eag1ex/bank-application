@@ -1,10 +1,6 @@
-//mongodb 
-var mongoose = require('mongoose');
-
-
 
 module.exports=(config)=>{
-   
+var mongoose = require('mongoose');   
 // connect to database
 function mongo(){
     mongoose.Promise = global.Promise;

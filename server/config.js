@@ -1,3 +1,4 @@
+
 const gulpConfig = require('../config.js');
 module.exports = {
     'secret': 'mysecretabc',
