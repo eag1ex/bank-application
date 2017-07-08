@@ -1,5 +1,4 @@
 declare var API_MAIN;
-
 module app.core {
   'use strict';
   angular.module('app.core', []);

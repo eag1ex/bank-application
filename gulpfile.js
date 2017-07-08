@@ -19,22 +19,25 @@ var wiredep = require('wiredep').stream;
 var gutil = require('gulp-util');
 var pathExists = require('path-exists');
 var concat = require('gulp-concat');
-var glob = require('glob');
 var config = require('./config');
 var ngAnnotate = require('gulp-ng-annotate');
-
 // for vetting code
 var print = require('gulp-print');
 var jscs = require('gulp-jscs');
-var jsStylish = require('jshint-stylish');
-var jshint = require('gulp-jshint');
+//var jsStylish = require('jshint-stylish');
+//var jshint = require('gulp-jshint');
 
 var port = process.env.PORT || config.SERVER_PORT;
 
 var APP_PATH = config.APP_PATH;
 var DIST_PATH = config.DIST_PATH;
-var WIREDEB_FINISHED = false;
-var INITIAL_LOAD = false;
+var FINISHED_TASKS = {
+  INIT: 0,
+  WIREDEB: 0,
+  STYLES: 0,
+  TS: 0,
+  HTML: 0
+}
 
 
 /**
@@ -43,8 +46,8 @@ var INITIAL_LOAD = false;
  * 
  */
 
-gulp.task('clean', function () {
- // del(['./public/dist/'], done());
+gulp.task('clean-index', function (done) {
+  del(['./public/dist/index.html'], done);
 });
 
 
@@ -55,9 +58,9 @@ gulp.task('clean', function () {
  */
 
 function reloadBrowserSync() {
-  if (INITIAL_LOAD === true){
-     browserSync.reload();
-     console.log('reloading browser')
+  if (FINISHED_TASKS.INIT === 1) {
+    browserSync.reload();
+    console.log('reloading browser')
   }
 }
 
@@ -124,6 +127,7 @@ gulp.task('styles', function () {
     .pipe(csso())
     .pipe(gulp.dest(DIST_PATH + '/styles'))
     .on('finish', function () {
+      FINISHED_TASKS.STYLES = 1;
       reloadBrowserSync()
     });
 });
@@ -147,36 +151,22 @@ gulp.task('typescript', function () {
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(DIST_PATH + '/js'))
     .on('finish', function () {
+      FINISHED_TASKS.TS = 1;
       reloadBrowserSync()
+
     });
 })
 
-/*
-
-// @ for production
-
-gulp.task('typescript-to-js', ['typescript'], function (done) {
-  var jssource =  DIST_PATH + '/*.js';
-  gulp.src(jssource)
-    .pipe(concat('prototype.js'))
-   // .pipe(uglify())
-    .pipe(gulp.dest(DIST_PATH + '/js/test'))
-    .on('error', (err)=>{
-      console.log('error with concat',err)
-    });
-})
-*/
 
 gulp.task('move-html-templates', function () {
-
   var htmlfiles = APP_PATH + '/scripts/**/*.html';
-  glob(htmlfiles, {}, function (er, files) {
-    gulp.src(files)
-      .pipe(gulp.dest(DIST_PATH + '/js'))
-        .on('finish', function () {
-        reloadBrowserSync()
-      });
-  })
+  return gulp.src(htmlfiles)
+    .pipe(rename({ dirname: '' }))// remove dir structure copy
+    .pipe(gulp.dest(DIST_PATH + '/js'))
+    .on('finish', function () {
+      FINISHED_TASKS.HTML = 1;
+      reloadBrowserSync()
+    });
 });
 
 
@@ -185,6 +175,7 @@ gulp.task('move-html-templates', function () {
  * vet the code and create coverage report
  * @return {Stream}
  */
+
 /*
 gulp.task('vet-js', function () {
   gutil.log('Analyzing source with TSLint, JSHint and JSCS');
@@ -204,8 +195,17 @@ gulp.task('watch', function () {
   gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript']);
   gulp.watch(APP_PATH + "/scss/*.scss", ['styles']);
   gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates']);
- // gulp.watch('./src' + "/index.html", ['wiredep-index']);
+   gulp.watch('./src' + "/index.html", ['wiredep-index']);
 });
+
+/**
+ * this so we can run wiredeb-index seperatly on index.html changes
+ */
+
+gulp.task('wiredep-index-start', ['typescript', 'styles', 'move-html-templates'], function () {
+ return gulp.start('wiredep-index',()=>{ })
+})
+
 
 
 /**
@@ -214,12 +214,12 @@ gulp.task('watch', function () {
  * 
  */
 
-gulp.task('wiredep-index',['clean','typescript', 'styles', 'move-html-templates'], function () {
+gulp.task('wiredep-index',['clean-index'], function () {
 
   var injectJSFiles = gulp.src([
     DIST_PATH + '/js/*.js',
-    '!' + DIST_PATH + '/js/app.js',
-    '!' + DIST_PATH + '/js/app.core.js'
+    '!**/app.js',
+    '!**/app.core.js'
   ]);
 
   var injectCSSFiles = gulp.src([DIST_PATH + '/styles/main.css']);
@@ -264,17 +264,17 @@ gulp.task('wiredep-index',['clean','typescript', 'styles', 'move-html-templates'
 
     .pipe(gulp.dest('./public'))
     .on('finish', function () {
-      WIREDEB_FINISHED = true;
+      FINISHED_TASKS.WIREDEB = 1;
+
+      if(FINISHED_TASKS.INIT===1){
+        reloadBrowserSync()
+      }
+
     });
-})
+});
 
-/** 
- * @default
- * due to wiredep and compass have to complete long tasks we wait until "WIREDEB_FINISHED" is true then 
- * we cleartimer and execute browserSync
- */
 
-gulp.task('default', ['wiredep-index', 'watch'], function () {
+gulp.task('nodemon', ['wiredep-index-start', 'watch'], function () {
 
   var browserTimer;
 
@@ -295,7 +295,7 @@ gulp.task('default', ['wiredep-index', 'watch'], function () {
     },
     injectChanges: true,
     logFileChanges: true,
-  //  logLevel: 'debug',
+    //  logLevel: 'debug',
     logPrefix: 'gulp-patterns',
     notify: true,
     reloadDelay: 0 //1000
@@ -303,13 +303,13 @@ gulp.task('default', ['wiredep-index', 'watch'], function () {
 
 
   function startbrowserSync() {
-    if (WIREDEB_FINISHED === true) {
+    if (FINISHED_TASKS.WIREDEB === 1) {
 
       if (!browserSync.active) {
         browserSync.init(null, browserSyncOptions);
       } else {
         setTimeout(function () {
-           reloadBrowserSync()
+          reloadBrowserSync()
           browserSync.notify('reloading browserSync now ...');
         }, 2300);
       }
@@ -338,7 +338,7 @@ gulp.task('default', ['wiredep-index', 'watch'], function () {
       }, 1300);
     })
     .on('start', function () {
-      INITIAL_LOAD = true;
+      FINISHED_TASKS.INIT = 1;
 
       gutil.log('*** nodemon and browserSync started');
 
@@ -355,4 +355,16 @@ gulp.task('default', ['wiredep-index', 'watch'], function () {
     .on('exit', function () {
       gutil.log('*** nodemon exited cleanly');
     });
+
+})
+
+
+/** 
+ * @default
+ * due to wiredep and compass have to complete long tasks we wait until "FINISHED_TASKS.WIREDEB" is 1 then 
+ * we cleartimer and execute browserSync
+ */
+
+gulp.task('default', ['nodemon'], function () {
+
 });
