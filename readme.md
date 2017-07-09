@@ -3,6 +3,7 @@
 #### - Bank Application -
 Practical bank application project for superficial brand name UBANK. A fully responsive cross browser application using Angular 1.6 MVC framework with OOP/Typescript and RESTFul API/ and data retrieval. Backend mongodb/mongoose ORM with CRUD. Multer for uploading and storing files for retrieval.
 You can register as new user, and return later to complete the application..
+##
 * A fully automated Gulp task runner with browsersync proxy to nodemon.
 * Access to Bootstrap sass configuration using global.vars with the help of 'Wiredeb' package.
 * All files are rendered using view HTML engine.
