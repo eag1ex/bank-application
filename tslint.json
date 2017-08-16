@@ -3,7 +3,7 @@
 
     "version": "2.0.0",
     "command": "gulp",
-    "isShellCommand": true,
+    "isShellCommand": true,  
     "tasks": [
         {
             "taskName": "tslint",
