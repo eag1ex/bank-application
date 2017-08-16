@@ -1,4 +1,4 @@
-#### - [ Developed by Creative At Work ](http://creativeatwork.net)
+#### - [ Developed by Eaglex ](http://eaglex.net)
 
 #### - Bank Application -
 Practical bank application project for superficial brand name UBANK. A fully responsive cross browser application using Angular 1.6 MVC framework with OOP/Typescript and RESTFul API/ and data retrieval. Backend mongodb/mongoose ORM with CRUD. Multer for uploading and storing files for retrieval.
@@ -10,7 +10,7 @@ You can register as new user, and return later to complete the application..
 * Fully documented.
 * JSHINT, TSLINT 
 
-[ Link to Application video preview ](http://creativeatwork.net/portfolio/bank-application-angular-mongodb/)
+[ Link to Application video preview ](http://eaglex.net/portfolio/bank-application-angular-mongodb/)
 
 
 ###### Instalation
@@ -62,10 +62,10 @@ $/ npm start
 ##### File structure
 
 ##### **APP**
-![App dir](http://creativeatwork.net/git_images/app.dir.screen.png)
+![App dir](http://eaglex.net/git_images/app.dir.screen.png)
 
 ##### **SERVER**
-![Server dir](http://creativeatwork.net/git_images/app.server.dir.screen.png)
+![Server dir](http://eaglex.net/git_images/app.server.dir.screen.png)
 
 
 ```
@@ -83,7 +83,7 @@ $/ npm start
 ##### -- Remarks --
 * Tested and works without bugs on lates Chrome and Firefox, not tested on IE(SORRY!).
 * All files are well documented.
-* you can preview a working app video via this link   **http://creativeatwork.net/portfolio/bank-application-angular-mongodb/**
+* you can preview a working app video via this link   **http://eaglex.net/portfolio/bank-application-angular-mongodb/**
 * If your server crashed and you get this error in the CLI **Error: listen EADDRINUSE :::8018**
   you will have to change the port in the ./config.js file
 ***
