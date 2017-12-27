@@ -8,7 +8,7 @@ declare interface ObjectConstructor {
 }
 declare interface Window { _: any; }
 
-
+  
 module app {
   'use strict';
   angular.module('app', [

@@ -86,6 +86,9 @@ $/ npm start
 * you can preview a working app video via this link   **http://eaglex.net/portfolio/bank-application-angular-mongodb/**
 * If your server crashed and you get this error in the CLI **Error: listen EADDRINUSE :::8018**
   you will have to change the port in the ./config.js file
+
+* if error installing node-sass> upgrade dependencies with "npm-check-updates -u& npm install"
+
 ***
 
 ###### TODOS ?

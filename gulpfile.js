@@ -46,8 +46,8 @@ var FINISHED_TASKS = {
  * 
  */
 
-gulp.task('clean-index', function (done) {
-  del(['./public/dist/index.html'], done);
+gulp.task('clean-index', function () {
+  //del(['./public/dist/index.html'], done);
 });
 
 
@@ -195,7 +195,7 @@ gulp.task('watch', function () {
   gulp.watch(APP_PATH + "/scripts/**/*.ts", ['typescript']);
   gulp.watch(APP_PATH + "/scss/*.scss", ['styles']);
   gulp.watch(APP_PATH + "/scripts/**/*.html", ['move-html-templates']);
-   gulp.watch('./src' + "/index.html", ['wiredep-index']);
+   gulp.watch('./src' + "/index.html", ['wiredep-index-go']);
 });
 
 /**
@@ -203,7 +203,7 @@ gulp.task('watch', function () {
  */
 
 gulp.task('wiredep-index-start', ['typescript', 'styles', 'move-html-templates'], function () {
- return gulp.start('wiredep-index',()=>{ })
+  gulp.start('wiredep-index-go');
 })
 
 
@@ -214,8 +214,8 @@ gulp.task('wiredep-index-start', ['typescript', 'styles', 'move-html-templates']
  * 
  */
 
-gulp.task('wiredep-index',['clean-index'], function () {
-
+gulp.task('wiredep-index-go', function () {
+  console.log('wiredep-index started')
   var injectJSFiles = gulp.src([
     DIST_PATH + '/js/*.js',
     '!**/app.js',
