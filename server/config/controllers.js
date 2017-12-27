@@ -139,7 +139,8 @@ module.exports = (upload, Bankuser, jsonData) => {
             if (err) {
                 return res.status(200).json({
                     error: true,
-                    message: 'error uploading file'
+                    message: 'error uploading file',
+                    err:err
                 })
             }
             return res.status(200).json({
