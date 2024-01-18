@@ -8,6 +8,7 @@ module app.core {
     .config(configure)
     .run(appRun)
     .constant('_', window._)
+    .constant('Rx',(window as any).Rx || undefined)
     .constant('API', { 'URL': "http:" + API_MAIN, 'DATA': null });
 
   /* @ngInject */

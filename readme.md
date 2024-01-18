@@ -10,7 +10,6 @@ You can register as new user, and return later to complete the application..
 * Fully documented.
 * JSHINT, TSLINT 
 
-[ Link to Application video preview ](http://eaglex.net/portfolio/bank-application-angular-mongodb/)
 
 
 ###### Instalation
@@ -61,15 +60,7 @@ $/ npm start
 
 ##### File structure
 
-##### **APP**
-![App dir](http://eaglex.net/git_images/app.dir.screen.png)
-
-##### **SERVER**
-![Server dir](http://eaglex.net/git_images/app.server.dir.screen.png)
-
-
 ```
-#!python
 
      /**
        *  The data flow of this app is:
