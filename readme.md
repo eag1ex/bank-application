@@ -11,11 +11,17 @@ You can register as new user, and return later to complete the application..
 * JSHINT, TSLINT 
 
 
+#### Depreciation notice
+This project is no longer maintained *(because Im busy building new exciting things!).* If you find something is not working, please check release date of the project, and adjust to corresponding Node.js (even) version, then it should work.
+
+If you are interested in my work and have questions about this project, **please drop me a comment, or email me, thanks!**
+
+
 
 ###### Instalation
 * You need to **install mongoDB** before running this application. Instructions to install on your OS here:
   https://docs.mongodb.com/manual/installation/
-  make sure you assing mongod to global path, or run it from the /bin folder, and assing new database path.
+  make sure you assign mongod to global path, or run it from the /bin folder, and assign new database path.
 * If you have problems with Sass run **$/ npm run fix** to rebuild
 * **npm install will** will install all node_modules and bower_components.
 
@@ -27,10 +33,10 @@ $/ npm install
 
 ***
 ###### Start the App
-* Once you run it and have installed, configured your mongodb, it will automaticly run the process for you, 
+* Once you run it and have installed, configured your mongodb, it will automatically run the process for you, 
   proxyfy and start the nodemon server, and launch Chorme as default browser.
 * Generated files are stored in the ./public dir along with bower_components.
-* The npm task runner/gulp uses Wiredeb to dynamicly inject files generated in ./public/index.html
+* The npm task runner/gulp uses Wiredeb to dynamically inject files generated in ./public/index.html
 * The server/backed is in ./server dir, some of the configuration is shared from the main 
   ./config.js file, such as port.
 
@@ -53,7 +59,7 @@ $/ npm start
   Multer, npm/gulp, nodemon/ browserSync as proxy, dynamic injection and sass globals configuration with Wiredeb.
   tslint/jshint, server RESTful API, data retrieval
 * Following John Papa Angular Style Guide
-* Integraded in modular fashion
+* Integrated in modular fashion
 * Coded in OOP
 ***
 
@@ -84,7 +90,7 @@ $/ npm start
 
 ###### TODOS ?
 * No persistant cache included as yet, only DATA retrieval.
-* User authentication not yet intergated.
+* User authentication not yet integrated.
 
 ***
 
