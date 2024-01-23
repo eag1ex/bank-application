@@ -53,7 +53,7 @@ module app.data {
      */
 
     registerUser(tok = '') {
-      console.log('window/URL',window)
+
       var token = (tok) ? tok : this.GLOBALS.token;
 
       if (!token || token === undefined) {

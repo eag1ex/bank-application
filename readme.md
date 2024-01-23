@@ -11,39 +11,51 @@ You can register as new user, and return later to complete the application..
 * JSHINT, TSLINT 
 
 
-#### Depreciation notice
+
+
+
+#### Depreciation notice and updates
 This project is no longer maintained *(because Im busy building new exciting things!).* If you find something is not working, please check release date of the project, and adjust to corresponding Node.js (even) version, then it should work.
 
 If you are interested in my work and have questions about this project, **please drop me a comment, or email me, thanks!**
+<br/>
 
+**Updates**
 
+*Project demo is now available on github pages:*
+[ >> bank-application <<](https://eag1ex.github.io/bank-application/)
 
-###### Instalation
+- some variables have been hardcoded to use remote server api with free mongodb tier
+
+<br/>
+
+<img  src="./screens/bank-app-reg-form.png" width="400"/>
+<img  src="./screens/ubank-application-featured.png" width="400"/>
+<br/>
+
+###### Installation
 * You need to **install mongoDB** before running this application. Instructions to install on your OS here:
   https://docs.mongodb.com/manual/installation/
   make sure you assign mongod to global path, or run it from the /bin folder, and assign new database path.
 * If you have problems with Sass run **$/ npm run fix** to rebuild
 * **npm install will** will install all node_modules and bower_components.
 
-```
-#!python
-$/ npm install node-sass -g # unless you have it, or run >  "npm run fix" 
+```sh
 $/ npm install
 ```
 
 ***
 ###### Start the App
 * Once you run it and have installed, configured your mongodb, it will automatically run the process for you, 
-  proxyfy and start the nodemon server, and launch Chorme as default browser.
+  proxyfy and start the nodemon server, and launch Chrome as default browser.
 * Generated files are stored in the ./public dir along with bower_components.
 * The npm task runner/gulp uses Wiredeb to dynamically inject files generated in ./public/index.html
 * The server/backed is in ./server dir, some of the configuration is shared from the main 
   ./config.js file, such as port.
 
-```
-#!python
+```sh
 # in this order.
-
+### you need to change mongo configuration
 $/ mongod #or mongod --dbpath /to/data
 $/ npm start
 ```
@@ -80,7 +92,7 @@ $/ npm start
 ##### -- Remarks --
 * Tested and works without bugs on lates Chrome and Firefox, not tested on IE(SORRY!).
 * All files are well documented.
-* you can preview a working app video via this link   **http://eaglex.net/portfolio/bank-application-angular-mongodb/**
+* you can preview a working app video via this link   **https://eaglex.net/app/work/ubank-application-angular-1-6-mongobd**
 * If your server crashed and you get this error in the CLI **Error: listen EADDRINUSE :::8018**
   you will have to change the port in the ./config.js file
 
@@ -89,7 +101,7 @@ $/ npm start
 ***
 
 ###### TODOS ?
-* No persistant cache included as yet, only DATA retrieval.
+* No persistent cache included as yet, only DATA retrieval.
 * User authentication not yet integrated.
 
 ***
