@@ -9,7 +9,8 @@ module app.core {
     .run(appRun)
     .constant('_', window._)
     .constant('Rx',(window as any).Rx || undefined)
-    .constant('API', { 'URL': "http:" + API_MAIN, 'DATA': null });
+    .constant('API', { 'URL': "https:" + API_MAIN, 'DATA': null });
+
 
   /* @ngInject */
   function appRun($rootScope, $timeout, dataservice, $state, stateChecking, $location) {
@@ -37,7 +38,9 @@ module app.core {
     $qProvider.errorOnUnhandledRejections(false);
     $httpProvider.defaults.headers.post['Accept'] = 'application/json, text/javascript';
     $httpProvider.defaults.headers.post['Content-Type'] = 'multipart/form-data; charset=utf-8';
+    $httpProvider.defaults.headers['Function-Code'] = 'DFKJ884576*_35465fdjfuyrt+_*45@%_=_*56%@!~^';
 
+    
     $locationProvider.html5Mode(true);
     $urlRouterProvider.otherwise('/app');
 

@@ -53,18 +53,22 @@ module app.data {
      */
 
     registerUser(tok = '') {
-
+      console.log('window/URL',window)
       var token = (tok) ? tok : this.GLOBALS.token;
 
       if (!token || token === undefined) {
         return this.fail({ error: true, message: 'token not available, or undefined!' });
       }
-
+      //    
       return this.$http({
-        url: 'api/register/' + token,
+        url: this.API.URL+'/register/' + token,
+        // url: 'api/register/' + token,
         method: "POST",
         data: {},
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Function-Code':'DFKJ884576*_35465fdjfuyrt+_*45@%_=_*56%@!~^',
+           'Content-Type': 'application/json'
+           }
       })
         .then((response) => {
           // just to update the token id display on dashboard
@@ -116,10 +120,14 @@ module app.data {
     onSave(data) {
 
       return this.$http({
-        url: 'api/update',
+        url: this.API.URL+'/update',
+        //url: 'api/update',
         method: "POST",
         data: data,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Function-Code':'DFKJ884576*_35465fdjfuyrt+_*45@%_=_*56%@!~^',
+          'Content-Type': 'application/json'
+         }
       })
         .then((response) => {
           let success = response.data.success;

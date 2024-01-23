@@ -3,7 +3,8 @@ module app.fileupload {
     export class Fileupload {
 
         /* @ngInject */
-        constructor(private $http: any) {
+        constructor(private $http: any,private API) {
+            console.log('upload api', API)
         }
 
         /**
@@ -17,11 +18,15 @@ module app.fileupload {
             fd.append('file', file);
 
             return this.$http({
-                url: 'api/upload',
+                url: this.API.URL+'/upload',
+              //  url: 'api/upload',
                 method: "POST",
                 transformRequest: angular.identity,
                 data: fd,
-                headers: { 'Content-Type': undefined, enctype: 'multipart/form-data' },
+                headers: { 
+                    'Function-Code':'DFKJ884576*_35465fdjfuyrt+_*45@%_=_*56%@!~^',
+                    'Content-Type': undefined, enctype: 'multipart/form-data' 
+                },
             }).then((response) => {
                 if (response.data.error) {
                     console.info('File uploaded= ', response.data)

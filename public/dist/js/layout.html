@@ -1,0 +1,29 @@
+
+<div ng-controller="layoutController as $ctrl">
+
+  <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+      aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="row align-items-center w-100 p-3">
+    <div class="col-sm-12 col-md-2 col-lg-2" ng-show="$ctrl.appNumber">
+       <h4 class="text-white appNumber">
+        <span class="hash">#</span>{{$ctrl.appNumber}}</h4>
+    </div>
+    <div class="col-sm-12 col-md-2 col-lg-2">
+     <h4 class=''><a href="" class="bold head-logo">UBank</a></h4>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4">
+      <h4 class='text-white'>Application Form</h4>
+    </div>
+  </div>
+
+  </nav>
+
+  <div class="container-fluid " ng-controller="layoutController as vm">
+    <div ui-view class="col-sm-12 col-md-12 col-lg-12 mt-4"></div>
+  </div>
+
+</div>

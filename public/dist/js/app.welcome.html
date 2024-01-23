@@ -1,0 +1,55 @@
+<!-- add app.welcome -->
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-sm-12 col-md-6">
+        <h2>Welcome!</h2>
+        <p class="lead">
+            Please enter new /or existing token.
+        </p>
+        <div id="app-welcome-wrap" >
+            <form name="welcomeForm" class="app-welcome-form" novalidate ng-submit="vm.registerUser(vm.registerNewUser.token);">
+
+                <div class="form-group mx-0" ng-class='{"has-danger":welcomeForm.$invalid && welcomeForm.$dirty || vm.registerNewUser.invalid, 
+                            "has-success":welcomeForm.$valid && welcomeForm.$dirty}'>
+            
+                    <input ng-pattern="/^[a-zA-Z0-9]*$/" ng-change="vm.formOnsubmit=false;" ng-class='{"form-control-danger":welcomeForm.$invalid===true || vm.registerNewUser.invalid, 
+                            "form-control-success":welcomeForm.$valid}' ng-model="vm.registerNewUser.token" ng-minlength="5"
+                        ng-maxlength="11" required name="registerNewUser" type="text" class="form-control" id="inputnumber" placeholder="Enter token">
+
+                    <!-- checking steps -->
+
+                    <div class="col-12 m-0 p-0">
+                        <div ng-show="vm.registerNewUser.valid==='' && welcomeForm.$dirty && vm.formOnsubmit===true && vm.registerNewUser.invalid!==true"
+                            class="form-control-feedback ml-1 w-100">Checking...</div>
+
+                        <div ng-show="welcomeForm.$invalid && welcomeForm.$dirty || vm.registerNewUser.invalid" class="form-control-feedback ml-1 w-100">Sorry, invalid combination!</div>
+
+                        <div ng-show="vm.existingUser===false && vm.registerNewUser.valid===true && welcomeForm.$dirty && vm.formOnsubmit===true"
+                            class="form-control-feedback ml-1 w-100">Great, new token created, keep it save!
+                            <div ng-show="vm.clickToContinue==true">
+                                <div class="text-white">Redirecting now...</div>
+                                <span id="preloader"></span>
+                            </div>
+                        </div>
+
+                        <div ng-show="vm.existingUser===true && welcomeForm.$dirty && vm.formOnsubmit===true" 
+                        class=" form-control-feedback ml-1 w-100"><span ng-show='vm.welcomeUser'>Hey <strong>{{vm.welcomeUser}}</strong>, </span>
+                        You are already registered!
+                            <div class="text-white">Redirecting now...</div>
+                            <span id="preloader"></span>
+                        </div>
+                    </div>
+                    <!-- col-12 -->
+
+                </div>
+
+                <button ng-init='vm.clickToContinue=false;' ng-model="vm.clickToContinue" ng-click="vm.clickToContinue=(vm.registerNewUser.valid || vm.existingUser)"
+                    ng-class='{"disabled": welcomeForm.registerNewUser.$invalid || !welcomeForm.registerNewUser.$dirty || welcomeForm.registerNewUser.$modelValue.length<4}'
+                    ng-hide="vm.clickToContinue==true" type="submit" class="btn btn-primary mt-4">Confirm</button>
+
+            </form>
+        </div>
+        <!-- wrap -->
+    </div>
+    <!-- col -->
+</div>
+<!-- row -->

@@ -1,0 +1,310 @@
+<!-- app.application -->
+<div class="row justify-content-center">
+    <div class="col-11 m-0 p-0">
+        <div class="application-form-wrap">
+
+            <form name="appForm" id="application-form" class="mb-5" novalidate ng-submit="vm.onSave('final');">
+                <h5 class="clearfix mb-3 strike">Personal Information, <span>steps 1/4</span></h5>
+
+                <div class="form-group row personal-information mb-5 mx-0 step-one">
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Your Name:-</label>
+                        <div class="input-group input-group-select mb-2 mb-sm-0 mt-2" uivalidation="{field:appForm.title, has:'select'}">
+                            <select ng-init="vm.APPFORM.one.title=(vm.APPFORM.one.title)? vm.APPFORM.one.title:'';" required ng-model="vm.APPFORM.one.title"
+                                name="title" class="custom-select mb-2 mr-1 mb-sm-0 px-1" id="inlineFormCustomSelect">
+                                <option value='' selected>Title</option>
+                                <option value="MR">MR.</option>
+                                <option value="MS">MS.</option>
+                                <option value="MRS">MRS.</option>
+                                <option value="DR">DR.</option>
+                            </select>
+                            <span class=required>*</span>
+                        </div>
+
+                        <div uivalidation="{field:appForm.firstName, has:'input'}" class="input-group mb-2 mb-sm-0 mr-1 mt-2">
+                            <input ng-init="vm.APPFORM.one.firstName=(vm.APPFORM.one.firstName)? vm.APPFORM.one.firstName:'';" required ng-pattern='/^[a-zA-Z]*$/'
+                                ng-model="vm.APPFORM.one.firstName" name="firstName" type="text" class="form-control" id="" placeholder="First Name">
+                            <span class=required>*</span>
+                        </div>
+                        <div uivalidation="{field:appForm.middleName, has:'input'}" class="input-group mb-2 mb-sm-0 mt-2 mr-1">
+                            <input ng-init="vm.APPFORM.one.middleName=(vm.APPFORM.one.middleName)? vm.APPFORM.one.middleName:'';" required ng-pattern='/^[a-zA-Z]*$/'
+                                ng-model="vm.APPFORM.one.middleName" name="middleName" type="text" class="form-control" id=""
+                                placeholder="Middle Name">
+                            <span class=required>*</span>
+                        </div>
+                        <div uivalidation="{field:appForm.lastName, has:'input'}" class="input-group mb-2 mb-sm-0 mr-1 mt-2">
+                            <input ng-init="vm.APPFORM.one.lastName=(vm.APPFORM.one.lastName)? vm.APPFORM.one.lastName:'';" required ng-pattern='/^[a-zA-Z]*$/'
+                                ng-model="vm.APPFORM.one.lastName" name="lastName" type="text" class="form-control" id="" placeholder="Last Name">
+                            <span class=required>*</span>
+                        </div>
+
+                    </div>
+                    <!-- inline-section -->
+
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Your Phone:-</label>
+                        <div uivalidation="{field:appForm.homePhone, has:'input', 
+                            bothValid:appForm.homePhone.$valid===appForm.homePhonePre.$valid}" class="input-group mb-2  mx-0 mt-1">
+                            <input validnumber required ng-maxlength="5" ng-init="vm.APPFORM.one.homePhonePre=(vm.APPFORM.one.homePhonePre)? vm.APPFORM.one.homePhonePre:'';"
+                                ng-model="vm.APPFORM.one.homePhonePre" name="homePhonePre" type="text" class="form-control px-1" id=""
+                                placeholder="+">
+                            <span class=required>*</span>
+
+                            <input ng-init="vm.APPFORM.one.homePhone=(vm.APPFORM.one.homePhone)? vm.APPFORM.one.homePhone:'';" required validnumber ng-model="vm.APPFORM.one.homePhone"
+                                name="homePhone" type="text" class="form-control w-75 mr-2" id="" placeholder="Home Phone">
+                            <span class=required>*</span>
+                        </div>
+
+                        <div uivalidation="{field:appForm.mobile, has:'input',
+                                   bothValid:appForm.mobilePre.$valid===appForm.mobile.$valid}" class="input-group mb-2 mx-0 mt-1 px-1">
+                            <input ng-maxlength="5" ng-init="vm.APPFORM.one.mobilePre=(vm.APPFORM.one.mobilePre)? vm.APPFORM.one.mobilePre:'';" ng-model="vm.APPFORM.one.mobilePre"
+                                name="mobilePre" type="text" validnumber class="form-control" id="" placeholder="+">
+                            <input ng-init="vm.APPFORM.one.mobile=(vm.APPFORM.one.mobile)? vm.APPFORM.one.mobile:'';" ng-model="vm.APPFORM.one.mobile"
+                                name="mobile" type="text" validnumber class="form-control w-75" id="" placeholder="Mobile Phone">
+                        </div>
+                    </div>
+                    <!-- inline-section -->
+
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Mailing Address:-</label>
+
+                        <div uivalidation="{field:appForm.address, has:'input'}" class="input-group mb-2 w-50">
+                            <!-- no regex validation here since not sure if using thai language etc. -->
+                            <input ng-init="vm.APPFORM.one.address=(vm.APPFORM.one.address)? vm.APPFORM.one.address:'';" required ng-model="vm.APPFORM.one.address"
+                                name="address" type="text" class="form-control" id="" placeholder="Address">
+                            <span class=required>*</span>
+                        </div>
+
+                        <div uivalidation="{field:appForm.addressOpt, has:'input'}" class="input-group mb-2 w-50">
+                            <input ng-init="vm.APPFORM.one.addressOpt=(vm.APPFORM.one.addressOpt)? vm.APPFORM.one.addressOpt:'';" ng-model="vm.APPFORM.one.addressOpt"
+                                name="addressOpt" type="text" class="form-control" id="" placeholder="Optional">
+                        </div>
+
+                    </div>
+                    <!-- inline-section -->
+
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Social Security Number:-</label>
+
+                        <div uivalidation="{field:appForm.securityNumber, has:'input'}" class="input-group mb-2 mb-sm-0 w-50">
+                            <input required ng-init="vm.APPFORM.one.securityNumber=(vm.APPFORM.one.securityNumber)? vm.APPFORM.one.securityNumber:'';"
+                                ng-model="vm.APPFORM.one.securityNumber" required ng-pattern="/^[a-zA-Z0-9-]*$/" name="securityNumber"
+                                type="text" class="form-control" id="" placeholder="Security Number">
+                            <span class=required>*</span>
+                        </div>
+
+                    </div>
+                    <!-- inline-section -->
+                    <div class="form-group form-inline">
+                        <button ng-init='step1=false' data-toggle="collapse" 
+                        ng-click="vm.checkFormStepsValid('one'); step1=true;" type="button" 
+                        class="btn-lg btn btn-secondary step-one mt-2" ng-class='{"btn-danger":vm.APPFORM.one.valid===false}'>Next</button> 
+                        <span ng-show='vm.sectionSaved==false && step1==true && vm.APPFORM.one.valid===true;' id="preloader" class='ml-3 mt-2'></span>
+                    </div>
+
+                </div>
+                <!-- personal-information -->
+
+                <h5 class="clearfix mb-3 strike">Employment Information, <span>steps 2/4</span></h5>
+
+                <div class="collapse form-group row mx-0 mb-5 step-two" id="employment-information">
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <div uivalidation="{field:appForm.job, has:'input'}" class="input-group mb-2 mb-sm-0 mx-0 w-100">
+                            <input ng-init="vm.APPFORM.two.job=(vm.APPFORM.two.job)? vm.APPFORM.two.job:'';" required ng-pattern="/^[a-zA-Z\s]*$/" ng-model="vm.APPFORM.two.job"
+                                type="text" name="job" class="form-control w-100" id="" placeholder="Job Position">
+                            <span class=required>*</span>
+                        </div>
+
+                    </div>
+                    <!-- inline-section -->
+
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Employer:-</label>
+                        <div uivalidation="{field:appForm.employerName, has:'input'}" class="input-group mb-2 mb-sm-0 mx-0 w-50">
+                            <input ng-init="vm.APPFORM.two.employerName=(vm.APPFORM.two.employerName)? vm.APPFORM.two.employerName:'';" required ng-pattern="/^[a-zA-Z\s]*$/"
+                                ng-model="vm.APPFORM.two.employerName" type="text" class="form-control w-50" id="" placeholder="Employer Name"
+                                name="employerName">
+                            <span class=required>*</span>
+                        </div>
+
+                        <div class="input-group mb-2 mb-sm-0 mx-0 w-50">
+                            <input ng-init="vm.APPFORM.two.employerAddress=(vm.APPFORM.two.employerAddress)? vm.APPFORM.two.employerAddress:'';" required
+                                ng-model="vm.APPFORM.two.employerAddress" name="employerAddress" type="text" class="form-control w-50"
+                                id="" placeholder="Address">
+                            <span class=required>*</span>
+                        </div>
+                    </div>
+                    <!-- inline-section -->
+
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Work:-</label>
+                        <div uivalidation="{field:appForm.workPhonePre, 
+                        has:'input',bothValid:appForm.workPhonePre.$valid===appForm.workPhone.$valid}" class="input-group mb-2 mb-sm-0 mx-0">
+                            <input ng-maxlength="5" ng-init="vm.APPFORM.two.workPhonePre=(vm.APPFORM.two.workPhonePre)? vm.APPFORM.two.workPhonePre:'';"
+                                ng-model="vm.APPFORM.two.workPhonePre" name="workPhonePre" type="text" validnumber class="form-control px-1"
+                                id="" placeholder="+">
+                            <input ng-init="vm.APPFORM.two.workPhone=(vm.APPFORM.two.workPhone)? vm.APPFORM.two.workPhone:'';" ng-model="vm.APPFORM.two.workPhone"
+                                name="workPhone" type="text" validnumber class="form-control w-75" id="" placeholder="Work Phone"
+                                validnumber>
+                        </div>
+
+                    </div>
+                    <!-- inline-section -->
+                    <div class="form-group form-inline">
+                        <button ng-init='step2=false' data-toggle="collapse" 
+                        ng-click="vm.checkFormStepsValid('two');step2=true" type="button" 
+                        class="btn-lg btn btn-secondary step-two mt-2" ng-class='{"btn-danger":vm.APPFORM.two.valid===false}'>Next</button>
+                        <span ng-show='vm.sectionSaved==false && step2==true && vm.APPFORM.two.valid===true;' id="preloader" class='ml-3 mt-2'></span>
+                    </div>
+
+
+                </div>
+                <!-- employment-information -->
+
+                <h5 class="clearfix mb-3 strike">Account Information, <span>steps 3/4</span></h5>
+
+                <div class="collapse form-group row  mb-5 mx-0 step-three" id='account-information'>
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <label class="col-form-label w-100 section-label">Account Type:-</label>
+                        <div uivalidation="{field:appForm.accountType, has:'select'}" class="input-group mb-2 mt-2 w-25 input-group-select">
+                            <select ng-init="vm.APPFORM.three.accountType=(vm.APPFORM.three.accountType)? vm.APPFORM.three.accountType:'';" ng-model="vm.APPFORM.three.accountType"
+                                name="accountType" required class="custom-select mb-2 mr-1 mb-sm-0 px-1" id="inlineFormCustomSelect">
+                                <option value="" selected>Type</option>
+                                <option value="Savings">Savings</option>
+                                <option value="Deposit">Deposit</option>  
+                            </select>
+                            <span class=required>*</span>
+                        </div>
+
+                        <div uivalidation="{field:appForm.bankPurpouse,has:'input'}" class="input-group mb-2 mb-sm-0 w-75">
+                            <input ng-init="vm.APPFORM.three.bankPurpouse=(vm.APPFORM.three.bankPurpouse)? vm.APPFORM.three.bankPurpouse:'';" ng-pattern="/^[ A-Za-z0-9_@./#&?*+-]*$/"
+                                ng-model="vm.APPFORM.three.bankPurpouse" name="bankPurpouse" type="text" class="form-control"
+                                ng-maxlength="100" id="" placeholder="Purpose of bank account">
+                            <span class=required>*</span>
+                        </div>
+                    </div>
+                    <!-- inline-section -->
+
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <div uivalidation="{field:appForm.money, has:'input'}" class="input-group mb-2 mb-sm-0 w-100">
+                            <input ng-init="vm.APPFORM.three.money=(vm.APPFORM.three.money)? vm.APPFORM.three.money:'';" required ng-pattern="/^[ A-Za-z0-9_@./#&?*+-]*$/"
+                                ng-maxlength="100" ng-model="vm.APPFORM.three.money" name="money" type="text" class="form-control w-100"
+                                id="" placeholder="Where will the money come from?">
+                            <span class=required>*</span>
+                        </div>
+                    </div>
+                    <!-- inline-section -->
+                    <div class="form-inline inline-section mb-3 w-100">
+                        <div uivalidation="{field:appForm.hearAboutUs, has:'input'}" class="input-group mb-2 mb-sm-0 w-100">
+                            <input ng-init="vm.APPFORM.three.hearAboutUs=(vm.APPFORM.three.hearAboutUs)? vm.APPFORM.three.hearAboutUs:'';" required ng-pattern="/^[ A-Za-z0-9_@./#&?*+-]*$/"
+                                ng-model="vm.APPFORM.three.hearAboutUs" name="hearAboutUs" type="text" class="form-control w-100"
+                                ng-maxlength="100" id="" placeholder="How did you hear about us?">
+                            <span class=required>*</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline">
+                        <button ng-init="step3=false;" data-toggle="collapse" ng-click="vm.checkFormStepsValid('three');step3=true;" type="button"
+                            class="btn-lg btn btn-secondary step-three mt-2" ng-class='{"btn-danger":vm.APPFORM.three.valid===false}'>Next</button>
+                        <span ng-show='vm.sectionSaved==false && step3==true && vm.APPFORM.three.valid===true;' id="preloader" class='ml-3 mt-2'></span>
+                    </div>
+
+
+
+
+                </div>
+                <!-- account-information -->
+
+                <h5 class="clearfix mb-3 w-100 strike">Documentation, <span>steps 4/4</span></h5>
+
+                <div class="collapse form-group row mb-2 mx-0 step-final" id="ducument-information">
+                    <div class="form-group inline-section mb-3 w-100 upload-image-wrap">
+
+                        <div class="mb-3">
+                            <label class="section-label">Upload Utility Bill:-</label>
+                            <div 
+                            uivalidation="{field:appForm.utilityFile, has:'input'}"
+                            class="input-group form-inline">
+                                <label class="custom-file w-50 mr-2 mb-2"> 
+                                <input 
+                                required
+                                filemodel="vm.APPFORM.final.utilityFile"      
+                                ng-init="vm.APPFORM.final.utilityFile=(vm.APPFORM.final.utilityFile)? vm.APPFORM.final.utilityFile:'';"
+                                ng-model="vm.APPFORM.final.utilityFile" name="utilityFile" type="file" id="file" class="custom-file-input">
+                                <span class=required>*</span>
+                                <span class="custom-file-control"></span></label>
+                                <button type="button" class="btn btn-secondary mr-3 mb-2" ng-click="vm.uploadFile(vm.APPFORM.final.utilityFile,'final','utilityFile')">upload</button>
+                                <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.utilityFile}}</small>
+
+                                <img ng-init="PATH='/uploaded_images/'; DUMMY='/dist/styles/images/imgdummy.gif';" ng-if="vm.fileNames.utilityFile
+                                .length==0;"
+                                    ng-src="{{(vm.APPFORM.final.utilityFile.length) ? PATH+vm.APPFORM.final.utilityFile:DUMMY}}"
+                                    class="rounded float-left uploadimg" alt="...">
+                            </div>
+                            <!-- input-group -->
+                        </div>
+
+                    </div>
+                    <!-- upload-image-wrap -->
+
+                    <div class="form-group inline-section mb-3 w-100 upload-image-wrap">
+                        <div class=" mb-3 ">
+                            <label class="section-label">Upload Social Security Number:-</label>
+                            <div 
+                            
+                            uivalidation="{field:appForm.securityFile, has:'input'}"
+                            class="input-group form-inline">
+
+                                <label class="custom-file w-50 mr-2 mb-2">
+                                <input required   
+                                filemodel="vm.APPFORM.final.securityFile"                        
+                                ng-init="vm.APPFORM.final.securityFile=(vm.APPFORM.final.securityFile)? vm.APPFORM.final.securityFile:'';"
+                                ng-model="vm.APPFORM.final.securityFile" name="securityFile" type="file" id="file" class="custom-file-input">
+                                <span class=required>*</span>
+                                <span class="custom-file-control"></span> </label>
+                                <button type="button" class="btn btn-secondary mr-3 mb-2" ng-click="vm.uploadFile(vm.APPFORM.final.securityFile,'final','securityFile');">upload</button>
+                                <small class="form-control-feedback ml-1 w-100 upload-file-text">{{vm.fileNames.securityFile}}</small>
+
+                                <img ng-init="PATH='/uploaded_images/'; DUMMY='/dist/styles/images/imgdummy.gif';" ng-if="vm.fileNames.securityFile.length==0;"
+                                    ng-src="{{(vm.APPFORM.final.securityFile.length) ? PATH+vm.APPFORM.final.securityFile:DUMMY}}"
+                                    class="rounded float-left uploadimg" alt="...">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- upload-image-wrap -->
+
+                    <input ng-init="vm.APPFORM.accountNumber=(vm.APPFORM.accountNumber)? vm.APPFORM.accountNumber:'';" ng-model="vm.APPFORM.accountNumber"
+                        name="accountNumber" type="hidden">
+
+                    <input ng-init="vm.APPFORM.contactBranchNumber=(vm.APPFORM.contactBranchNumber)? vm.APPFORM.contactBranchNumber:'';" ng-model="vm.APPFORM.contactBranchNumber"
+                        name="contactBranchNumber" type="hidden">
+
+                    <input  ng-init="vm.APPFORM.approved=(vm.APPFORM.approved)? vm.APPFORM.approved:'';" ng-model="vm.APPFORM.approved"
+                        name="approved" type="hidden">
+                </div>
+                <div ng-init='step4=false' class="input-group form-inline mb-2">
+
+                    <button                  
+                    ng-click="vm.checkFormStepsValid('final');vm.APPFORM.approved=true; step4=true" type="submit" 
+                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid==true || vm.finalSave==true"
+                        class="btn-lg btn btn-success step-final mt-2 mr-2">Approve</button>
+
+                    <button    
+                    ng-click="vm.checkFormStepsValid('final'); vm.APPFORM.approved=false; step4=true" type="submit" 
+                    ng-disabled="vm.APPFORM.final.valid===false || appForm.$invalid==true || vm.finalSave==true"
+                        class=" btn-lg btn btn-danger step-final mt-2">Decline</button>
+
+                    <span ng-show='step4==true;' id="preloader" class='ml-3 mt-2'></span>
+                </div>
+                <!-- ducument-information -->
+
+            </form>
+
+        </div>
+        <!-- wrap -->
+    </div>
+    <!-- col -->
+</div>
+<!-- row-->

@@ -1,0 +1,12 @@
+<form id="fileForm" name="form" method="post" ng-submit='uploadFile(file);'>
+
+    <h3>Form</h3>
+    <div class="openfile-group">
+        <input ng-model="file" name="appForm" type="file" accept="image/*" class=" float-left btn btn-danger btn-md" />
+         <input name="firstname" type="text"  class=" float-left btn btn-danger btn-md" value="mike pol" />
+        <button type="submit" class="btn btn-danger btn-md">Choose file</button>
+        <span id="preload-icon" ng-show="fileLoading==true"></span>
+    </div>
+    <p class="bg-success" ng-show="file.toString().length>0">{{file.name}}</p>
+    <button ng-show="file.toString().length>0" type="submit" class="btn btn-primary btn-md">Upload</button>
+</form>

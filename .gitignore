@@ -9,20 +9,24 @@ obj
 
 # Ignore Node & Bower
 ###################
+__temp
 typings
 .sass-cache
 node_modules
-bower_components
+### old pproject keep build files
+# bower_components
 build
 server/images
 .tmp
 assets
 src/**/*.map
 src/**/*.js
-public
+### old pproject keep build files
+# public
+# public/bower_components
 tmp
 history
-public/bower_components
+
 
 # Ignore Test reporters
 ###################
