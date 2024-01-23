@@ -1,0 +1,32 @@
+<!-- add app.terms -->
+<div class="row justify-content-center">
+    <div class="col-sm-12 col-md-8 col-lg-8 mt-3 mb-5">
+        <h3>Application Complete</h3>
+        <p class='lead'>
+            Dear {{vm.application.applicant}}
+        </p>
+        <div ng-if='vm.application.decission=="approved"' id="complete" class="complete-{{vm.application.decission}} ">
+            <p>Your application has been approved, congratulation!</p>
+            <div class="bg-success text-black my-3 p-4 container">
+                <h5>This is your account number: <br><strong>{{vm.application.accountNumber}}</strong></h5>
+            </div>
+
+        </div>
+        <div ng-if='vm.application.decission=="declined"' 
+            id="complete" class="complete-{{vm.application.decission}} ">
+            <p>Your application has been declined, sorry!</p>
+
+            <div class="bg-warning text-black my-3 p-4 container">
+
+                <h5>Please call as at the Branch <strong>
+                    <a href="callto:322342" class="white">
+                        {{vm.application.contactBranchNumber}}</a></strong></h5>
+                <h5> Your application number/token is: <br><strong>{{vm.application.appNumber}}</strong></h5>
+
+            </div>
+        </div>
+        <!-- complete -->
+    </div>
+    <!-- col -->
+</div>
+<!-- row -->
